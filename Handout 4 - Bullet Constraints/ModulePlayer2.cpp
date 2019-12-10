@@ -1,20 +1,20 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModulePlayer.h"
+#include "ModulePlayer2.h"
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
+ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled), P2vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
 }
 
-ModulePlayer::~ModulePlayer()
+ModulePlayer2::~ModulePlayer2()
 {}
 
 // Load assets
-bool ModulePlayer::Start()
+bool ModulePlayer2::Start()
 {
 	LOG("Loading player");
 
@@ -95,16 +95,14 @@ bool ModulePlayer::Start()
 	car.wheels[3].brake = true;
 	car.wheels[3].steering = false;
 
-	vehicle = App->physics->AddVehicle(car);
-	//vehicle2 = App->physics->AddVehicle(car);					//Hive Mind Version (1 player controls 2 Cars and need to do tasks).
-	vehicle->SetPos(0, 12, 10);
-	//vehicle2->SetPos(0, 12, 15);
+	P2vehicle = App->physics->AddVehicle(car);
+	P2vehicle->SetPos(5, 12, 10);
 
 	return true;
 }
 
 // Unload assets
-bool ModulePlayer::CleanUp()
+bool ModulePlayer2::CleanUp()
 {
 	LOG("Unloading player");
 
@@ -112,33 +110,33 @@ bool ModulePlayer::CleanUp()
 }
 
 // Update: draw background
-update_status ModulePlayer::Update(float dt)
+update_status ModulePlayer2::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
-	{																		//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode).
+	//------------------------------------------- PLAYER 2 INPUTS -------------------------------------------
+	if (App->input->GetKey(SDL_SCANCODE_KP_8) == KEY_REPEAT)
+	{
 		acceleration = MAX_ACCELERATION;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_KP_4) == KEY_REPEAT)
 	{
 		if (turn < TURN_DEGREES)
 			turn += TURN_DEGREES;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_KP_6) == KEY_REPEAT)
 	{
 		if (turn > -TURN_DEGREES)
 			turn -= TURN_DEGREES;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_KP_5) == KEY_REPEAT)
 	{
 		//brake = BRAKE_POWER;
 
-		if (vehicle->GetKmh() <= 0.0f)
+		if (P2vehicle->GetKmh() <= 0.0f)
 		{
 			acceleration -= MAX_ACCELERATION;
 		}
@@ -148,22 +146,14 @@ update_status ModulePlayer::Update(float dt)
 		}
 	}
 
-	//Player 2 Inputs
-	//
+	P2vehicle->ApplyEngineForce(acceleration);
+	P2vehicle->Turn(turn);
+	P2vehicle->Brake(brake);
 
-	vehicle->ApplyEngineForce(acceleration);
-	vehicle->Turn(turn);
-	vehicle->Brake(brake);
-
-	/*vehicle2->ApplyEngineForce(acceleration);					//Hive Mind Version.
-	vehicle2->Turn(turn);
-	vehicle2->Brake(brake);*/
-
-	vehicle->Render();
-	//vehicle2->Render();
+	P2vehicle->Render();
 
 	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
+	sprintf_s(title, "%.1f Km/h", P2vehicle->GetKmh());
 	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;

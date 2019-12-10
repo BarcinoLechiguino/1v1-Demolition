@@ -7,14 +7,15 @@
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
-	window = new ModuleWindow(this);
-	input = new ModuleInput(this);
-	audio = new ModuleAudio(this);
-	scene_intro = new ModuleSceneIntro(this);
-	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
-	physics = new ModulePhysics3D(this);
-	player = new ModulePlayer(this);
+	window			= new ModuleWindow(this);
+	input			= new ModuleInput(this);
+	audio			= new ModuleAudio(this);
+	scene_intro		= new ModuleSceneIntro(this);
+	renderer3D		= new ModuleRenderer3D(this);
+	camera			= new ModuleCamera3D(this);
+	physics			= new ModulePhysics3D(this);
+	player			= new ModulePlayer(this);
+	player2			= new ModulePlayer2(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -30,6 +31,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(player);
+	AddModule(player2);
 
 	// Renderer last!
 	AddModule(renderer3D);
