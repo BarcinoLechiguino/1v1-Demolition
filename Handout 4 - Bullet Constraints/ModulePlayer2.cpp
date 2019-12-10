@@ -117,7 +117,14 @@ update_status ModulePlayer2::Update(float dt)
 	//------------------------------------------- PLAYER 2 INPUTS -------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_KP_8) == KEY_REPEAT)
 	{
-		acceleration = MAX_ACCELERATION;
+		if (P2vehicle->GetKmh() >= 0.0f)
+		{
+			acceleration = MAX_ACCELERATION;
+		}
+		else
+		{
+			brake = BRAKE_POWER;
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_KP_4) == KEY_REPEAT)
@@ -146,15 +153,20 @@ update_status ModulePlayer2::Update(float dt)
 		}
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
+	{
+
+	}
+
 	P2vehicle->ApplyEngineForce(acceleration);
 	P2vehicle->Turn(turn);
 	P2vehicle->Brake(brake);
 
 	P2vehicle->Render();
 
-	char title[80];
+	/*char title[80];
 	sprintf_s(title, "%.1f Km/h", P2vehicle->GetKmh());
-	App->window->SetTitle(title);
+	App->window->SetTitle(title);*/
 
 	return UPDATE_CONTINUE;
 }

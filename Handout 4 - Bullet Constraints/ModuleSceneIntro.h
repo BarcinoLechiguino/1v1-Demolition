@@ -42,9 +42,13 @@ public:
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
 
+	void DebugSpawnPrimitive(Primitive* p);					//Temporal. Just to check that the vehicle input work.
+
+	p2DynArray<Primitive*> primitives;						//Temporal. Just to check that the  vehicle throw item method works. Maybe create an AddPrimitive method.
+
 private:
 	void HandleDebugInput();
-	void DebugSpawnPrimitive(Primitive* p);
+	//void DebugSpawnPrimitive(Primitive* p);
 
-	p2DynArray<Primitive*> primitives;
+	//p2DynArray<Primitive*> primitives;
 };

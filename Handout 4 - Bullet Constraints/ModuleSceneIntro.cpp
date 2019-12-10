@@ -21,8 +21,8 @@ bool ModuleSceneIntro::Start()
 
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
-	//App->camera->LookAt(App->player->vehicle->GetTransform());
 
+	//App->camera->LookAt(App->player->vehicle->GetTransform());
 	/*vec3 vehiclePos;
 	App->player->vehicle->GetPos(vehiclePos);
 	

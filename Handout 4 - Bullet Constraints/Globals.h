@@ -38,6 +38,11 @@ enum update_status
 #define VSYNC true
 #define TITLE "3D Physics Playground"
 
+// Player Vehicles Movement Variables --------------------
+#define MAX_ACCELERATION 1250.0f
+#define TURN_DEGREES 20.0f * DEGTORAD
+#define BRAKE_POWER 1250.0f
+
 class Application;
 
 extern Application* App;

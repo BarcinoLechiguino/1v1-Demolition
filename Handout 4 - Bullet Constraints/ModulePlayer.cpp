@@ -1,9 +1,11 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePlayer.h"
+#include "ModulePlayer2.h"
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
+#include "ModuleSceneIntro.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
@@ -119,7 +121,14 @@ update_status ModulePlayer::Update(float dt)
 	//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
 	{																		//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode).
-		acceleration = MAX_ACCELERATION;
+		if (vehicle->GetKmh() >= 0.0f)
+		{
+			acceleration = MAX_ACCELERATION;
+		}
+		else
+		{
+			brake = BRAKE_POWER;
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
@@ -148,6 +157,12 @@ update_status ModulePlayer::Update(float dt)
 		}
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
+		SpawnThrowableItem(new Sphere());
+	}
+
 	//Player 2 Inputs
 	//
 
@@ -163,8 +178,23 @@ update_status ModulePlayer::Update(float dt)
 	//vehicle2->Render();
 
 	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
+	sprintf_s(title, "P1 Speed: %.1f Km/h / P2 Speed: %.1f Km/h", 
+		vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());			//Temporal measure to show both vehicles Km/h.
 	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
+}
+
+void ModulePlayer::SpawnThrowableItem(Primitive* p)
+{
+	App->scene_intro->primitives.PushBack(p);
+	//p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	//p->SetPos(vehicle->parentPrimitive->transform.translation().x, vehicle->parentPrimitive->transform.translation().y, vehicle->parentPrimitive->transform.translation().z);
+	
+	//vec3 transform = vehicle->GetTransform();
+
+	p->SetPos(1 , vehicle->parentPrimitive->transform.translation().y, vehicle->parentPrimitive->transform.translation().z);
+
+	p->body.collision_listeners.add(this);
+	p->body.Push(-App->camera->Z * 1000.f);
 }

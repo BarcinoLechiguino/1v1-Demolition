@@ -236,9 +236,9 @@ void Cylinder::SetHeight(const float newHeight)			//REVISE THIS. Check both the 
 void Cylinder::InnerRender() const
 {
 	glPushMatrix();
-	mat4x4 rotateMat = IdentityMatrix;
+	/*mat4x4 rotateMat = IdentityMatrix;
 	rotateMat.rotate(90.f, vec3(0, 0, 1));
-	glMultMatrixf(&rotateMat);
+	glMultMatrixf(&rotateMat);*/
 
 	int n = 30;
 
