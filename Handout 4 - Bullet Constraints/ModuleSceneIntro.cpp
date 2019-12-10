@@ -166,6 +166,23 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
+	vec3 vehiclePos = App->player->vehicle->GetPos();
+	vec3 vehicle2Pos = App->player2->P2vehicle->GetPos();
+
+	vec3 midPos = {
+		(vehiclePos.x + vehicle2Pos.x) / 2,
+		0,
+		(vehiclePos.z + vehicle2Pos.z) / 2
+	};
+
+	//App->camera->Position = (vec3(vehiclePos.x, 50, vehiclePos.z));			//Changes both the camera position and its reference point. Set Move to match the vehicle.
+	App->camera->Position = (vec3(midPos.x, 50, midPos.z));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
+	//App->camera->LookAt(vehiclePos);
+	App->camera->LookAt(vec3(0, 0, 0));
+
+	LOG("Vehicle pos (%f %f %f)", vehiclePos.x, vehiclePos.y, vehiclePos.z);
+	LOG("Camera pos: (%f %f %f)", App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	
 	if (App->debug == true)
 		HandleDebugInput();
 

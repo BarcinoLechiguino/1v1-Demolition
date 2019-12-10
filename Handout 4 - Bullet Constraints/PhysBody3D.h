@@ -34,7 +34,7 @@ public:
 	//void GetPos(vec3 position);						//Temporal measure (?). Used to get a vehicle's position.
 	//void GetPos(vec3 position);						//Temporal measure (?). Used to get a vehicle's position.
 	//void GetPos(btVector3 position);					//Temporal measure (?). Used to get a vehicle's position.
-	//vec3 GetPos() const;								//Temporal measure (?). Used to get a vehicle's position.
+	vec3 GetPos() const;								//Temporal measure (?). Used to get a vehicle's position.
 
 	void SetSpeed(vec3 speed);
 	void Push(vec3 force);

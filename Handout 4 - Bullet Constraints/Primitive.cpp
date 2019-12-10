@@ -111,7 +111,7 @@ void Primitive::Scale(float x, float y, float z)
 }
 
 // CUBE ============================================
-//Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
+//Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)		//REVISE THIS here
 //{
 //	type = PrimitiveTypes::Primitive_Cube;
 //}

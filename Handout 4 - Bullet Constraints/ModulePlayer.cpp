@@ -23,15 +23,15 @@ bool ModulePlayer::Start()
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(2, 2, 4);			//._______________.
-	car.chassis_offset.Set(0, 1.5, 0);
-	car.mass = 500.0f;						//FV
-	car.suspensionStiffness = 15.88f;
-	car.suspensionCompression = 0.83f;
-	car.suspensionDamping = 0.88f;
-	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 50.5;
-	car.maxSuspensionForce = 6000.0f;
+	car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
+	car.chassis_offset.Set(0, 1.5, 0);		//(0, 1.5, 0)
+	car.mass = 500.0f;						//500.0f		//FV
+	car.suspensionStiffness = 150.88f;		//15.88f
+	car.suspensionCompression = 0.83f;		//0.83f
+	car.suspensionDamping = 10.0f;			//0.88f
+	car.maxSuspensionTravelCm = 1000.0f;	//1000.0f
+	car.frictionSlip = 50.5f;				//50.5f
+	car.maxSuspensionForce = 6000.0f;		//6000.0f
 
 	// Wheel properties ---------------------------------------
 	float connection_height = 1.2f;
