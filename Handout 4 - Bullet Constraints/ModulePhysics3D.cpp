@@ -60,6 +60,7 @@ bool ModulePhysics3D::Start()
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
 	world->setDebugDrawer(debug_draw);
 	world->setGravity(GRAVITY);
+	vehicle_raycaster = new btDefaultVehicleRaycaster(world);								//Without this stepSimulation crashes. It sends an reading access error because m_dynamicsWorld cannot be read as it has not been allocated/set (is nullptr).
 
 	// Big rectangle as ground
 	{
@@ -205,8 +206,6 @@ bool ModulePhysics3D::CleanUp()
 	vehicles.clear();
 
 	delete vehicle_raycaster;
-	delete world;
-
 	delete world;
 
 	return true;

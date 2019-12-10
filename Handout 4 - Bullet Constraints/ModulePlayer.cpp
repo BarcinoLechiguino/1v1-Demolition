@@ -95,9 +95,9 @@ bool ModulePlayer::Start()
 	car.wheels[3].brake = true;
 	car.wheels[3].steering = false;
 
-	//vehicle = App->physics->AddVehicle(car);
+	vehicle = App->physics->AddVehicle(car);
 	//vehicle2 = App->physics->AddVehicle(car);
-	//vehicle->SetPos(0, 12, 10);
+	vehicle->SetPos(0, 12, 10);
 	//vehicle2->SetPos(0, 12, 15);
 
 	return true;
@@ -136,20 +136,25 @@ update_status ModulePlayer::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		brake = BRAKE_POWER;
+
+		if (vehicle->GetKmh())
+		{
+
+		}
 	}
 
 	//Player 2 Inputs
 	//
 
-	//vehicle->ApplyEngineForce(acceleration);
-	//vehicle->Turn(turn);
-	//vehicle->Brake(brake);
+	vehicle->ApplyEngineForce(acceleration);
+	vehicle->Turn(turn);
+	vehicle->Brake(brake);
 
-	//vehicle->Render();
+	vehicle->Render();
 
 	char title[80];
-	//sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
-	//App->window->SetTitle(title);
+	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
+	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
 }
