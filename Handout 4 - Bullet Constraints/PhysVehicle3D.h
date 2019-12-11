@@ -26,6 +26,31 @@ struct VehicleInfo
 
 	vec3 chassis_size;
 	vec3 chassis_offset;
+	vec3 cabin_size;
+	vec3 cabin_offset;
+	vec3 L_spoiler_foot_size;
+	vec3 L_spoiler_foot_offset;
+	vec3 R_spoiler_foot_size;
+	vec3 R_spoiler_foot_offset;
+	vec3 spoiler_size;
+	vec3 spoiler_offset;
+	vec3 front_size;
+	vec3 front_offset;
+	vec3 front2_size;
+	vec3 front2_offset;
+	vec3 back_size;
+	vec3 back_offset;
+	vec3 R_size;
+	vec3 R_offset;
+	vec3 L_size;
+	vec3 L_offset;
+	vec3 L_light_size;
+	vec3 L_light_offset;
+	vec3 R_light_size;
+	vec3 R_light_offset;
+	vec3 neon_size;
+	vec3 neon_offset;
+
 	float mass;
 	float suspensionStiffness;		// default to 5.88 / 10.0 offroad / 50.0 sports car / 200.0 F1 car
 	float suspensionCompression;	// default to 0.83
