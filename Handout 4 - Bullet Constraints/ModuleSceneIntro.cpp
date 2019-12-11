@@ -230,6 +230,18 @@ float ModuleSceneIntro::GetZoom() const
 
 	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
 
+	if (P1_position.x < 10)
+	{
+		P1_position.x = P2_position.x;
+		//P1_position.x = P1_position.z;
+	}
+
+	if (P2_position.x < 10)
+	{
+		P2_position.x = P1_position.x;
+		//P2_position.x = P2_position.z;
+	}
+
 	float posX = P1_position.x * P2_position.x;
 	float posZ = P1_position.z * P2_position.z;
 
