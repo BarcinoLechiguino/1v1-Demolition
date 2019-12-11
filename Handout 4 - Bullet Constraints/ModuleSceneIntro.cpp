@@ -166,30 +166,25 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	vec3 vehiclePos = App->player->vehicle->GetPos();
-	vec3 vehicle2Pos = App->player2->P2vehicle->GetPos();
+	vec3 P1_position = App->player->vehicle->GetPos();								//Gets the current position of Player 1.
+	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
 
-	vec3 midPos = {
-		(vehiclePos.x + vehicle2Pos.x) / 2,
-		0,
-		(vehiclePos.z + vehicle2Pos.z) / 2
+	vec3 midPos = {																	//Position vector that is set to be at the center poisition of both players.
+		(P1_position.x + P2_position.x) * HALF,										//MidPos in the X axis.
+		0,																			//MidPos in the Y axis.
+		(P1_position.z + P2_position.z) * HALF										//MidPos in the Z axis.
 	};
 
-	vec3 lookAtMidPos = {
-		(vehiclePos.x + vehicle2Pos.x) / 2,
-		0,//(vehiclePos.y + vehicle2Pos.y) / 2,
-		(vehiclePos.z + vehicle2Pos.z) / 2
-	};
+	vec3 avgRefPoint = (P1_position + P2_position) * HALF;							//Calculates the position of the point of reference of the camera. Set to be at the center of both players.
 
-	vec3 average = (App->player->vehicle->GetPos() + App->player2->P2vehicle->GetPos()) /*/ 2*/;
+	if (!App->debug)
+	{
+		App->camera->Position = (vec3(midPos.x + CAM_OFFSET, 100, midPos.z));			//Changes both the camera position and its reference point. Set Move to match the vehicle.
+		App->camera->LookAt(avgRefPoint);												//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
+	}
 
-	//App->camera->Position = (vec3(vehiclePos.x + 10, 50, vehiclePos.z));			//Changes both the camera position and its reference point. Set Move to match the vehicle.
-	App->camera->Position = (vec3(midPos.x, 100, midPos.z));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
-	//App->camera->LookAt(vec3(App->player->vehicle->GetPos().x, 0, App->player->vehicle->GetPos().z));
-	App->camera->LookAt(average);													//LookAt cannot look  at the same position the camera is.
-
-	LOG("Vehicle pos (%f %f %f)", vehiclePos.x, vehiclePos.y, vehiclePos.z);
-	LOG("Camera pos: (%f %f %f)", App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	//LOG("Vehicle pos (%f %f %f)", P1_position.x, P1_position.y, P1_position.z);
+	//LOG("Camera pos: (%f %f %f)", App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 	
 	if (App->debug == true)
 		HandleDebugInput();
