@@ -7,7 +7,7 @@
 #include "PhysBody3D.h"
 #include "ModuleSceneIntro.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
+ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), P1vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
 }
@@ -20,7 +20,7 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	VehicleInfo car;
+	//VehicleInfo car;
 
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
@@ -97,9 +97,9 @@ bool ModulePlayer::Start()
 	car.wheels[3].brake = true;
 	car.wheels[3].steering = false;
 
-	vehicle = App->physics->AddVehicle(car);
+	P1vehicle = App->physics->AddVehicle(car);
 	//vehicle2 = App->physics->AddVehicle(car);					//Hive Mind Version (1 player controls 2 Cars and need to do tasks).
-	vehicle->SetPos(0, 12, 10);
+	P1vehicle->SetPos(0, 12, 10);
 	//vehicle2->SetPos(0, 12, 15);
 
 	return true;
@@ -121,7 +121,7 @@ update_status ModulePlayer::Update(float dt)
 	//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
 	{																		//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode).
-		if (vehicle->GetKmh() >= 0.0f)
+		if (P1vehicle->GetKmh() >= 0.0f)
 		{
 			acceleration = MAX_ACCELERATION;
 		}
@@ -147,7 +147,7 @@ update_status ModulePlayer::Update(float dt)
 	{
 		//brake = BRAKE_POWER;
 
-		if (vehicle->GetKmh() <= 0.0f)
+		if (P1vehicle->GetKmh() <= 0.0f)
 		{
 			acceleration -= MAX_ACCELERATION;
 		}
@@ -163,23 +163,25 @@ update_status ModulePlayer::Update(float dt)
 		//SpawnThrowableItem(new Sphere());
 	}
 
-	//Player 2 Inputs
-	//
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		RestartPlayer1(vec3(0, 12, 10));
+	}
 
-	vehicle->ApplyEngineForce(acceleration);
-	vehicle->Turn(turn);
-	vehicle->Brake(brake);
+	P1vehicle->ApplyEngineForce(acceleration);
+	P1vehicle->Turn(turn);
+	P1vehicle->Brake(brake);
 
-	/*vehicle2->ApplyEngineForce(acceleration);					//Hive Mind Version.
+	/*vehicle2->ApplyEngineForce(acceleration);								//Hive Mind Version.
 	vehicle2->Turn(turn);
 	vehicle2->Brake(brake);*/
 
-	vehicle->Render();
+	P1vehicle->Render();
 	//vehicle2->Render();
 
 	char title[80];
 	sprintf_s(title, "P1 Speed: %.1f Km/h / P2 Speed: %.1f Km/h", 
-		vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());			//Temporal measure to show both vehicles Km/h.
+		P1vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());			//Temporal measure to show both vehicles Km/h.
 	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
@@ -193,8 +195,21 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	
 	//vec3 transform = vehicle->GetTransform();
 
-	p->SetPos(vehicle->GetPos().x, vehicle->GetPos().y, vehicle->GetPos().z);
+	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y, P1vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
 	p->body.Push(-App->camera->Z * 1000.f);
+}
+
+void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
+{
+	/*delete P1vehicle;
+	P1vehicle = App->physics->AddVehicle(car);*/
+
+	P1vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
+	P1vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
+	P1vehicle->vehicle->getRigidBody()->setAngularVelocity(btVector3(0, 0, 0));		//Resets the vehicle's angular velocity (turn).
+
+	P1vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
+	P1vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
 }

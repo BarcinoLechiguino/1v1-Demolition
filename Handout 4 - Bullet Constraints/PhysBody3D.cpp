@@ -74,6 +74,16 @@ void PhysBody3D::SetTransform(const float* matrix) const
 }
 
 // ---------------------------------------------------------
+void PhysBody3D::ResetTransform() const
+{
+	mat4x4 matrix = IdentityMatrix;
+	btTransform transform;
+	transform.setFromOpenGLMatrix(&matrix);
+
+	body->setWorldTransform(transform);								//Set transform to its original/identity position, (1, 1, 1).
+}
+
+// ---------------------------------------------------------
 void PhysBody3D::SetPos(float x, float y, float z)
 {
 	if (HasBody() == false)

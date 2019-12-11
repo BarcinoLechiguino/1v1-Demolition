@@ -166,7 +166,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	vec3 P1_position = App->player->vehicle->GetPos();								//Gets the current position of Player 1.
+	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
 	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
 
 	vec3 midPos = {																	//Position vector that is set to be at the center poisition of both players.
@@ -175,12 +175,20 @@ update_status ModuleSceneIntro::Update(float dt)
 		(P1_position.z + P2_position.z) * HALF										//MidPos in the Z axis.
 	};
 
-	vec3 avgRefPoint = (P1_position + P2_position) * HALF;							//Calculates the position of the point of reference of the camera. Set to be at the center of both players.
+	float camZoom = GetZoom();
 
-	if (!App->debug)
+	vec3 avgPosition = { midPos.x + CAM_OFFSET, camZoom, midPos.z };
+	vec3 avgRefPoint = { (P1_position + P2_position) * HALF };						//Calculates the position of the point of reference of the camera. Set to be at the center of both players.
+
+	vec3 cameraPosition = { App->camera->Position.x, App->camera->Position.y, App->camera->Position.z };
+	
+	if (!App->debug)																//If debug mode is on, the camera is freed and can be controlled with the mouse.
 	{
-		App->camera->Position = (vec3(midPos.x + CAM_OFFSET, 100, midPos.z));			//Changes both the camera position and its reference point. Set Move to match the vehicle.
-		App->camera->LookAt(avgRefPoint);												//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
+		App->camera->Position = (avgPosition);									//Changes both the camera position and its reference point. Set Move to match the vehicle. OFFSET on x --> Horizontal, OFFSET on z --> Vertical.
+
+		//LerpCamera(cameraPosition, avgPosition);
+		
+		App->camera->LookAt(avgRefPoint);											//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
 	}
 
 	//LOG("Vehicle pos (%f %f %f)", P1_position.x, P1_position.y, P1_position.z);
@@ -212,4 +220,59 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	body1->parentPrimitive->color = color;
 	body2->parentPrimitive->color = color;
 
+}
+
+//Gets the amount of zoom required taking into account the distance between players (ratio).
+float ModuleSceneIntro::GetZoom() const
+{
+	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
+	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
+
+	float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
+
+	//LOG("Distance %.2f: ", distanceNoSqrt);
+
+	//Zoom Limits
+	if (distanceNoSqrt < 0)
+	{
+		distanceNoSqrt = distanceNoSqrt * (-1);
+	}
+
+	if (distanceNoSqrt < 500)
+	{
+		distanceNoSqrt = 500;
+	}
+
+	if (distanceNoSqrt > 2000)
+	{
+		distanceNoSqrt = 2000;
+	}
+
+	float cameraZoom = distanceNoSqrt * 0.1f;
+
+	return cameraZoom;
+}
+
+float ModuleSceneIntro::GetLerpSpeed(vec3 position, vec3 target, float speed) const
+{
+	float pos = sqrt(position.x * position.x + position.y * position.y + position.z * position.z);
+
+	float posTarget = sqrt(target.x * target.x + target.y * target.y + target.z * target.z);
+
+	float lerpSpeed = (posTarget - pos) * speed;
+
+	return lerpSpeed;
+	//return pos + lerpSpeed;
+}
+
+void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition)
+{
+	if (App->camera->Position.x < targetPosition.x && App->camera->Position.z < targetPosition.z);
+	{
+		App->camera->Position += GetLerpSpeed(cameraPosition, targetPosition, 0.025f);
+	}
+	if (App->camera->Position.x > targetPosition.x && App->camera->Position.z > targetPosition.z)
+	{
+		App->camera->Position -= GetLerpSpeed(cameraPosition, targetPosition, 0.025f);
+	}
 }
