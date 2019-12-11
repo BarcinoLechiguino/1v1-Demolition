@@ -160,7 +160,7 @@ update_status ModulePlayer::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
-		SpawnThrowableItem(new Sphere());
+		//SpawnThrowableItem(new Sphere());
 	}
 
 	//Player 2 Inputs
@@ -193,7 +193,7 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	
 	//vec3 transform = vehicle->GetTransform();
 
-	p->SetPos(1 , vehicle->parentPrimitive->transform.translation().y, vehicle->parentPrimitive->transform.translation().z);
+	p->SetPos(vehicle->GetPos().x, vehicle->GetPos().y, vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
 	p->body.Push(-App->camera->Z * 1000.f);
