@@ -161,7 +161,7 @@ update_status ModulePlayer::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
-		//SpawnThrowableItem(new Sphere());
+		SpawnThrowableItem(new Sphere());
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
@@ -191,15 +191,16 @@ update_status ModulePlayer::Update(float dt)
 void ModulePlayer::SpawnThrowableItem(Primitive* p)
 {
 	App->scene_intro->primitives.PushBack(p);
-	//p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-	//p->SetPos(vehicle->parentPrimitive->transform.translation().x, vehicle->parentPrimitive->transform.translation().y, vehicle->parentPrimitive->transform.translation().z);
 	
-	//vec3 transform = vehicle->GetTransform();
+	vec3 position = App->player->P1vehicle->GetPos();
+	
+	btVector3 buffer = P1vehicle->vehicle->getForwardVector();
+	vec3 direction = { buffer.getX(), buffer.getY(), buffer.getZ() };
 
-	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y, P1vehicle->GetPos().z);
+	p->SetPos(position.x, position.y + 2, position.z + 2);
 
 	p->body.collision_listeners.add(this);
-	p->body.Push(-App->camera->Z * 1000.f);
+	p->body.Push(direction.z * 1000.f);
 }
 
 void ModulePlayer::RestartPlayer1(vec3 respawnPosition)

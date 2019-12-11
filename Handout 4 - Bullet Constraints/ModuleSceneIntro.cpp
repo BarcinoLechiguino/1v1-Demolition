@@ -190,9 +190,6 @@ update_status ModuleSceneIntro::Update(float dt)
 		
 		App->camera->LookAt(avgRefPoint);											//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
 	}
-
-	//LOG("Vehicle pos (%f %f %f)", P1_position.x, P1_position.y, P1_position.z);
-	//LOG("Camera pos: (%f %f %f)", App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 	
 	if (App->debug == true)
 		HandleDebugInput();
@@ -225,84 +222,38 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 //Gets the amount of zoom required taking into account the distance between players (ratio).
 float ModuleSceneIntro::GetZoom() const
 {
-	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
-	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
+	vec3 P1_position = App->player->P1vehicle->GetPos();				//Gets the current position of Player 1.
+	vec3 P2_position = App->player2->P2vehicle->GetPos();				//Gets the current position of Player 2.
 
-	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
+	float posX = P1_position.x - P2_position.x;							//Calculates the average position for the X axis.
+	float posZ = P1_position.z - P2_position.z;							//Calculates the average position for the Z axis.
 
-	LOG("Position x %.2f: ", P1_position.x);
-	LOG("Position z %.2f: ", P1_position.z);
+	LOG("PosX: (%.2f, %2.f)", P1_position.x, P2_position.x);
 
-	if (P1_position.x < 10)
+	if (posX < 0)														//If the average of X is negative
 	{
-		//P1_position.x = P2_position.x;
-		P1_position.x = P1_position.z;
+		posX = posX * (-1);												//Change the average to positive.
 	}
 
-	if (P2_position.x < 10)
+	if (posZ < 0)														//If the average of Z is negative
 	{
-		//P2_position.x = P1_position.x;
-		P2_position.x = P2_position.z;
-	}
-	
-	/*if (P1_position.z < 10)
-	{
-		P1_position.z = P1_position.x;
+		posZ = posZ * (-1);												//Change the average to negative.
 	}
 
-	if (P2_position.z < 10)
-	{
-		P2_position.z = P2_position.x;
-	}*/
+	float distance = posX + posZ;										//Calculates the distance between both players.
 
-	float posX = P1_position.x * P2_position.x;
-	float posZ = P1_position.z * P2_position.z;
+	float cameraZoom = distance /** 0.1f*/;								//Assigns distance to cameraZoom so the amount of zoom is related to the distance between the players.
 
-	if (posX < 0)
+	LOG("Camera Zoom %.2f", cameraZoom);
+
+	if (cameraZoom < 60)												//If the zoom value is lower than 60 (Màximum zoom possible)
 	{
-		posX = posX * (-1);
+		cameraZoom = 60;												//Set the zoom (and consequently the camera pos in the Y axis) to 60.
 	}
 
-	if (posZ < 0)
+	if (cameraZoom > 150)												//If the zoom value is higher than 150 (Mìnimum zoom possible)
 	{
-		posZ = posZ * (-1);
-	}
-
-	float distanceNoSqrt = posX + posZ;
-
-	//LOG("Distance %.2f: ", distanceNoSqrt);
-
-	//Zoom Limits
-	/*if (distanceNoSqrt < 0)
-	{
-		distanceNoSqrt = distanceNoSqrt * (-1);
-	}*/
-
-	/*if (distanceNoSqrt < 500)
-	{
-		distanceNoSqrt = 500;
-	}*/
-
-	/*if (distanceNoSqrt > 2000)
-	{
-		distanceNoSqrt = 2000;
-	}*/
-
-	float cameraZoom = distanceNoSqrt * 0.1f;
-
-	if (cameraZoom < 0)
-	{
-		cameraZoom = cameraZoom * (-1);
-	}
-
-	if (cameraZoom < 50)
-	{
-		cameraZoom = 50;
-	}
-
-	if (cameraZoom > 200)
-	{
-		cameraZoom = 200;
+		cameraZoom = 150;												//Sets the zoom (and consequently the camera pos in the Y axis) to 100.
 	}
 
 	return cameraZoom;

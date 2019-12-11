@@ -95,7 +95,7 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->activate();
 }
 
-vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
+vec3 PhysBody3D::GetPos() const
 {
 	if (HasBody() == false)
 		return vec3(0, 0, 0);
@@ -103,24 +103,10 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 	btTransform trans = body->getWorldTransform();
 	btVector3 buffer = trans.getOrigin();
 
-	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};
-	
-	//LOG("Pos (%.2f %.2f %.2f)", buffer.getX(), buffer.getY(), buffer.getZ());
+	vec3 position = { buffer.getX(), buffer.getY(), buffer.getZ() };
 
 	return position;
 }
-
-//void PhysBody3D::GetPos(vec3 position)
-//{
-//	if (HasBody() == false)
-//		return;
-//
-//	btTransform trans = body->getWorldTransform();
-//	btVector3 pos = { position.x, position.y, position.z };
-//	pos = trans.getOrigin();
-//
-//	position = {pos.x, pos.y, pos.z};
-//}
 
 void PhysBody3D::SetSpeed(vec3 speed)
 {
