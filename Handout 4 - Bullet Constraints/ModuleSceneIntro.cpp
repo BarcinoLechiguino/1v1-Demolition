@@ -228,7 +228,22 @@ float ModuleSceneIntro::GetZoom() const
 	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
 	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
 
-	float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
+	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
+
+	float posX = P1_position.x * P2_position.x;
+	float posZ = P1_position.z * P2_position.z;
+
+	if (posX < 0)
+	{
+		posX = posX * (-1);
+	}
+
+	if (posZ < 0)
+	{
+		posZ = posZ * (-1);
+	}
+
+	float distanceNoSqrt = posX + posZ;
 
 	//LOG("Distance %.2f: ", distanceNoSqrt);
 
