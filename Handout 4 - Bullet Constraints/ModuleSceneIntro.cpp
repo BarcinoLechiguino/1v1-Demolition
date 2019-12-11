@@ -233,22 +233,37 @@ float ModuleSceneIntro::GetZoom() const
 	//LOG("Distance %.2f: ", distanceNoSqrt);
 
 	//Zoom Limits
-	if (distanceNoSqrt < 0)
+	/*if (distanceNoSqrt < 0)
 	{
 		distanceNoSqrt = distanceNoSqrt * (-1);
-	}
+	}*/
 
-	if (distanceNoSqrt < 500)
+	/*if (distanceNoSqrt < 500)
 	{
 		distanceNoSqrt = 500;
-	}
+	}*/
 
-	if (distanceNoSqrt > 2000)
+	/*if (distanceNoSqrt > 2000)
 	{
 		distanceNoSqrt = 2000;
-	}
+	}*/
 
 	float cameraZoom = distanceNoSqrt * 0.1f;
+
+	if (cameraZoom < 0)
+	{
+		cameraZoom = cameraZoom * (-1);
+	}
+
+	if (cameraZoom < 50)
+	{
+		cameraZoom = 50;
+	}
+
+	if (cameraZoom > 200)
+	{
+		cameraZoom = 200;
+	}
 
 	return cameraZoom;
 }

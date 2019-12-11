@@ -178,8 +178,8 @@ update_status ModulePlayer2::Update(float dt)
 
 void ModulePlayer2::RestartPlayer2(vec3 respawnPosition)
 {
-	/*delete P1vehicle;
-	P1vehicle = App->physics->AddVehicle(car);*/
+	/*delete P2vehicle;
+	P2vehicle = App->physics->AddVehicle(car);*/
 	
 	P2vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
 	P2vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).

@@ -98,8 +98,9 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	P1vehicle = App->physics->AddVehicle(car);
-	//vehicle2 = App->physics->AddVehicle(car);					//Hive Mind Version (1 player controls 2 Cars and need to do tasks).
 	P1vehicle->SetPos(0, 12, 10);
+
+	//vehicle2 = App->physics->AddVehicle(car);					//Hive Mind Version (1 player controls 2 Cars and need to do tasks).
 	//vehicle2->SetPos(0, 12, 15);
 
 	return true;
@@ -203,8 +204,8 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 
 void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 {
-	/*delete P1vehicle;
-	P1vehicle = App->physics->AddVehicle(car);*/
+	//delete P1vehicle;
+	//P1vehicle = App->physics->AddVehicle(car);
 
 	P1vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
 	P1vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
