@@ -259,6 +259,44 @@ float ModuleSceneIntro::GetZoom() const
 	if (posZ < 0)
 	{
 		posZ = posZ * (-1);
+
+	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
+
+	LOG("Position x %.2f: ", P1_position.x);
+	LOG("Position z %.2f: ", P1_position.z);
+
+	{
+		//P1_position.x = P2_position.x;
+		P1_position.x = P1_position.z;
+	}
+
+	if (P2_position.x < 10)
+	{
+		//P2_position.x = P1_position.x;
+		P2_position.x = P2_position.z;
+	}
+	
+	/*if (P1_position.z < 10)
+	{
+		P1_position.z = P1_position.x;
+	}
+
+	if (P2_position.z < 10)
+	{
+		P2_position.z = P2_position.x;
+	}*/
+
+	float posX = P1_position.x * P2_position.x;
+	float posZ = P1_position.z * P2_position.z;
+
+	if (posX < 0)
+	{
+		posX = posX * (-1);
+	}
+
+	if (posZ < 0)
+	{
+		posZ = posZ * (-1);
 	}
 
 	float distanceNoSqrt = posX + posZ;
@@ -283,6 +321,20 @@ float ModuleSceneIntro::GetZoom() const
 
 	float cameraZoom = distanceNoSqrt * 0.1f;
 
+	if (cameraZoom < 0)
+	{
+		cameraZoom = cameraZoom * (-1);
+	}
+
+	if (cameraZoom < 50)
+	{
+		cameraZoom = 50;
+	}
+
+	if (cameraZoom > 200)
+	{
+		cameraZoom = 200;
+	}
 
 	return cameraZoom;
 }
