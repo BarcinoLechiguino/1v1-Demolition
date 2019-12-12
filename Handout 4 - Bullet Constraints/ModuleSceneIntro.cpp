@@ -223,7 +223,6 @@ float ModuleSceneIntro::GetZoom() const
 
 	LOG("Position x %.2f: ", P1_position.x);
 	LOG("Position z %.2f: ", P1_position.z);
-	 
 
 	if (P1_position.x < 10)
 	{
