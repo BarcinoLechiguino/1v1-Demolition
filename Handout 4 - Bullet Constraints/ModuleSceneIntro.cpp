@@ -223,7 +223,7 @@ float ModuleSceneIntro::GetZoom() const
 
 	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
 
-	LOG("Position x %.2f: ", P1_position.x);
+	LOG("Position x %.2f: ", P1_position.x);								//haha
 	LOG("Position z %.2f: ", P1_position.z);
 
 	if (P1_position.x < 10)
