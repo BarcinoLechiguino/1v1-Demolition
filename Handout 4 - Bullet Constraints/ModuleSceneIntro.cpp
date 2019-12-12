@@ -220,8 +220,6 @@ float ModuleSceneIntro::GetZoom() const
 {
 	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
 	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
-<<<<<<< HEAD
-
 	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
 
 	LOG("Position x %.2f: ", P1_position.x);
@@ -237,7 +235,6 @@ float ModuleSceneIntro::GetZoom() const
 	{
 		//P2_position.x = P1_position.x;
 		P2_position.x = P2_position.z;
-=======
 
 	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
 
@@ -277,7 +274,6 @@ float ModuleSceneIntro::GetZoom() const
 	if (posZ < 0)
 	{
 		posZ = posZ * (-1);
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 	}
 	
 	/*if (P1_position.z < 10)
@@ -290,7 +286,6 @@ float ModuleSceneIntro::GetZoom() const
 		P2_position.z = P2_position.x;
 	}*/
 
-<<<<<<< HEAD
 	float posX = P1_position.x * P2_position.x;
 	float posZ = P1_position.z * P2_position.z;
 
@@ -357,7 +352,68 @@ float ModuleSceneIntro::GetZoom() const
 
 	float cameraZoom = distanceNoSqrt * 0.1f;
 
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
+	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
+
+	LOG("Position x %.2f: ", P1_position.x);
+	LOG("Position z %.2f: ", P1_position.z);
+
+	if (P1_position.x < 10)
+	{
+		//P1_position.x = P2_position.x;
+		P1_position.x = P1_position.z;
+	}
+
+	if (P2_position.x < 10)
+	{
+		//P2_position.x = P1_position.x;
+		P2_position.x = P2_position.z;
+	}
+	
+	/*if (P1_position.z < 10)
+	{
+		P1_position.z = P1_position.x;
+	}
+
+	if (P2_position.z < 10)
+	{
+		P2_position.z = P2_position.x;
+	}*/
+
+	float posX = P1_position.x * P2_position.x;
+	float posZ = P1_position.z * P2_position.z;
+
+	if (posX < 0)
+	{
+		posX = posX * (-1);
+	}
+
+	if (posZ < 0)
+	{
+		posZ = posZ * (-1);
+	}
+
+	float distanceNoSqrt = posX + posZ;
+
+	//LOG("Distance %.2f: ", distanceNoSqrt);
+
+	//Zoom Limits
+	/*if (distanceNoSqrt < 0)
+	{
+		distanceNoSqrt = distanceNoSqrt * (-1);
+	}*/
+
+	/*if (distanceNoSqrt < 500)
+	{
+		distanceNoSqrt = 500;
+	}*/
+
+	/*if (distanceNoSqrt > 2000)
+	{
+		distanceNoSqrt = 2000;
+	}*/
+
+	float cameraZoom = distanceNoSqrt * 0.1f;
+
 	if (cameraZoom < 0)
 	{
 		cameraZoom = cameraZoom * (-1);
