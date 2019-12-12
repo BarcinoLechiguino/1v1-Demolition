@@ -190,24 +190,11 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	App->scene_intro->primitives.PushBack(p);
 	//p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 	//p->SetPos(vehicle->parentPrimitive->transform.translation().x, vehicle->parentPrimitive->transform.translation().y, vehicle->parentPrimitive->transform.translation().z);
-	
+
 	//vec3 transform = vehicle->GetTransform();
 
-	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y, P1vehicle->GetPos().z);
+	p->SetPos(vehicle->GetPos().x, vehicle->GetPos().y, vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
 	p->body.Push(-App->camera->Z * 1000.f);
-}
-
-void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
-{
-	//delete P1vehicle;
-	//P1vehicle = App->physics->AddVehicle(car);
-
-	P1vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
-	P1vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
-	P1vehicle->vehicle->getRigidBody()->setAngularVelocity(btVector3(0, 0, 0));		//Resets the vehicle's angular velocity (turn).
-
-	P1vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
-	P1vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
 }
