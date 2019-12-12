@@ -190,10 +190,10 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	App->scene_intro->primitives.PushBack(p);
 	//p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 	//p->SetPos(vehicle->parentPrimitive->transform.translation().x, vehicle->parentPrimitive->transform.translation().y, vehicle->parentPrimitive->transform.translation().z);
-
+	
 	//vec3 transform = vehicle->GetTransform();
 
-	p->SetPos(vehicle->GetPos().x, vehicle->GetPos().y, vehicle->GetPos().z);
+	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y, P1vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
 	p->body.Push(-App->camera->Z * 1000.f);
