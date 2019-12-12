@@ -5,9 +5,11 @@
 #include "PhysBody3D.h"
 #include "ModulePlayer.h"
 #include "PhysVehicle3D.h"
+#include "ModuleRenderer3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	//app->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);		//Setting the skybox's color from ModuleSceneIntro. Color white.
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -18,6 +20,8 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
+
+	//App->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);
 
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
@@ -215,8 +219,15 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 {
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
 
-	body1->parentPrimitive->color = color;
-	body2->parentPrimitive->color = color;
+	if (body1->parentPrimitive != nullptr)
+	{
+		body1->parentPrimitive->color = color;
+	}
+	
+	if (body2->parentPrimitive != nullptr)
+	{
+		body2->parentPrimitive->color = color;
+	}
 }
 
 //Gets the amount of zoom required taking into account the distance between players (ratio).
@@ -284,3 +295,20 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition)
 		App->camera->Position -= GetLerpSpeed(cameraPosition, targetPosition, 0.025f);
 	}
 }
+
+//void ModuleSceneIntro::SpawnThrowableItem(Primitive* p)
+//{
+//	primitives.PushBack(p);
+//
+//	App->player->P1vehicle->vehicle->getForwardVector().getZ();
+//
+//	btVector3 buffer = App->player->P1vehicle->vehicle->getForwardVector();
+//	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
+//
+//	vec3 playerPos = { App->player->P1vehicle->GetPos().x, App->player->P1vehicle->GetPos().y, App->player->P1vehicle->GetPos().z };
+//
+//	p->SetPos(playerPos.x, playerPos.y + 2, playerPos.z + 5);
+//
+//	p->body.collision_listeners.add(this);
+//	p->body.Push(-fwdVector.z * 1000.f);
+//}

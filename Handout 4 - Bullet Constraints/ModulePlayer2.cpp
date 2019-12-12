@@ -5,7 +5,10 @@
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 
-ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled), P2vehicle(NULL)
+ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled)
+, P2vehicle(NULL)
+, lives(3)
+, alive(true)
 {
 	turn = acceleration = brake = 0.0f;
 }
@@ -114,6 +117,120 @@ update_status ModulePlayer2::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
+	DriveInputsP2();
+
+	if (lives <= 0 || lives > 3)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
+	{
+		RestartPlayer2(vec3(5, 12, 10));
+	}
+	
+	if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
+	{
+		//App->scene_intro->SpawnThrowableItem(new Sphere());
+		SpawnThrowableItem(new Sphere());
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		RestartPlayer2(vec3(5, 12, 10));
+	}
+
+	P2vehicle->ApplyEngineForce(acceleration);
+	P2vehicle->Turn(turn);
+	P2vehicle->Brake(brake);
+
+	P2vehicle->Render();
+
+	/*char title[80];
+	sprintf_s(title, "%.1f Km/h", P2vehicle->GetKmh());
+	App->window->SetTitle(title);*/
+
+	return UPDATE_CONTINUE;
+}
+
+void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
+{
+	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
+
+	if (body1->parentPrimitive != nullptr)
+	{
+		body1->parentPrimitive->color = color;
+	}
+
+	if (body2->parentPrimitive != nullptr)
+	{
+		body2->parentPrimitive->color = color;
+	}
+
+	if (body1->GetBody() == App->player2->P2vehicle->GetBody())
+	{
+		if (App->player2->prevCollBody == NULL || App->player2->prevCollBody != body2->GetBody())
+		{
+			App->player2->lives--;
+
+			LOG("Return Player 2 Lives: %d", App->player2->lives);
+
+			App->player2->prevCollBody = body2->GetBody();
+		}
+	}
+
+	if (body2->GetBody() == App->player2->P2vehicle->GetBody())
+	{
+		if (App->player2->prevCollBody == NULL || App->player2->prevCollBody != body1->GetBody())
+		{
+			App->player2->lives--;
+
+			LOG("Return Player 2 Lives: %d", App->player2->lives);
+
+			App->player2->prevCollBody = body1->GetBody();
+		}
+
+		/*for (int i = 0; i < MAX_BODIES; i++)
+		{
+			if (&App->player2->prevCollBody[i] == NULL || &App->player2->prevCollBody[i] != body1->GetBody())
+			{
+				App->player2->lives--;
+
+				LOG("Return Player 2 Lives: %d", App->player2->lives);
+
+				App->player2->prevCollBody[i] = *body1->GetBody();
+			}
+		}*/
+	}
+}
+
+void ModulePlayer2::SpawnThrowableItem(Primitive* p)
+{
+	App->scene_intro->primitives.PushBack(p);
+
+	P2vehicle->vehicle->getForwardVector().getZ();
+
+	btVector3 buffer = P2vehicle->vehicle->getForwardVector();
+	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
+
+	p->SetPos(P2vehicle->GetPos().x, P2vehicle->GetPos().y + 2, P2vehicle->GetPos().z + 5);
+
+	p->body.collision_listeners.add(App->player);									//listener set to Player 1 so the collision is detected by Player 1's OnCollision() method.
+	p->body.Push(-fwdVector.z * 1000.f);
+}
+
+void ModulePlayer2::RestartPlayer2(vec3 respawnPosition)
+{
+	//delete P1vehicle;
+	//P1vehicle = App->physics->AddVehicle(car);
+
+	P2vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
+	P2vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
+	P2vehicle->vehicle->getRigidBody()->setAngularVelocity(btVector3(0, 0, 0));		//Resets the vehicle's angular velocity (turn).
+
+	P2vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
+	P2vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
+
+	lives = 3;
+}
+
+void ModulePlayer2::DriveInputsP2()
+{
 	//------------------------------------------- PLAYER 2 INPUTS -------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_KP_8) == KEY_REPEAT)
 	{
@@ -152,51 +269,9 @@ update_status ModulePlayer2::Update(float dt)
 			brake = BRAKE_POWER;
 		}
 	}
-
-	if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
-	{
-
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-		RestartPlayer2(vec3(5, 12, 10));
-	}
-
-	P2vehicle->ApplyEngineForce(acceleration);
-	P2vehicle->Turn(turn);
-	P2vehicle->Brake(brake);
-
-	P2vehicle->Render();
-
-	/*char title[80];
-	sprintf_s(title, "%.1f Km/h", P2vehicle->GetKmh());
-	App->window->SetTitle(title);*/
-
-	return UPDATE_CONTINUE;
 }
 
-void ModulePlayer2::SpawnThrowableItem(Primitive* p)
+void ModulePlayer2::GenerateP2Vehicle()
 {
-	App->scene_intro->primitives.PushBack(p);
 
-	//P2vehicle->vehicle->getForwardVector();
-
-	p->SetPos(P2vehicle->GetPos().x, P2vehicle->GetPos().y, P2vehicle->GetPos().z);
-
-	p->body.collision_listeners.add(this);
-	p->body.Push(-App->camera->Z * 1000.f);
-}
-
-void ModulePlayer2::RestartPlayer2(vec3 respawnPosition)
-{
-	//delete P1vehicle;
-	//P1vehicle = App->physics->AddVehicle(car);
-
-	P2vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
-	P2vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
-	P2vehicle->vehicle->getRigidBody()->setAngularVelocity(btVector3(0, 0, 0));		//Resets the vehicle's angular velocity (turn).
-
-	P2vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
-	P2vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
 }

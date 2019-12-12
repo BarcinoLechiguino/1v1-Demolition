@@ -19,8 +19,12 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void OnCollision(PhysBody3D* body1, PhysBody3D* body2) override;
+
 	void SpawnThrowableItem(Primitive* p);
 	void RestartPlayer2(vec3 respawnPosition);
+	void GenerateP2Vehicle();
+	void DriveInputsP2();
 
 public:
 
@@ -28,4 +32,8 @@ public:
 	float turn;
 	float acceleration;
 	float brake;
+
+	btRigidBody* prevCollBody;					//Keeps track of the previous body that the vehicle collided with.
+	uint lives;
+	bool alive;
 };

@@ -38,13 +38,16 @@ enum update_status
 #define VSYNC true
 #define TITLE "3D Physics Playground"
 
+// 3D Context variables
+#define SKYBOX_ALPHA 1.f					//Defines the alpha/transparency of the skybox in the 3D context.
+
 // Player Variables 
 // ------------------------- General Variables ------------------------
 #define HALF 0.5f
 #define CAM_OFFSET 1
 
 // -------------------- Vehicle Movement Variables --------------------
-#define MAX_ACCELERATION 1250.0f
+#define MAX_ACCELERATION 2500.0f
 #define TURN_DEGREES 20.0f * DEGTORAD
 #define BRAKE_POWER 1250.0f
 

@@ -24,4 +24,6 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
+
+	vec3 skyBoxColor;				//RGB for the skybox color. Values need to be between 0 and 1 (r/255, g/255, b/255)
 };

@@ -8,7 +8,9 @@
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
-ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled), context()
+ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+, context()
+, skyBoxColor(0.f, 0.f, 0.f)				//Sets the skybox's color. Maybe change to someplace else? Sky Blue: (0.53f, 0.81f, 0.92f)
 {
 }
 
@@ -64,7 +66,8 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		//glClearColor(0.f, 0.f, 0.f, 1.f);											//Original Clear Color (Skybox color). Set to black. The rgb needs to be passed as r/255...
+		glClearColor(skyBoxColor.x, skyBoxColor.y, skyBoxColor.z, SKYBOX_ALPHA);	//Own Clear Color. It is set to black as default but it will be normally modified from ModuleScene.cpp.
 
 		//Check for error
 		error = glGetError();

@@ -86,33 +86,33 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	world->stepSimulation(dt, 15);
 
-	//REVISE THIS 
-	int numManifolds = world->getDispatcher()->getNumManifolds();
-	for (int i = 0; i < numManifolds; i++)
+	//REVISE THIS. COMMIT FIX
+	int numManifolds = world->getDispatcher()->getNumManifolds();											//Gets the amount of manifolds in the dispatcher
+	for (int i = 0; i < numManifolds; i++)																	//Loop that iterates for as many manyfolds the dispatcher has registered.
 	{
-		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
-		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
-		btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
+		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);		//Sets a PersistentManifold with the manifold with the index being iterated.
+		btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());							//Gets the pointer of the first body from the manifold.
+		btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());							//Gets the pointer of the second body from the manifold.
 
-		int numContacts = contactManifold->getNumContacts();
-		if (numContacts > 0)
+		int numContacts = contactManifold->getNumContacts();												//Gets the number of contact points between the bodies of the manifold.
+		if (numContacts > 0)																				//If the bodies colliding (More contact points than 0).
 		{
-			PhysBody3D* pbodyA = (PhysBody3D*)obA->getUserPointer();
-			PhysBody3D* pbodyB = (PhysBody3D*)obB->getUserPointer();
+			PhysBody3D* pbodyA = (PhysBody3D*)obA->getUserPointer();										//Gets the pointer of the first body that is colliding.
+			PhysBody3D* pbodyB = (PhysBody3D*)obB->getUserPointer();										//Gets the pointer of the second body that is colliding.
 
-			if (pbodyA && pbodyB)
+			if (pbodyA && pbodyB)																			//If both pbodies' pointers are not NULL (bodies exist)
 			{
-				p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
-				while (item)
+				p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();						//Sets the list item as the first element in the collision_listeners list.
+				while (item)																				//While Item is not NULL.
 				{
-					item->data->OnCollision(pbodyA, pbodyB);
-					item = item->next;
+					item->data->OnCollision(pbodyA, pbodyB);												//Calls the OnCollision method.
+					item = item->next;																		
 				}
 
-				item = pbodyB->collision_listeners.getFirst();
-				while (item)
+				item = pbodyB->collision_listeners.getFirst();												//Sets the list item as the first element in the collision_listeners list.
+				while (item)																				
 				{
-					item->data->OnCollision(pbodyB, pbodyA);
+					item->data->OnCollision(pbodyB, pbodyA);												//Calls the OnCollision method.
 					item = item->next;
 				}
 			}
@@ -378,6 +378,10 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 	PhysVehicle3D* pvehicle = new PhysVehicle3D(body, vehicle, info);
 	world->addVehicle(vehicle);
 	vehicles.add(pvehicle);
+
+	body->setUserPointer(pvehicle);
+	//pvehicle->parentPrimitive = ;
+	//pvehicle->collision_listeners.add(this);
 
 	return pvehicle;
 }

@@ -20,7 +20,8 @@ public:
 	bool CleanUp();
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2) override;
-
+	void SpawnThrowableItem(Primitive* p);								//As the listener registers the module from where the spheres were created,
+																		//to put this method in ModulePlayer/2 a new  OnCollision method would need to be created there.
 public:
 	/*
 	PhysBody3D* pb_snake[MAX_SNAKE];
