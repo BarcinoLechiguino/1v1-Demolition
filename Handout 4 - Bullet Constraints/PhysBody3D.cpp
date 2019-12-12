@@ -96,7 +96,6 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};
 	
 	//LOG("Pos (%.2f %.2f %.2f)", buffer.getX(), buffer.getY(), buffer.getZ());
-
 	return position;
 }
 

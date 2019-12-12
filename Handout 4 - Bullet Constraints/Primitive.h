@@ -78,7 +78,7 @@ public:
 	void SetHeight(float newHeight);					//REVISE THIS. Check both the setter function and the const float argument.
 protected:
 	void InnerRender() const;
-public:
+private:
 	float radius;
 	float height;
 };

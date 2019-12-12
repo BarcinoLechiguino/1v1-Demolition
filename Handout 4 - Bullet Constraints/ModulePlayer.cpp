@@ -23,61 +23,23 @@ bool ModulePlayer::Start()
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(3.0f, 1.0f, 6.0f);
-	car.chassis_offset.Set(0.0f, 0.7f, 0.0f);
-
-	car.cabin_size.Set(2.9f, 1.5f, 3.0f);
-	car.cabin_offset.Set(0.0f, 1.2f, -0.5f);
-
-	car.L_light_size.Set(0.4f, 0.2f, 6.05f);
-	car.L_light_offset.Set(1.0f, 0.9f, 0.0f);
-
-	car.R_light_size.Set(0.4f, 0.2f, 6.05f);
-	car.R_light_offset.Set(-1.0f, 0.9f, 0.0f);
-
-	car.L_spoiler_foot_size.Set(0.2f, 1.0f, 0.4f);
-	car.L_spoiler_foot_offset.Set(-1.0f, 1.3f, -2.7f);
-
-	car.R_spoiler_foot_size.Set(0.2f, 1.0f, 0.4f);
-	car.R_spoiler_foot_offset.Set(1.0f, 1.3f, -2.7f);
-
-	car.spoiler_size.Set(3.0f, 0.2f, 1.0f);
-	car.spoiler_offset.Set(0.0f, 1.9f, -3.0f);
-
-	car.front_size.Set(3.0f, 0.2f, 1.0f);
-	car.front_offset.Set(0.0f, -0.4f, 2.9f);
-
-	car.front2_size.Set(3.0f, 0.5f, 0.2f);
-	car.front2_offset.Set(0.0f, 0.0f, 3.0f);
-
-	car.back_size.Set(3.0f, 0.5f, 0.2f);
-	car.back_offset.Set(0.0f, 0.0f, -2.9f);
-
-	car.L_size.Set(0.2f, 0.5f, 3.0f);
-	car.L_offset.Set(-1.5f, 0.0f, 0.0f);
-
-	car.R_size.Set(0.2f, 0.5f, 3.0f);
-	car.R_offset.Set(1.5f, 0.0f, 0.0f);
-
-	car.neon_size.Set(3.2f, 0.1f, 6.1f);
-	car.neon_offset.Set(0.0f, -0.25f, 0.0f);
-
-	car.mass = 500.0f;
-	car.suspensionStiffness = 15.88f;
-	car.suspensionCompression = 0.83f;
-	car.suspensionDamping = 0.88f;
-	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 50.5;
-	car.maxSuspensionForce = 6000.0f;
+	car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
+	car.chassis_offset.Set(0, 1.5, 0);		//(0, 1.5, 0)
+	car.mass = 500.0f;						//500.0f		//FV
+	car.suspensionStiffness = 150.88f;		//15.88f
+	car.suspensionCompression = 0.83f;		//0.83f
+	car.suspensionDamping = 10.0f;			//0.88f
+	car.maxSuspensionTravelCm = 1000.0f;	//1000.0f
+	car.frictionSlip = 50.5f;				//50.5f
+	car.maxSuspensionForce = 6000.0f;		//6000.0f
 
 	// Wheel properties ---------------------------------------
 	float connection_height = 1.2f;
-	float wheel_radius = 0.8f;
-	float wheel_width = 0.7f;
-	float suspensionRestLength = 1.0f;
+	float wheel_radius = 0.6f;
+	float wheel_width = 0.5f;
+	float suspensionRestLength = 1.2f;
 
 	// Don't change anything below this line ------------------
-
 	float half_width = car.chassis_size.x*0.5f;
 	float half_length = car.chassis_size.z*0.5f;
 
@@ -136,7 +98,9 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 20, 0);
+	//vehicle2 = App->physics->AddVehicle(car);					//Hive Mind Version (1 player controls 2 Cars and need to do tasks).
+	vehicle->SetPos(0, 12, 10);
+	//vehicle2->SetPos(0, 12, 15);
 
 	return true;
 }
@@ -154,20 +118,23 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
-		acceleration = MAX_ACCELERATION;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		acceleration = -MAX_ACCELERATION;
+	//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
+	{																		//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode).
+		if (vehicle->GetKmh() >= 0.0f)
+		{
+			acceleration = MAX_ACCELERATION;
+		}
+		else
+		{
+			brake = BRAKE_POWER;
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 	{
 		if (turn < TURN_DEGREES)
-			turn = TURN_DEGREES;
+			turn += TURN_DEGREES;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
@@ -176,28 +143,22 @@ update_status ModulePlayer::Update(float dt)
 			turn -= TURN_DEGREES;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		brake = BRAKE_POWER;
-	}
+		//brake = BRAKE_POWER;
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-
-		//resets the game
-		IdentityMatrix = IDENTITY;
-		vehicle->SetTransform(IdentityMatrix.M);
-		vehicle->SetPos(startPos.x, startPos.y, startPos.z);
-		vehicle->GetBody()->setAngularVelocity({ 0, 0, 0 });
-		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
-
-		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
-		//SpawnThrowableItem(new Sphere());
+		if (vehicle->GetKmh() <= 0.0f)
+		{
+			acceleration -= MAX_ACCELERATION;
+		}
+		else
+		{
+			brake = BRAKE_POWER;
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
-		//Cambiar input SPACE ES PARA FRENAR
 		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
 		//SpawnThrowableItem(new Sphere());
 	}
