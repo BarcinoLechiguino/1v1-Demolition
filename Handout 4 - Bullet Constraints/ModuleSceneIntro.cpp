@@ -179,8 +179,11 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	if (!App->debug)
 	{
-		App->camera->Position = (vec3(midPos.x + CAM_OFFSET, 100, midPos.z));			//Changes both the camera position and its reference point. Set Move to match the vehicle.
-		App->camera->LookAt(avgRefPoint);												//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
+		App->camera->Position = (avgPosition);									//Changes both the camera position and its reference point. Set Move to match the vehicle. OFFSET on x --> Horizontal, OFFSET on z --> Vertical.
+
+		//LerpCamera(cameraPosition, avgPosition);
+		
+		App->camera->LookAt(avgRefPoint);											//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
 	}
 
 	//LOG("Vehicle pos (%f %f %f)", P1_position.x, P1_position.y, P1_position.z);
@@ -221,30 +224,17 @@ float ModuleSceneIntro::GetZoom() const
 
 	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
 
-	LOG("Position x %.2f: ", P1_position.x);
-	LOG("Position z %.2f: ", P1_position.z);
-
 	if (P1_position.x < 10)
 	{
-		//P1_position.x = P2_position.x;
-		P1_position.x = P1_position.z;
+		P1_position.x = P2_position.x;
+		//P1_position.x = P1_position.z;
 	}
 
 	if (P2_position.x < 10)
 	{
-		//P2_position.x = P1_position.x;
-		P2_position.x = P2_position.z;
+		P2_position.x = P1_position.x;
+		//P2_position.x = P2_position.z;
 	}
-	
-	/*if (P1_position.z < 10)
-	{
-		P1_position.z = P1_position.x;
-	}
-
-	if (P2_position.z < 10)
-	{
-		P2_position.z = P2_position.x;
-	}*/
 
 	float posX = P1_position.x * P2_position.x;
 	float posZ = P1_position.z * P2_position.z;
