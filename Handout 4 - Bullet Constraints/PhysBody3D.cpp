@@ -93,7 +93,7 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 	btTransform trans = body->getWorldTransform();
 	btVector3 buffer = trans.getOrigin();
 
-	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};	//haha
+	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};
 
 	return position;
 }
