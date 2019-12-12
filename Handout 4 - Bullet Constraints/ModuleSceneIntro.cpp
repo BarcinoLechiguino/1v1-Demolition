@@ -282,7 +282,7 @@ float ModuleSceneIntro::GetZoom() const
 		distanceNoSqrt = 2000;
 	}*/
 
-	float cameraZoom = distanceNoSqrt * 0.1f;
+	float cameraZoom = distanceNoSqrt /** 0.1f*/;
 
 	if (cameraZoom < 0)
 	{
