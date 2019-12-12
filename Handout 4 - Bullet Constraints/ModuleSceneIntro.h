@@ -42,6 +42,14 @@ public:
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
 
+	//Camera Methods
+	float GetZoom() const;													//Gets the amount of zoom required taking into account the distance between players (ratio).
+	float GetLerpSpeed(vec3 position, vec3 target, float speed) const;		//Gets the lerp speed for the camera according to the position of the camera and its target position.
+	void LerpCamera(vec3 cameraPosition, vec3 targetPosition);				//Method that changes the camera's poisition according to the lerp speed received from GetLerpSpeed().
+	
+	//Game Methods
+	void RestartGame();
+
 	void DebugSpawnPrimitive(Primitive* p);					//Temporal. Just to check that the vehicle input work.
 
 	p2DynArray<Primitive*> primitives;						//Temporal. Just to check that the  vehicle throw item method works. Maybe create an AddPrimitive method.

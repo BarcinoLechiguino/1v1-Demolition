@@ -30,11 +30,13 @@ public:
 
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
+	void ResetTransform() const;						//Resets the transform of a PhysBody to (1, 1, 1). setTransformToIdentity() would be a far more fitting name.
 	void SetPos(float x, float y, float z);
+
 	//void GetPos(vec3 position);						//Temporal measure (?). Used to get a vehicle's position.
 	//void GetPos(vec3 position);						//Temporal measure (?). Used to get a vehicle's position.
 	//void GetPos(btVector3 position);					//Temporal measure (?). Used to get a vehicle's position.
-	vec3 GetPos();							//Not temporal anymore  measure (?). Used to get a vehicle's position.
+	vec3 GetPos();							//Not temporal anymore. Used to get a vehicle's position.
 
 	void SetSpeed(vec3 speed);
 	void Push(vec3 force);
