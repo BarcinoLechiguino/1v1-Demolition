@@ -85,29 +85,6 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->activate();
 }
 
-
-
-vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
-{
-	btTransform transform = body->getWorldTransform();
-	btVector3 origin = transform.getOrigin();
-	vec3 ret;
-	ret.Set(origin.getX(), origin.getY(), origin.getZ());
-	return ret;
-}
-
-//void PhysBody3D::GetPos(vec3 position)
-//{
-//	if (HasBody() == false)
-//		return;
-//
-//	btTransform trans = body->getWorldTransform();
-//	btVector3 pos = { position.x, position.y, position.z };
-//	pos = trans.getOrigin();
-//
-//	position = {pos.x, pos.y, pos.z};
-//}
-
 vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 {
 	if (HasBody() == false)

@@ -232,11 +232,6 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	
 	//vec3 transform = vehicle->GetTransform();
 
-	p->SetPos(vehicle->GetPos().x, vehicle->GetPos().y, vehicle->GetPos().z);
-
-	p->body.collision_listeners.add(this);
-	p->body.Push(-App->camera->Z * 1000.f);
-
 	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y, P1vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
