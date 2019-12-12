@@ -295,6 +295,8 @@ float ModuleSceneIntro::GetZoom() const
 	{
 		cameraZoom = 200;
 	}
+	
+	return cameraZoom;
 }
 
 float ModuleSceneIntro::GetLerpSpeed(vec3 position, vec3 target, float speed) const
