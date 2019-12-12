@@ -2,12 +2,10 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
+#include "PhysVehicle3D.h"   //Delete at some point (?).
 
 struct PhysVehicle3D;
-
-//#define MAX_ACCELERATION 1000.0f
-//#define TURN_DEGREES 25.0f * DEGTORAD
-//#define BRAKE_POWER 1000.0f
+struct VehicleInfo;
 
 class ModulePlayer2 : public Module
 {
@@ -19,10 +17,16 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void SpawnThrowableItem(Primitive* p);
+	void RestartPlayer2(vec3 respawnPosition);
+
 public:
 
 	PhysVehicle3D* P2vehicle;
 	float turn;
 	float acceleration;
 	float brake;
+
+private:
+	VehicleInfo car;
 };
