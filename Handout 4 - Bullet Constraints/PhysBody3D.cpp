@@ -85,7 +85,7 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->activate();
 }
 
-vec3 PhysBody3D::GetPos()
+
 
 vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 {
