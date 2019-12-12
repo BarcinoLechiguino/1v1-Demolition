@@ -7,7 +7,7 @@
 #include "PhysBody3D.h"
 #include "ModuleSceneIntro.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
+ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), P1vehicle(NULL)
 {
 	turn = acceleration = brake = 0.0f;
 }
@@ -97,9 +97,9 @@ bool ModulePlayer::Start()
 	car.wheels[3].brake = true;
 	car.wheels[3].steering = false;
 
-	vehicle = App->physics->AddVehicle(car);
+	P1vehicle = App->physics->AddVehicle(car);
 	//vehicle2 = App->physics->AddVehicle(car);					//Hive Mind Version (1 player controls 2 Cars and need to do tasks).
-	vehicle->SetPos(0, 12, 10);
+	P1vehicle->SetPos(0, 12, 10);
 	//vehicle2->SetPos(0, 12, 15);
 
 	return true;
@@ -121,7 +121,7 @@ update_status ModulePlayer::Update(float dt)
 	//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
 	{																		//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode).
-		if (vehicle->GetKmh() >= 0.0f)
+		if (P1vehicle->GetKmh() >= 0.0f)
 		{
 			acceleration = MAX_ACCELERATION;
 		}
@@ -147,7 +147,7 @@ update_status ModulePlayer::Update(float dt)
 	{
 		//brake = BRAKE_POWER;
 
-		if (vehicle->GetKmh() <= 0.0f)
+		if (P1vehicle->GetKmh() <= 0.0f)
 		{
 			acceleration -= MAX_ACCELERATION;
 		}
@@ -163,23 +163,26 @@ update_status ModulePlayer::Update(float dt)
 		//SpawnThrowableItem(new Sphere());
 	}
 
-	//Player 2 Inputs
-	//
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		RestartPlayer1(vec3(0, 12, 10));
+	}
 
-	vehicle->ApplyEngineForce(acceleration);
-	vehicle->Turn(turn);
-	vehicle->Brake(brake);
+	P1vehicle->ApplyEngineForce(acceleration);
+	P1vehicle->Turn(turn);
+	P1vehicle->Brake(brake);
+
+	P1vehicle->Render();
 
 	/*vehicle2->ApplyEngineForce(acceleration);					//Hive Mind Version.
 	vehicle2->Turn(turn);
 	vehicle2->Brake(brake);*/
 
-	vehicle->Render();
 	//vehicle2->Render();
 
 	char title[80];
 	sprintf_s(title, "P1 Speed: %.1f Km/h / P2 Speed: %.1f Km/h", 
-		vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());			//Temporal measure to show both vehicles Km/h.
+		P1vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());			//Temporal measure to show both vehicles Km/h.
 	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;

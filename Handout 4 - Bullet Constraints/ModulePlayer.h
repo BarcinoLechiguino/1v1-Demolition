@@ -20,10 +20,11 @@ public:
 	bool CleanUp();
 
 	void SpawnThrowableItem(Primitive* p);
+	void RestartPlayer1(vec3 respawnPosition);
 
 public:
 
-	PhysVehicle3D* vehicle;
+	PhysVehicle3D* P1vehicle;
 	PhysVehicle3D* vehicle2;
 	float turn;
 	float acceleration;

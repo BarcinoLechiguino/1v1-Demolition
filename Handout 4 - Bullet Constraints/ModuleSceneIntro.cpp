@@ -166,7 +166,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	vec3 P1_position = App->player->vehicle->GetPos();								//Gets the current position of Player 1.
+	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
 	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
 
 	vec3 midPos = {																	//Position vector that is set to be at the center poisition of both players.
@@ -174,12 +174,15 @@ update_status ModuleSceneIntro::Update(float dt)
 		0,																			//MidPos in the Y axis.
 		(P1_position.z + P2_position.z) * HALF										//MidPos in the Z axis.
 	};
+	
+	float camZoom = GetZoom();
 
+	vec3 avgPosition = { midPos.x + CAM_OFFSET, camZoom, midPos.z };
 	vec3 avgRefPoint = (P1_position + P2_position) * HALF;							//Calculates the position of the point of reference of the camera. Set to be at the center of both players.
 
 	if (!App->debug)
 	{
-		App->camera->Position = (avgPosition);									//Changes both the camera position and its reference point. Set Move to match the vehicle. OFFSET on x --> Horizontal, OFFSET on z --> Vertical.
+		App->camera->Position = (avgPosition);										//Changes both the camera position and its reference point. Set Move to match the vehicle. OFFSET on x --> Horizontal, OFFSET on z --> Vertical.
 
 		//LerpCamera(cameraPosition, avgPosition);
 		
@@ -219,38 +222,16 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 //Gets the amount of zoom required taking into account the distance between players (ratio).
 float ModuleSceneIntro::GetZoom() const
 {
-	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
-	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
+	vec3 P1_position = App->player->P1vehicle->GetPos();				//Gets the current position of Player 1.
+	vec3 P2_position = App->player2->P2vehicle->GetPos();				//Gets the current position of Player 2.
 
 	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
 
 	LOG("Position x %.2f: ", P1_position.x);
 	LOG("Position z %.2f: ", P1_position.z);
 
-	if (P1_position.x < 10)
-	{
-		//P1_position.x = P2_position.x;
-		P1_position.x = P1_position.z;
-	}
-
-	if (P2_position.x < 10)
-	{
-		//P2_position.x = P1_position.x;
-		P2_position.x = P2_position.z;
-	}
-	
-	/*if (P1_position.z < 10)
-	{
-		P1_position.z = P1_position.x;
-	}
-
-	if (P2_position.z < 10)
-	{
-		P2_position.z = P2_position.x;
-	}*/
-
-	float posX = P1_position.x * P2_position.x;
-	float posZ = P1_position.z * P2_position.z;
+	float posX = P1_position.x - P2_position.x;
+	float posZ = P1_position.z - P2_position.z;
 
 	if (posX < 0)
 	{
@@ -262,41 +243,19 @@ float ModuleSceneIntro::GetZoom() const
 		posZ = posZ * (-1);
 	}
 
-	float distanceNoSqrt = posX + posZ;
+	float distance = posX + posZ;
 
-	//LOG("Distance %.2f: ", distanceNoSqrt);
 
-	//Zoom Limits
-	/*if (distanceNoSqrt < 0)
-	{
-		distanceNoSqrt = distanceNoSqrt * (-1);
-	}*/
-
-	/*if (distanceNoSqrt < 500)
-	{
-		distanceNoSqrt = 500;
-	}*/
-
-	/*if (distanceNoSqrt > 2000)
-	{
-		distanceNoSqrt = 2000;
-	}*/
-
-	float cameraZoom = distanceNoSqrt /** 0.1f*/;
-
-	if (cameraZoom < 0)
-	{
-		cameraZoom = cameraZoom * (-1);
-	}
+	float cameraZoom = distance;
 
 	if (cameraZoom < 50)
 	{
 		cameraZoom = 50;
 	}
 
-	if (cameraZoom > 200)
+	if (cameraZoom > 150)
 	{
-		cameraZoom = 200;
+		cameraZoom = 150;
 	}
 
 	return cameraZoom;

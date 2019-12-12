@@ -100,17 +100,14 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 	return position;
 }
 
-//void PhysBody3D::GetPos(vec3 position)
-//{
-//	if (HasBody() == false)
-//		return;
-//
-//	btTransform trans = body->getWorldTransform();
-//	btVector3 pos = { position.x, position.y, position.z };
-//	pos = trans.getOrigin();
-//
-//	position = {pos.x, pos.y, pos.z};
-//}
+void PhysBody3D::ResetTransform()
+{
+	mat4x4 matrix = IdentityMatrix;
+	btTransform transform;
+	transform.setFromOpenGLMatrix(&matrix);
+
+	body->setWorldTransform(transform);
+}
 
 void PhysBody3D::SetSpeed(vec3 speed)
 {

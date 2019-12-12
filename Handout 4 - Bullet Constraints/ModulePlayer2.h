@@ -19,6 +19,9 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void SpawnThrowableItem(Primitive* p);
+	void RestartPlayer2(vec3 respawnPosition);
+
 public:
 
 	PhysVehicle3D* P2vehicle;
