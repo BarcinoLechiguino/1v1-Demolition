@@ -219,7 +219,6 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 float ModuleSceneIntro::GetZoom() const
 {
 
-	if (P2_position.x < 10)
 }
 
 float ModuleSceneIntro::GetLerpSpeed(vec3 position, vec3 target, float speed) const
