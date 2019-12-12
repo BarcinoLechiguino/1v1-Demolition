@@ -276,6 +276,7 @@ float ModuleSceneIntro::GetZoom() const
 	{
 		distanceNoSqrt = 500;
 	}*/
+<<<<<<< HEAD
 
 	/*if (distanceNoSqrt > 2000)
 	{
@@ -284,6 +285,16 @@ float ModuleSceneIntro::GetZoom() const
 
 	float cameraZoom = distanceNoSqrt * 0.1f;
 
+=======
+
+	/*if (distanceNoSqrt > 2000)
+	{
+		distanceNoSqrt = 2000;
+	}*/
+
+	float cameraZoom = distanceNoSqrt * 0.1f;
+
+>>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 	if (cameraZoom < 0)
 	{
 		cameraZoom = cameraZoom * (-1);

@@ -86,6 +86,7 @@ void PhysBody3D::SetPos(float x, float y, float z)
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 vec3 PhysBody3D::GetPos()
 =======
 vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
@@ -117,6 +118,23 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 //	position = {pos.x, pos.y, pos.z};
 //}
 
+=======
+vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
+{
+	if (HasBody() == false)
+		return vec3(0, 0, 0);
+
+	btTransform trans = body->getWorldTransform();
+	btVector3 buffer = trans.getOrigin();
+
+	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};
+	
+	//LOG("Pos (%.2f %.2f %.2f)", buffer.getX(), buffer.getY(), buffer.getZ());
+
+	return position;
+}
+
+>>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 //void PhysBody3D::GetPos(vec3 position)
 //{
 //	if (HasBody() == false)
