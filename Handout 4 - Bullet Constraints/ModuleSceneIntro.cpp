@@ -286,6 +286,7 @@ float ModuleSceneIntro::GetZoom() const
 	if (cameraZoom < 0)
 	{
 		cameraZoom = cameraZoom * (-1);
+		//This is great
 	}
 
 	if (cameraZoom < 50)
