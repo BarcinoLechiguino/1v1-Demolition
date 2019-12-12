@@ -283,20 +283,6 @@ float ModuleSceneIntro::GetZoom() const
 
 	float cameraZoom = distanceNoSqrt * 0.1f;
 
-	if (cameraZoom < 0)
-	{
-		cameraZoom = cameraZoom * (-1);
-	}
-
-	if (cameraZoom < 50)
-	{
-		cameraZoom = 50;
-	}
-
-	if (cameraZoom > 200)
-	{
-		cameraZoom = 200;
-	}
 
 	return cameraZoom;
 }
