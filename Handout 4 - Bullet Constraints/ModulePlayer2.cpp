@@ -158,11 +158,6 @@ update_status ModulePlayer2::Update(float dt)
 
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-		RestartPlayer2(vec3(5, 12, 10));
-	}
-
 	P2vehicle->ApplyEngineForce(acceleration);
 	P2vehicle->Turn(turn);
 	P2vehicle->Brake(brake);
@@ -174,17 +169,4 @@ update_status ModulePlayer2::Update(float dt)
 	App->window->SetTitle(title);*/
 
 	return UPDATE_CONTINUE;
-}
-
-void ModulePlayer2::RestartPlayer2(vec3 respawnPosition)
-{
-	/*delete P2vehicle;
-	P2vehicle = App->physics->AddVehicle(car);*/
-	
-	P2vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
-	P2vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
-	P2vehicle->vehicle->getRigidBody()->setAngularVelocity(btVector3(0, 0, 0));		//Resets the vehicle's angular velocity (turn).
-
-	P2vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
-	P2vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
 }
