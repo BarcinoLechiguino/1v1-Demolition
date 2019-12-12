@@ -183,17 +183,12 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
-<<<<<<< HEAD
 		//resets the game
 		IdentityMatrix = IDENTITY;
 		vehicle->SetTransform(IdentityMatrix.M);
 		vehicle->SetPos(startPos.x, startPos.y, startPos.z);
 		vehicle->GetBody()->setAngularVelocity({ 0, 0, 0 });
 		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
-=======
-		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
-		//SpawnThrowableItem(new Sphere());
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -233,28 +228,8 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	
 	//vec3 transform = vehicle->GetTransform();
 
-<<<<<<< HEAD
 	p->SetPos(vehicle->GetPos().x, vehicle->GetPos().y, vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
 	p->body.Push(-App->camera->Z * 1000.f);
-=======
-	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y, P1vehicle->GetPos().z);
-
-	p->body.collision_listeners.add(this);
-	p->body.Push(-App->camera->Z * 1000.f);
-}
-
-void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
-{
-	//delete P1vehicle;
-	//P1vehicle = App->physics->AddVehicle(car);
-
-	P1vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
-	P1vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
-	P1vehicle->vehicle->getRigidBody()->setAngularVelocity(btVector3(0, 0, 0));		//Resets the vehicle's angular velocity (turn).
-
-	P1vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
-	P1vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 }
