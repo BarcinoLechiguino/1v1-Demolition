@@ -212,8 +212,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	body1->parentPrimitive->color = color;
 	body2->parentPrimitive->color = color;
 
-<<<<<<< HEAD
-=======
+
 }
 
 //Gets the amount of zoom required taking into account the distance between players (ratio).
@@ -276,7 +275,6 @@ float ModuleSceneIntro::GetZoom() const
 	{
 		distanceNoSqrt = 500;
 	}*/
-<<<<<<< HEAD
 
 	/*if (distanceNoSqrt > 2000)
 	{
@@ -285,8 +283,6 @@ float ModuleSceneIntro::GetZoom() const
 
 	float cameraZoom = distanceNoSqrt * 0.1f;
 
-=======
-
 	/*if (distanceNoSqrt > 2000)
 	{
 		distanceNoSqrt = 2000;
@@ -294,7 +290,8 @@ float ModuleSceneIntro::GetZoom() const
 
 	float cameraZoom = distanceNoSqrt * 0.1f;
 
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
+	float cameraZoom = distanceNoSqrt * 0.1f;
+
 	if (cameraZoom < 0)
 	{
 		cameraZoom = cameraZoom * (-1);
@@ -335,5 +332,4 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition)
 	{
 		App->camera->Position -= GetLerpSpeed(cameraPosition, targetPosition, 0.025f);
 	}
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 }

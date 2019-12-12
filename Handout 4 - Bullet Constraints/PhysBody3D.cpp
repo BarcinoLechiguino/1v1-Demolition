@@ -85,12 +85,9 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->activate();
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 vec3 PhysBody3D::GetPos()
-=======
+
 vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 {
 	btTransform transform = body->getWorldTransform();
 	btVector3 origin = transform.getOrigin();
@@ -98,13 +95,6 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 	ret.Set(origin.getX(), origin.getY(), origin.getZ());
 	return ret;
 }
-
-<<<<<<< HEAD
-=======
-	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};
-	
-	//LOG("Pos (%.2f %.2f %.2f)", buffer.getX(), buffer.getY(), buffer.getZ());
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 
 //void PhysBody3D::GetPos(vec3 position)
 //{
@@ -118,7 +108,6 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 //	position = {pos.x, pos.y, pos.z};
 //}
 
-=======
 vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 {
 	if (HasBody() == false)
@@ -134,7 +123,6 @@ vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
 	return position;
 }
 
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 //void PhysBody3D::GetPos(vec3 position)
 //{
 //	if (HasBody() == false)

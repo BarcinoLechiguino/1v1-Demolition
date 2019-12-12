@@ -183,20 +183,17 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
-<<<<<<< HEAD
+
 		//resets the game
 		IdentityMatrix = IDENTITY;
 		vehicle->SetTransform(IdentityMatrix.M);
 		vehicle->SetPos(startPos.x, startPos.y, startPos.z);
 		vehicle->GetBody()->setAngularVelocity({ 0, 0, 0 });
 		vehicle->GetBody()->setLinearVelocity({ 0, 0, 0 });
-=======
+
 		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
 		//SpawnThrowableItem(new Sphere());
-<<<<<<< HEAD
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
-=======
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
+
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -235,17 +232,12 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	//p->SetPos(vehicle->parentPrimitive->transform.translation().x, vehicle->parentPrimitive->transform.translation().y, vehicle->parentPrimitive->transform.translation().z);
 	
 	//vec3 transform = vehicle->GetTransform();
-<<<<<<< HEAD
 
-<<<<<<< HEAD
 	p->SetPos(vehicle->GetPos().x, vehicle->GetPos().y, vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
 	p->body.Push(-App->camera->Z * 1000.f);
-=======
-=======
 
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y, P1vehicle->GetPos().z);
 
 	p->body.collision_listeners.add(this);
@@ -263,5 +255,4 @@ void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 
 	P1vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
 	P1vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
->>>>>>> parent of a6c4ae1... Camera Zoom has been fully Implemented. Throw Item method has been partially implemented.
 }
