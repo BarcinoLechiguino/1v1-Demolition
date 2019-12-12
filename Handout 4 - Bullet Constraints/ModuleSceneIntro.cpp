@@ -218,7 +218,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 //Gets the amount of zoom required taking into account the distance between players (ratio).
 float ModuleSceneIntro::GetZoom() const
 {
-	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
+	vec3 P1_position = App->player->P1vehicle->GetPos();							//Gets the current position of Player 1.
 	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
 
 	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
