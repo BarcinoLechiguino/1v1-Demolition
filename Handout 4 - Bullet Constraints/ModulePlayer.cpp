@@ -11,6 +11,8 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 , P1vehicle(NULL)
 , lives(3)
 , alive(true)
+, scale(1.0f)
+, alreadyLoaded(false)
 {
 	turn = acceleration = brake = 0.0f;
 }
@@ -23,134 +25,8 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	//GenerateP1Vehicle();
+	GenerateP1Vehicle();
 
-	VehicleInfo car;
-
-	// Car properties ----------------------------------------
-	//car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
-	//car.chassis_offset.Set(0, 1.5, 0);		//(0, 1.5, 0)
-	//car.mass = 500.0f;						//500.0f		//FV
-	//car.suspensionStiffness = 150.88f;		//15.88f
-	//car.suspensionCompression = 0.83f;		//0.83f
-	//car.suspensionDamping = 10.0f;			//0.88f
-	//car.maxSuspensionTravelCm = 1000.0f;	//1000.0f
-	//car.frictionSlip = 50.5f;				//50.5f
-	//car.maxSuspensionForce = 6000.0f;		//6000.0f
-
-	// Car properties ----------------------------------------
-	car.chassis_size.Set(3.0f, 1.0f, 6.0f);
-	car.chassis_offset.Set(0.0f, 0.7f, 0.0f);
-
-	car.cabin_size.Set(2.9f, 1.5f, 3.0f);
-	car.cabin_offset.Set(0.0f, 1.2f, -0.5f);
-
-	car.L_light_size.Set(0.4f, 0.2f, 6.05f);
-	car.L_light_offset.Set(1.0f, 0.9f, 0.0f);
-
-	car.R_light_size.Set(0.4f, 0.2f, 6.05f);
-	car.R_light_offset.Set(-1.0f, 0.9f, 0.0f);
-
-	car.L_spoiler_foot_size.Set(0.2f, 1.0f, 0.4f);
-	car.L_spoiler_foot_offset.Set(-1.0f, 1.3f, -2.7f);
-
-	car.R_spoiler_foot_size.Set(0.2f, 1.0f, 0.4f);
-	car.R_spoiler_foot_offset.Set(1.0f, 1.3f, -2.7f);
-
-	car.spoiler_size.Set(3.0f, 0.2f, 1.0f);
-	car.spoiler_offset.Set(0.0f, 1.9f, -3.0f);
-
-	car.front_size.Set(3.0f, 0.2f, 1.0f);
-	car.front_offset.Set(0.0f, -0.4f, 2.9f);
-
-	car.front2_size.Set(3.0f, 0.5f, 0.2f);
-	car.front2_offset.Set(0.0f, 0.0f, 3.0f);
-
-	car.back_size.Set(3.0f, 0.5f, 0.2f);
-	car.back_offset.Set(0.0f, 0.0f, -2.9f);
-
-	car.L_size.Set(0.2f, 0.5f, 3.0f);
-	car.L_offset.Set(-1.5f, 0.0f, 0.0f);
-
-	car.R_size.Set(0.2f, 0.5f, 3.0f);
-	car.R_offset.Set(1.5f, 0.0f, 0.0f);
-
-	car.neon_size.Set(3.2f, 0.1f, 6.1f);
-	car.neon_offset.Set(0.0f, -0.25f, 0.0f);
-
-	car.mass = 750.0f;
-	car.suspensionStiffness = 15.88f;
-	car.suspensionCompression = 0.83f;
-	car.suspensionDamping = 0.88f;
-	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 50.5;
-	car.maxSuspensionForce = 6000.0f;
-
-	// Wheel properties ---------------------------------------
-	float connection_height = 1.2f;
-	float wheel_radius = 0.6f;
-	float wheel_width = 0.5f;
-	float suspensionRestLength = 1.2f;
-
-	// Don't change anything below this line ------------------
-	float half_width = car.chassis_size.x*0.5f;
-	float half_length = car.chassis_size.z*0.5f;
-
-	vec3 direction(0, -1, 0);
-	vec3 axis(-1, 0, 0);
-
-	car.num_wheels = 4;
-	car.wheels = new Wheel[4];
-
-	// FRONT-LEFT ------------------------
-	car.wheels[0].connection.Set(half_width - 0.3f * wheel_width, connection_height, half_length - wheel_radius);
-	car.wheels[0].direction = direction;
-	car.wheels[0].axis = axis;
-	car.wheels[0].suspensionRestLength = suspensionRestLength;
-	car.wheels[0].radius = wheel_radius;
-	car.wheels[0].width = wheel_width;
-	car.wheels[0].front = true;
-	car.wheels[0].drive = true;
-	car.wheels[0].brake = false;
-	car.wheels[0].steering = true;
-
-	// FRONT-RIGHT ------------------------
-	car.wheels[1].connection.Set(-half_width + 0.3f * wheel_width, connection_height, half_length - wheel_radius);
-	car.wheels[1].direction = direction;
-	car.wheels[1].axis = axis;
-	car.wheels[1].suspensionRestLength = suspensionRestLength;
-	car.wheels[1].radius = wheel_radius;
-	car.wheels[1].width = wheel_width;
-	car.wheels[1].front = true;
-	car.wheels[1].drive = true;
-	car.wheels[1].brake = false;
-	car.wheels[1].steering = true;
-
-	// REAR-LEFT ------------------------
-	car.wheels[2].connection.Set(half_width - 0.3f * wheel_width, connection_height, -half_length + wheel_radius);
-	car.wheels[2].direction = direction;
-	car.wheels[2].axis = axis;
-	car.wheels[2].suspensionRestLength = suspensionRestLength;
-	car.wheels[2].radius = wheel_radius;
-	car.wheels[2].width = wheel_width;
-	car.wheels[2].front = false;
-	car.wheels[2].drive = false;
-	car.wheels[2].brake = true;
-	car.wheels[2].steering = false;
-
-	// REAR-RIGHT ------------------------
-	car.wheels[3].connection.Set(-half_width + 0.3f * wheel_width, connection_height, -half_length + wheel_radius);
-	car.wheels[3].direction = direction;
-	car.wheels[3].axis = axis;
-	car.wheels[3].suspensionRestLength = suspensionRestLength;
-	car.wheels[3].radius = wheel_radius;
-	car.wheels[3].width = wheel_width;
-	car.wheels[3].front = false;
-	car.wheels[3].drive = false;
-	car.wheels[3].brake = true;
-	car.wheels[3].steering = false;
-
-	P1vehicle = App->physics->AddVehicle(car);
 	P1vehicle->SetPos(0, 12, 10);
 
 	return true;
@@ -168,7 +44,7 @@ bool ModulePlayer::CleanUp()
 update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
-
+	
 	DriveInputsP1();											//Inputs P1
 
 	if (lives <= 0 || lives > 3)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
@@ -178,8 +54,6 @@ update_status ModulePlayer::Update(float dt)
 	
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
-		//App->scene_intro->DebugSpawnPrimitive(new Sphere());
-		//App->scene_intro->SpawnThrowableItem(new Sphere());
 		SpawnThrowableItem(new Sphere());
 	}
 
@@ -192,6 +66,13 @@ update_status ModulePlayer::Update(float dt)
 	{
 		brake = BRAKE_POWER;
 	}
+
+	/*if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
+	{
+		scale += 0.1f;
+
+		GenerateP1Vehicle();
+	}*/
 
 	P1vehicle->ApplyEngineForce(acceleration);
 	P1vehicle->Turn(turn);
@@ -344,9 +225,9 @@ void ModulePlayer::DriveInputsP1()
 
 void ModulePlayer::GenerateP1Vehicle()
 {
-	//VehicleInfo car;
+	/*VehicleInfo car;*/
 
-	//// Car properties ----------------------------------------
+	// Car properties ----------------------------------------
 	//car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
 	//car.chassis_offset.Set(0, 1.5, 0);		//(0, 1.5, 0)
 	//car.mass = 500.0f;						//500.0f		//FV
@@ -357,75 +238,122 @@ void ModulePlayer::GenerateP1Vehicle()
 	//car.frictionSlip = 50.5f;				//50.5f
 	//car.maxSuspensionForce = 6000.0f;		//6000.0f
 
-	//// Wheel properties ---------------------------------------
-	//float connection_height = 1.2f;
-	//float wheel_radius = 0.6f;
-	//float wheel_width = 0.5f;
-	//float suspensionRestLength = 1.2f;
+	// Car properties ----------------------------------------
+	car.chassis_size.Set(3.0f * scale, 1.0f * scale, 6.0f * scale);
+	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
-	//// Don't change anything below this line ------------------
-	//float half_width = car.chassis_size.x*0.5f;
-	//float half_length = car.chassis_size.z*0.5f;
+	car.cabin_size.Set(2.9f * scale, 1.5f * scale, 3.0f * scale);
+	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
-	//vec3 direction(0, -1, 0);
-	//vec3 axis(-1, 0, 0);
+	car.L_light_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.L_light_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	//car.num_wheels = 4;
-	//car.wheels = new Wheel[4];
+	car.R_light_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.R_light_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	//// FRONT-LEFT ------------------------
-	//car.wheels[0].connection.Set(half_width - 0.3f * wheel_width, connection_height, half_length - wheel_radius);
-	//car.wheels[0].direction = direction;
-	//car.wheels[0].axis = axis;
-	//car.wheels[0].suspensionRestLength = suspensionRestLength;
-	//car.wheels[0].radius = wheel_radius;
-	//car.wheels[0].width = wheel_width;
-	//car.wheels[0].front = true;
-	//car.wheels[0].drive = true;
-	//car.wheels[0].brake = false;
-	//car.wheels[0].steering = true;
+	car.L_spoiler_foot_size.Set(0.2f * scale, 1.0f * scale, 0.4f * scale);
+	car.L_spoiler_foot_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	//// FRONT-RIGHT ------------------------
-	//car.wheels[1].connection.Set(-half_width + 0.3f * wheel_width, connection_height, half_length - wheel_radius);
-	//car.wheels[1].direction = direction;
-	//car.wheels[1].axis = axis;
-	//car.wheels[1].suspensionRestLength = suspensionRestLength;
-	//car.wheels[1].radius = wheel_radius;
-	//car.wheels[1].width = wheel_width;
-	//car.wheels[1].front = true;
-	//car.wheels[1].drive = true;
-	//car.wheels[1].brake = false;
-	//car.wheels[1].steering = true;
+	car.R_spoiler_foot_size.Set(0.2f * scale, 1.0f * scale, 0.4f * scale);
+	car.R_spoiler_foot_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	//// REAR-LEFT ------------------------
-	//car.wheels[2].connection.Set(half_width - 0.3f * wheel_width, connection_height, -half_length + wheel_radius);
-	//car.wheels[2].direction = direction;
-	//car.wheels[2].axis = axis;
-	//car.wheels[2].suspensionRestLength = suspensionRestLength;
-	//car.wheels[2].radius = wheel_radius;
-	//car.wheels[2].width = wheel_width;
-	//car.wheels[2].front = false;
-	//car.wheels[2].drive = false;
-	//car.wheels[2].brake = true;
-	//car.wheels[2].steering = false;
+	car.spoiler_size.Set(3.0f * scale, 0.2f * scale, 1.0f * scale);
+	car.spoiler_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);
 
-	//// REAR-RIGHT ------------------------
-	//car.wheels[3].connection.Set(-half_width + 0.3f * wheel_width, connection_height, -half_length + wheel_radius);
-	//car.wheels[3].direction = direction;
-	//car.wheels[3].axis = axis;
-	//car.wheels[3].suspensionRestLength = suspensionRestLength;
-	//car.wheels[3].radius = wheel_radius;
-	//car.wheels[3].width = wheel_width;
-	//car.wheels[3].front = false;
-	//car.wheels[3].drive = false;
-	//car.wheels[3].brake = true;
-	//car.wheels[3].steering = false;
+	car.front_size.Set(3.0f * scale, 0.2f * scale, 1.0f * scale);
+	car.front_offset.Set(0.0f * scale, -0.4f * scale, 2.9f * scale);
 
-	//P1vehicle = App->physics->AddVehicle(car);
-	//P1vehicle->SetPos(0, 12, 10);
+	car.front2_size.Set(3.0f * scale, 0.5f * scale, 0.2f * scale);
+	car.front2_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
 
-	//lives = 3;
+	car.back_size.Set(3.0f * scale, 0.5f * scale, 0.2f * scale);
+	car.back_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
 
-	//vehicle2 = App->physics->AddVehicle(car);					//Hive Mind Version (1 player controls 2 Cars and need to do tasks).
-	//vehicle2->SetPos(0, 12, 15);
+	car.L_size.Set(0.2f * scale, 0.5f * scale, 3.0f * scale);
+	car.L_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);
+
+	car.R_size.Set(0.2f * scale, 0.5f * scale, 3.0f * scale);
+	car.R_offset.Set(1.5f * scale, 0.0f * scale, 0.0f * scale);
+
+	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
+	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
+
+	car.mass = 1750.0f;
+	car.suspensionStiffness = 15.88f;
+	car.suspensionCompression = 0.83f;
+	car.suspensionDamping = 0.88f;
+	car.maxSuspensionTravelCm = 1000.0f;
+	car.frictionSlip = 50.5;
+	car.maxSuspensionForce = 6000.0f;
+
+	// Wheel properties ---------------------------------------
+	float connection_height = 1.2f * scale;
+	float wheel_radius = 0.6f * scale;
+	float wheel_width = 0.5f *  scale;
+	float suspensionRestLength = 1.2f * scale;
+
+	// Don't change anything below this line ------------------
+	float half_width = car.chassis_size.x*0.5f;
+	float half_length = car.chassis_size.z*0.5f;
+
+	vec3 direction(0, -1, 0);
+	vec3 axis(-1, 0, 0);
+
+	car.num_wheels = 4;
+	car.wheels = new Wheel[4];
+
+	// FRONT-LEFT ------------------------
+	car.wheels[0].connection.Set(half_width - 0.3f * wheel_width, connection_height, half_length - wheel_radius);
+	car.wheels[0].direction = direction;
+	car.wheels[0].axis = axis;
+	car.wheels[0].suspensionRestLength = suspensionRestLength;
+	car.wheels[0].radius = wheel_radius;
+	car.wheels[0].width = wheel_width;
+	car.wheels[0].front = true;
+	car.wheels[0].drive = true;
+	car.wheels[0].brake = false;
+	car.wheels[0].steering = true;
+
+	// FRONT-RIGHT ------------------------
+	car.wheels[1].connection.Set(-half_width + 0.3f * wheel_width, connection_height, half_length - wheel_radius);
+	car.wheels[1].direction = direction;
+	car.wheels[1].axis = axis;
+	car.wheels[1].suspensionRestLength = suspensionRestLength;
+	car.wheels[1].radius = wheel_radius;
+	car.wheels[1].width = wheel_width;
+	car.wheels[1].front = true;
+	car.wheels[1].drive = true;
+	car.wheels[1].brake = false;
+	car.wheels[1].steering = true;
+
+	// REAR-LEFT ------------------------
+	car.wheels[2].connection.Set(half_width - 0.3f * wheel_width, connection_height, -half_length + wheel_radius);
+	car.wheels[2].direction = direction;
+	car.wheels[2].axis = axis;
+	car.wheels[2].suspensionRestLength = suspensionRestLength;
+	car.wheels[2].radius = wheel_radius;
+	car.wheels[2].width = wheel_width;
+	car.wheels[2].front = false;
+	car.wheels[2].drive = false;
+	car.wheels[2].brake = true;
+	car.wheels[2].steering = false;
+
+	// REAR-RIGHT ------------------------
+	car.wheels[3].connection.Set(-half_width + 0.3f * wheel_width, connection_height, -half_length + wheel_radius);
+	car.wheels[3].direction = direction;
+	car.wheels[3].axis = axis;
+	car.wheels[3].suspensionRestLength = suspensionRestLength;
+	car.wheels[3].radius = wheel_radius;
+	car.wheels[3].width = wheel_width;
+	car.wheels[3].front = false;
+	car.wheels[3].drive = false;
+	car.wheels[3].brake = true;
+	car.wheels[3].steering = false;
+
+	if (!alreadyLoaded)
+	{
+		/*p2List_item<PhysVehicle3D*>* item = vehicles;*/
+		P1vehicle = App->physics->AddVehicle(car);
+		alreadyLoaded = true;
+	}
 }

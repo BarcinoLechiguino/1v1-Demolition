@@ -43,6 +43,8 @@ public:
 	void AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB);
 	void AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB);
 
+	p2List<PhysVehicle3D*>					vehicles;
+
 private:
 	bool debug;		//Bool for debug mode. Used to spawn bodies.
 	
@@ -58,7 +60,7 @@ private:
 	p2List<PhysBody3D*>						bodies;
 	p2List<btDefaultMotionState*>			motions;
 	p2List<btTypedConstraint*>				constraints;
-	p2List<PhysVehicle3D*>					vehicles;
+	//p2List<PhysVehicle3D*>					vehicles;
 };
 
 class DebugDrawer : public btIDebugDraw
