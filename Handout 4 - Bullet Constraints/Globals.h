@@ -48,7 +48,7 @@ enum update_status
 
 // -------------------- Vehicle Movement Variables --------------------
 #define MAX_ACCELERATION 2500.0f
-#define TURN_DEGREES 20.0f * DEGTORAD
+#define TURN_DEGREES 25.0f * DEGTORAD
 #define BRAKE_POWER 1250.0f
 
 class Application;

@@ -24,15 +24,63 @@ bool ModulePlayer2::Start()
 	VehicleInfo car;
 
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
-	car.chassis_offset.Set(0, 1.5, 0);		//(0, 1.5, 0)
-	car.mass = 500.0f;						//500.0f		//FV
-	car.suspensionStiffness = 150.88f;		//15.88f
-	car.suspensionCompression = 0.83f;		//0.83f
-	car.suspensionDamping = 10.0f;			//0.88f
-	car.maxSuspensionTravelCm = 1000.0f;	//1000.0f
-	car.frictionSlip = 50.5f;				//50.5f
-	car.maxSuspensionForce = 6000.0f;		//6000.0f
+	//car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
+	//car.chassis_offset.Set(0, 1.5, 0);		//(0, 1.5, 0)
+	//car.mass = 500.0f;						//500.0f		//FV
+	//car.suspensionStiffness = 150.88f;		//15.88f
+	//car.suspensionCompression = 0.83f;		//0.83f
+	//car.suspensionDamping = 10.0f;			//0.88f
+	//car.maxSuspensionTravelCm = 1000.0f;	//1000.0f
+	//car.frictionSlip = 50.5f;				//50.5f
+	//car.maxSuspensionForce = 6000.0f;		//6000.0f
+
+	// Car properties ----------------------------------------
+	car.chassis_size.Set(3.0f, 1.0f, 6.0f);
+	car.chassis_offset.Set(0.0f, 0.7f, 0.0f);
+
+	car.cabin_size.Set(2.9f, 1.5f, 3.0f);
+	car.cabin_offset.Set(0.0f, 1.2f, -0.5f);
+
+	car.L_light_size.Set(0.4f, 0.2f, 6.05f);
+	car.L_light_offset.Set(1.0f, 0.9f, 0.0f);
+
+	car.R_light_size.Set(0.4f, 0.2f, 6.05f);
+	car.R_light_offset.Set(-1.0f, 0.9f, 0.0f);
+
+	car.L_spoiler_foot_size.Set(0.2f, 1.0f, 0.4f);
+	car.L_spoiler_foot_offset.Set(-1.0f, 1.3f, -2.7f);
+
+	car.R_spoiler_foot_size.Set(0.2f, 1.0f, 0.4f);
+	car.R_spoiler_foot_offset.Set(1.0f, 1.3f, -2.7f);
+
+	car.spoiler_size.Set(3.0f, 0.2f, 1.0f);
+	car.spoiler_offset.Set(0.0f, 1.9f, -3.0f);
+
+	car.front_size.Set(3.0f, 0.2f, 1.0f);
+	car.front_offset.Set(0.0f, -0.4f, 2.9f);
+
+	car.front2_size.Set(3.0f, 0.5f, 0.2f);
+	car.front2_offset.Set(0.0f, 0.0f, 3.0f);
+
+	car.back_size.Set(3.0f, 0.5f, 0.2f);
+	car.back_offset.Set(0.0f, 0.0f, -2.9f);
+
+	car.L_size.Set(0.2f, 0.5f, 3.0f);
+	car.L_offset.Set(-1.5f, 0.0f, 0.0f);
+
+	car.R_size.Set(0.2f, 0.5f, 3.0f);
+	car.R_offset.Set(1.5f, 0.0f, 0.0f);
+
+	car.neon_size.Set(3.2f, 0.1f, 6.1f);
+	car.neon_offset.Set(0.0f, -0.25f, 0.0f);
+
+	car.mass = 1500.0f;
+	car.suspensionStiffness = 15.88f;
+	car.suspensionCompression = 0.83f;
+	car.suspensionDamping = 0.88f;
+	car.maxSuspensionTravelCm = 1000.0f;
+	car.frictionSlip = 50.5;
+	car.maxSuspensionForce = 6000.0f;
 
 	// Wheel properties ---------------------------------------
 	float connection_height = 1.2f;
@@ -133,6 +181,11 @@ update_status ModulePlayer2::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
 		RestartPlayer2(vec3(5, 12, 10));
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_REPEAT)
+	{
+		brake = BRAKE_POWER;
 	}
 
 	P2vehicle->ApplyEngineForce(acceleration);
