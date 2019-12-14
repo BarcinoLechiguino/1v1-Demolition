@@ -314,7 +314,7 @@ void ModulePlayer::GenerateP1Vehicle()
 	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
 	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
 
-	car.mass = 1750.0f;
+	car.mass = 1950.0f;
 	car.suspensionStiffness = 15.88f;
 	car.suspensionCompression = 0.83f;
 	car.suspensionDamping = 0.88f;
