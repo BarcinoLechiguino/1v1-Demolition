@@ -12,7 +12,6 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 , lives(3)
 , alive(true)
 , scale(1.0f)
-, alreadyLoaded(false)
 , prevCollBody()
 {
 	turn = acceleration = brake = 0.0f;
@@ -30,14 +29,7 @@ bool ModulePlayer::Start()
 
 	P1vehicle->SetPos(0, 12, 10);
 
-	//Loading FX
-	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
-	App->audio->LoadFx("audio/FX/Car_Braking.wav");
-	App->audio->LoadFx("audio/FX/Shoot_1.wav");
-	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
-	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
-	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
-	App->audio->LoadFx("audio/FX/Gun_Reload_sound_effect.wav");
+	LoadAudioP1();
 
 	return true;
 }
@@ -55,9 +47,9 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 	
-	DriveInputsP1();											//Inputs P1
+	DriveInputsP1();												//Inputs P1
 
-	if (lives <= 0 || lives > 3)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
+	if (lives <= 0 || lives > 3)									//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
 	{
 		LOG("Player 1 Restart at %d lives", lives);
 		RestartPlayer1(vec3(0, 12, 10));
@@ -69,15 +61,14 @@ update_status ModulePlayer::Update(float dt)
 
 	P1vehicle->Render();
 
-	/*vehicle2->ApplyEngineForce(acceleration);					//Hive Mind Version.
+	/*vehicle2->ApplyEngineForce(acceleration);						//Hive Mind Version.
 	vehicle2->Turn(turn);
-	vehicle2->Brake(brake);*/
-
-	//vehicle2->Render();
+	vehicle2->Brake(brake);
+	vehicle2->Render();*/
 
 	char title[80];
 	sprintf_s(title, "P1 Speed: %.1f Km/h / P2 Speed: %.1f Km/h", 
-		P1vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());			//Temporal measure to show both vehicles Km/h.
+		P1vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());	//Temporal measure to show both vehicles Km/h.
 	App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
@@ -96,7 +87,7 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	if (body2->parentPrimitive != nullptr)
 	{
 		//body2->parentPrimitive->color = color;
-		body2->parentPrimitive->color = Blue;
+		body2->parentPrimitive->color = Red;
 	}
 	
 	/*if (body1->GetBody() == P1vehicle->GetBody())
@@ -113,39 +104,26 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 
 	if (body2->GetBody() == P1vehicle->GetBody())
 	{
-		/*if (prevCollBody == NULL || prevCollBody != body1->GetBody())
-		{
-			lives--;
-
-			LOG("Return Player 1 Lives: %d", lives);
-
-			prevCollBody = body1->GetBody();
-		}*/
-
 		if (body1->is_sensor == true)
 		{
 			RestartPlayer1(vec3(0, 12, 10));
-			/*delete body1;
-
-			body1->collision_listeners.find(body1)
-			body1->collision_listeners.del();*/
 			return;
 		}
-		
+
 		for (int i = 0; i < MAX_BODIES; i++)
-		{	
-			if (prevCollBody[i] == body1->GetBody())
+		{
+			if (prevCollBody[i] == body1)
 			{
 				//continue;
 				break;
 			}
-			
+
 			if (prevCollBody[i] == NULL)
 			{
 				lives--;
 				LOG("Return Player 1 Lives: %d", lives);
 
-				prevCollBody[i] = body1->GetBody();
+				prevCollBody[i] = body1;
 
 				break;
 			}
@@ -153,47 +131,65 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			if (prevCollBody[MAX_BODIES - 1] != NULL)
 			{
 				for (int i = 0; i < MAX_BODIES; i++)
-				{	
+				{
 					prevCollBody[i] = NULL;
-					
-					/*for (int i = 0; i < App->scene_intro->primitives.Count(); i++)
-					{
-						if (App->scene_intro->primitives[i]->body.GetBody() == prevCollBody[i])
-						{
-							delete App->scene_intro->primitives[i]->body.GetBody();
-							delete App->scene_intro->primitives[i];
-							App->scene_intro->primitives.Pop(App->scene_intro->primitives[i]);
-						}
-					}*/
 				}
 			}
 		}
+		
+		//for (int i = 0; i < MAX_BODIES; i++)
+		//{	
+		//	if (prevCollBody[i] == body1->GetBody())
+		//	{
+		//		//continue;
+		//		break;
+		//	}
+		//	
+		//	if (prevCollBody[i] == NULL)
+		//	{
+		//		lives--;
+		//		LOG("Return Player 1 Lives: %d", lives);
+
+		//		prevCollBody[i] = body1->GetBody();
+
+		//		break;
+		//	}
+
+		//	if (prevCollBody[MAX_BODIES - 1] != NULL)
+		//	{
+		//		for (int i = 0; i < MAX_BODIES; i++)
+		//		{	
+		//			prevCollBody[i] = NULL;
+		//			
+		//			App->scene_intro->DeletePrimitive();
+		//		}
+		//	}
+		//}
 	}
 }
 
 void ModulePlayer::SpawnThrowableItem(Primitive* p)
 {
-	App->scene_intro->AddPrimitive(p);
+	App->scene_intro->AddPrimitive(p);														//Adds the "item" to the primitives array.
 
-	btVector3 buffer = P1vehicle->vehicle->getForwardVector();
-	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
+	vec3 P1_Pos = P1vehicle->GetPos();														//Vec3 that will be set to P1vehicl's position vector.
 
-	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y + 2, P1vehicle->GetPos().z );
-	//p->SetPos(fwdVector.x, fwdVector.y, fwdVector.z);
+	btVector3 buffer = P1vehicle->vehicle->getForwardVector();								//Buffer for P1vehicle's forward vector.
+	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };						//vec3 set with the buffer of the forward vector.
 
-	LOG("Forward vector is (%d %d %d)", fwdVector.x, fwdVector.y, fwdVector.z);
+	p->SetPos(P1_Pos.x, P1_Pos.y + 2, P1_Pos.z );											//Sets the position from where the item will spawn.
+	//p->SetPos(fwdVector.x, fwdVector.y, fwdVector.z);										
 
-	p->body.collision_listeners.add(App->player2);									//listener set to player 2 so the collision is detected by Player 2's OnCollision() method.
-	p->body.Push(fwdVector * 5000.f);
+	LOG("Forward vector is (%d %d %d)", fwdVector.x, fwdVector.y, fwdVector.z);				
 
-	p->color = Blue;
+	p->body.collision_listeners.add(App->player2);											//listener set to player 2 so the collision is detected by Player 2's OnCollision() method.
+	p->body.Push(fwdVector * 5000.f);														//Adds a force to the spawned projectile in the directon of fwdVector.
+
+	p->color = Blue;																		//The colour of the spawned item will be blue when P1 spawns it.
 }
 
 void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 {
-	//delete P1vehicle;
-	//P1vehicle = App->physics->AddVehicle(car);
-
 	P1vehicle->GetBody()->clearForces();											//Resets the force and torque values applied to an object.
 	P1vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));		//Resets the vehicle's linear velocity (throttle).
 	P1vehicle->vehicle->getRigidBody()->setAngularVelocity(btVector3(0, 0, 0));		//Resets the vehicle's angular velocity (turn).
@@ -216,10 +212,6 @@ void ModulePlayer::DriveInputsP1()
 			acceleration = MAX_ACCELERATION;
 			
 		}
-		else if (P1vehicle->GetKmh() >= 125.0f)
-		{
-			acceleration = 0.0f;
-		}
 		else
 		{
 			brake = BRAKE_POWER;
@@ -240,9 +232,6 @@ void ModulePlayer::DriveInputsP1()
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		//brake = BRAKE_POWER;
-		
-
 		if (P1vehicle->GetKmh() <= 0.0f)
 		{
 			acceleration -= MAX_ACCELERATION;
@@ -270,13 +259,6 @@ void ModulePlayer::DriveInputsP1()
 	{
 		brake = BRAKE_POWER;
 	}
-
-	/*if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
-	{
-		scale += 0.1f;
-
-		GenerateP1Vehicle();
-	}*/
 }
 
 void ModulePlayer::GenerateP1Vehicle()
@@ -334,13 +316,13 @@ void ModulePlayer::GenerateP1Vehicle()
 	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
 	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
 
-	car.mass = 1950.0f;
-	car.suspensionStiffness = 15.88f;
-	car.suspensionCompression = 0.83f;
-	car.suspensionDamping = 0.88f;
-	car.maxSuspensionTravelCm = 1000.0f;
-	car.frictionSlip = 50.5;
-	car.maxSuspensionForce = 6000.0f;
+	car.mass					= 1600.0f;		//Original: 1500.0f, Heavy: 1950.0f
+	car.suspensionStiffness		= 15.88f;		//F1: 200.0f
+	car.suspensionCompression	= 0.83f;
+	car.suspensionDamping		= 0.88f;
+	car.maxSuspensionTravelCm	= 1000.0f;
+	car.frictionSlip			= 50.5;
+	car.maxSuspensionForce		= 6000.0f;
 
 	// Wheel properties ---------------------------------------
 	float connection_height = 1.2f * scale;
@@ -406,17 +388,17 @@ void ModulePlayer::GenerateP1Vehicle()
 	car.wheels[3].brake = true;
 	car.wheels[3].steering = false;
 
-	if (!alreadyLoaded)
-	{
-		/*p2List_item<PhysVehicle3D*>* item = vehicles;*/
-		P1vehicle = App->physics->AddVehicle(car);
-		alreadyLoaded = true;
-	}
+	P1vehicle = App->physics->AddVehicle(car);
 }
 
-bool ModulePlayer::LoadAudio()
+void ModulePlayer::LoadAudioP1()
 {
-	
-
-	return true;
+	//Loading FX
+	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
+	App->audio->LoadFx("audio/FX/Car_Braking.wav");
+	App->audio->LoadFx("audio/FX/Shoot_1.wav");
+	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
+	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
+	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
+	App->audio->LoadFx("audio/FX/Gun_Reload_sound_effect.wav");
 }

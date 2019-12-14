@@ -37,6 +37,8 @@ public:
 	Sphere Sensor;*/
 
 	void AddPrimitive(Primitive* p);											//Adds a primitive to the primitives array.
+	//void DeletePrimitive();
+	void DeletePrimitive(Primitive* p);
 
 	float GetZoom() const;														//Gets the amount of zoom required taking into account the distance between players (ratio).
 	float GetLerpSpeed(vec3 position, vec3 target, float speed) const;			//Gets the lerp speed for the camera according to the position of the camera and its target position.
@@ -49,4 +51,5 @@ private:
 	void DebugSpawnPrimitive(Primitive* p);
 
 	p2DynArray<Primitive*> primitives;
+	p2DynArray<Primitive*> arena_elements;
 };

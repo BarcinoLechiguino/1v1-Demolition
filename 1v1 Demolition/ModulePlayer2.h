@@ -25,17 +25,16 @@ public:
 	void RestartPlayer2(vec3 respawnPosition);
 	void GenerateP2Vehicle();
 	void DriveInputsP2();
+	void LoadAudioP2();
 
 public:
-
 	PhysVehicle3D* P2vehicle;
 	float turn;
 	float acceleration;
 	float brake;
 
-	btRigidBody* prevCollBody;					//Keeps track of the previous body that the vehicle collided with.
+	PhysBody3D* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
 	uint lives;
 	bool alive;
-
 	float scale;
 };

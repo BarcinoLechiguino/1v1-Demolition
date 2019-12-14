@@ -29,7 +29,7 @@ public:
 	void RestartPlayer1(vec3 respawnPosition);
 	void GenerateP1Vehicle();
 	void DriveInputsP1();
-	bool LoadAudio();									//Loads all player relevant audio.
+	void LoadAudioP1();									//Loads all player relevant audio.
 
 public:
 
@@ -41,11 +41,11 @@ public:
 	float brake;
 
 	//btRigidBody* prevCollBody;						//Keeps track of the previous body that the vehicle collided with.
-	btRigidBody* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
-	//p2DynArray<btRigidBody*> prevCollBody;
+	//btRigidBody* prevCollBody[MAX_BODIES];			//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
+	PhysBody3D* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
+
 	uint lives;
 	bool alive;
-	bool alreadyLoaded;									//Maybe can be useful in increasing the size of the car bc of a power-up.
 
 	float scale;
 };

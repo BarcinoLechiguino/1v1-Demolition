@@ -24,9 +24,9 @@ public:
 	PhysBody3D(btRigidBody* body);						//REVISE THIS. Second constructor. May be problematic(?).
 	~PhysBody3D();
 
-	void SetBody(Sphere* primitive, float mass, bool is_sensor = false);
-	void SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor = false);
-	void SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor = false);
+	void SetBody(Sphere* primitive, float mass, bool is_sensor = false, bool is_environment = false);
+	void SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor = false, bool is_environment = false);
+	void SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor = false, bool is_environment = false);
 	bool HasBody() const;
 	btRigidBody* GetBody() const;
 	void SetAsSensor(bool is_sensor);
@@ -41,8 +41,11 @@ public:
 	void Push(vec3 force);
 	void Stop();
 
+	float DistanceFromWorldOrigin(vec3 bodyPos) const;
+	float DistanceBetweenBodies(vec3 bodyPos) const;
+
 private:
-	void SetBody(btCollisionShape* shape, Primitive* parent, float mass, bool is_sensor = false);
+	void SetBody(btCollisionShape* shape, Primitive* parent, float mass, bool is_sensor = false, bool is_environment = false);
 
 	btRigidBody* body;
 	btCollisionShape* colShape;
@@ -53,6 +56,7 @@ public:
 	p2List<Module*> collision_listeners;
 
 	bool is_sensor;										//Bool that keeps track whether a physBody is a sensor or not.
+	bool is_environment;								//Bool that keeps track whether a physBody is an environment element.
 };
 
 #endif // __PhysBody3D_H__

@@ -48,8 +48,8 @@ bool ModuleSceneIntro::CleanUp()
 	}
 	
 	//primitives.Clear();
-
-	//Reload the 
+	//LoadArena();
+	//Reload the map? 
 
 	return true;
 }
@@ -59,16 +59,33 @@ void ModuleSceneIntro::HandleDebugInput()
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 		DebugSpawnPrimitive(new Sphere());
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-		DebugSpawnPrimitive(new Cube(/*vec3(1.f, 1.f, 1.f)*/));				//REVISE THIS. Should be just new Cube(). Check how to disambiguate a class constructor function when creating "new"s (and everything else).
+		DebugSpawnPrimitive(new Cube(/*vec3(1.f, 1.f, 1.f)*/));
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 		DebugSpawnPrimitive(new Cylinder());
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
-		for (uint n = 0; n < primitives.Count(); n++)
-			primitives[n]->SetPos((float)(std::rand() % 40 - 20), 10.f, (float)(std::rand() % 40 - 20));
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
-		for (uint n = 0; n < primitives.Count(); n++)
-			primitives[n]->body.Push(vec3((float)(std::rand() % 500) - 250, 500, (float)(std::rand() % 500) - 250));
 
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)		//Teleports all free primitives to random places.
+	{
+		for (uint n = 0; n < primitives.Count(); n++)
+		{
+			if (primitives[n]->body.is_sensor == false && primitives[n]->body.is_environment == false)
+			{
+				primitives[n]->SetPos((float)(std::rand() % 40 - 20), 10.f, (float)(std::rand() % 40 - 20));
+			}
+		}
+	}
+	
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)		//Adds a random force to all free primitives.
+	{
+		for (uint n = 0; n < primitives.Count(); n++)
+		{
+			if (primitives[n]->body.is_sensor == false && primitives[n]->body.is_environment == false)
+			{
+				primitives[n]->body.Push(vec3((float)(std::rand() % 500) - 250, 500, (float)(std::rand() % 500) - 250));
+			}
+		}
+			
+	}
+			
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
 		//TODO: NEW CODE		//Change Ball colour on click.
@@ -77,10 +94,12 @@ void ModuleSceneIntro::HandleDebugInput()
 		//Get a vector indicating the direction from the camera viewpoint to the "mouse"
 		const vec2 mousePos(((float)App->input->GetMouseX() / (float)App->window->Width()) * 2.f - 1.f,
 			-((float)App->input->GetMouseY() / (float)App->window->Height()) * 2.f + 1.f);
+		
 		const vec4 rayEye = inverse(App->renderer3D->ProjectionMatrix) * vec4(mousePos.x, mousePos.y, -1.f, 1.f);
 		const vec4 rayWorld(inverse(App->camera->GetViewMatrix()) * vec4(rayEye.x, rayEye.y, -1.f, 0.f));
 
 		vec3 Dir(rayWorld.x, rayWorld.y, rayWorld.z);
+		
 		//Cast a ray from the camera, in the "mouse" direction
 		PhysBody3D* body = App->physics->RayCast(App->camera->Position, Dir);
 		if (body)
@@ -95,9 +114,8 @@ void ModuleSceneIntro::DebugSpawnPrimitive(Primitive * p)
 {
 	primitives.PushBack(p);
 	p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-	//p->body.collision_listeners.PushBack(this);
-	//p->body.collision_listeners.add(this);
-	p->body.collision_listeners.add(App->player);
+	//p->body.collision_listeners.add(this);												//Uncomment this to add this primitive to the colision_listener array
+	//p->body.collision_listeners.add(App->player);
 	p->body.Push(-App->camera->Z * 1000.f);
 }
 
@@ -108,7 +126,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	vec3 P1_position = App->player->P1vehicle->GetPos();								//Gets the current position of Player 1.
+	vec3 P1_position = App->player->P1vehicle->GetPos();							//Gets the current position of Player 1.
 	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
 
 	vec3 midPos = {																	//Position vector that is set to be at the center poisition of both players.
@@ -130,15 +148,15 @@ update_status ModuleSceneIntro::Update(float dt)
 		
 		App->camera->LookAt(avgRefPoint);											//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
 	}
-
-	//LOG("Vehicle pos (%f %f %f)", P1_position.x, P1_position.y, P1_position.z);
-	//LOG("Camera pos: (%f %f %f)", App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 	
 	if (App->debug == true)
 		HandleDebugInput();
 
 	for (uint n = 0; n < primitives.Count(); n++)
 		primitives[n]->Update();
+
+	/*for (uint n = 0; n < arena_elements.Count(); n++)
+		arena_elements[n]->Update();*/
 
 	return UPDATE_CONTINUE;
 }
@@ -150,13 +168,12 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		primitives[n]->Render();
 	}
 
-	return UPDATE_CONTINUE;
-}
+	/*for (uint n = 0; n < arena_elements.Count(); n++)
+	{
+		arena_elements[n]->Render();
+	}*/
 
-// --- Adds a primitive to the primitives dynArray.
-void ModuleSceneIntro::AddPrimitive(Primitive * p)
-{
-	primitives.PushBack(p);
+	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
@@ -174,16 +191,35 @@ void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	}
 }
 
+// --- Adds a primitive to the primitives dynArray.
+void ModuleSceneIntro::AddPrimitive(Primitive * p)
+{
+	primitives.PushBack(p);
+}
+
+void ModuleSceneIntro::DeletePrimitive(Primitive* p)
+{
+	for (int i = 0; i < primitives.Count(); i++)									//Revise this.
+	{
+		if (primitives[i] == p)
+		{
+			if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
+			{
+				App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+				delete primitives[i];
+				primitives.Pop(primitives[i]);
+			}
+
+			break;
+		}
+	}
+}
+
 //Gets the amount of zoom required taking into account the distance between players (ratio).
 float ModuleSceneIntro::GetZoom() const
 {
 	vec3 P1_position = App->player->P1vehicle->GetPos();				//Gets the current position of Player 1.
 	vec3 P2_position = App->player2->P2vehicle->GetPos();				//Gets the current position of Player 2.
-
-	//float distanceNoSqrt = (P1_position.x * P2_position.x) + (P1_position.z * P2_position.z);
-
-	LOG("Position x %.2f: ", P1_position.x);
-	LOG("Position z %.2f: ", P1_position.z);
 
 	float posX = P1_position.x - P2_position.x;
 	float posZ = P1_position.z - P2_position.z;
@@ -249,19 +285,25 @@ void ModuleSceneIntro::LoadArena()
 
 
 	// ----------------------------------- WALLS -----------------------------------
-	Cube* cube = new Cube(vec3(1.f, 1.f, 1.f), 0.0f, true);
-	cube->SetPos(5.0f, 1.0f, 0.0f);
-	primitives.PushBack(cube);
-
+	Cube* wall1 = new Cube(vec3(5.f, 5.f, 20.f), 0.0f, false, true);
+	wall1->SetPos(-5.0f, 5.0f, 0.0f);
+	primitives.PushBack(wall1);
+	//arena_elements.PushBack(wall1);
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
 
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
-	Sphere* ammo_pickup = new Sphere(1.0f, 0.0f, true);
+	Sphere* ammo_pickup = new Sphere(1.0f, 0.0f, true, true);
 	ammo_pickup->SetPos(0.0f, 0.0f, 0.0f);
-	//ammo_pickup->color = Red;
 	primitives.PushBack(ammo_pickup);
+	//arena_elements.PushBack(ammo_pickup);
+	//ammo_pickup->color = Red;
+
+	Cube* cube = new Cube(vec3(1.f, 1.f, 1.f), 0.0f, true, true);
+	cube->SetPos(5.0f, 1.0f, 0.0f);
+	primitives.PushBack(cube);
+	//arena_elements.PushBack(cube);
 
 	/*Sphere ammo_pickup(1.0f, 0.0f);
 	ammo_pickup.SetPos(0.0f, 0.0f, 0.0f);

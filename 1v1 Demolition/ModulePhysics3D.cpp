@@ -100,7 +100,7 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	world->stepSimulation(dt, 15);
 
-	//REVISE THIS. COMMIT FIX
+																											//REVISE THIS.
 	int numManifolds = world->getDispatcher()->getNumManifolds();											//Gets the amount of manifolds in the dispatcher
 	for (int i = 0; i < numManifolds; i++)																	//Loop that iterates for as many manyfolds the dispatcher has registered.
 	{
@@ -132,29 +132,6 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 			}
 		}
 	}
-	
-	/*for (int n = 0; n < world->getDispatcher()->getNumManifolds(); n++)
-	{
-		btPersistentManifold* manifold = world->getDispatcher()->getManifoldByIndexInternal(n);
-		if (manifold->getNumContacts() > 0)
-		{
-			PhysBody3D* body1 = (PhysBody3D*)manifold->getBody0()->getUserPointer();
-			PhysBody3D* body2 = (PhysBody3D*)manifold->getBody1()->getUserPointer();
-
-			if (body1 != nullptr && body2 != nullptr)
-			{
-				for (uint n = 0; n < body1->collision_listeners.Count(); n++)
-				{
-					body1->collision_listeners[n]->OnCollision(body1, body2);
-				}
-
-				for (uint n = 0; n < body2->collision_listeners.Count(); n++)
-				{
-					body2->collision_listeners[n]->OnCollision(body2, body1);
-				}
-			}
-		}
-	}*/
 
 	return UPDATE_CONTINUE;
 }

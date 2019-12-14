@@ -37,25 +37,27 @@ PhysBody3D::~PhysBody3D()
 	}
 }
 
-void PhysBody3D::SetBody(Sphere* primitive, float mass, bool is_sensor)
+void PhysBody3D::SetBody(Sphere* primitive, float mass, bool is_sensor, bool is_environment)
 {
-	SetBody(new btSphereShape(primitive->GetRadius()), 
-		primitive, mass, is_sensor);
+	SetBody(new btSphereShape(primitive->GetRadius()),
+		primitive, mass, is_sensor, is_environment);
 }
 
-void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor)
+void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor, bool is_environment)
 {
 	//btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
 	btVector3 btSize = { size.x, size.y, size.z };
 
-	SetBody(new btBoxShape(btSize * 0.5f), primitive, mass, is_sensor);
+	SetBody(new btBoxShape(btSize * 0.5f),
+		primitive, mass, is_sensor, is_environment);
 }
 
-void PhysBody3D::SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor)
+void PhysBody3D::SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor, bool is_environment)
 {
 	btVector3 btSize = { primitive->GetRadius(), primitive->GetHeight(), depth };
 	
-	SetBody(new btCylinderShape(btSize * 0.5f), primitive, mass, is_sensor);
+	SetBody(new btCylinderShape(btSize * 0.5f),
+		primitive, mass, is_sensor, is_environment);
 }
 
 bool PhysBody3D::HasBody() const
@@ -102,6 +104,7 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->activate();
 }
 
+// --- Gets the position of an object in the physics world.
 vec3 PhysBody3D::GetPos() const
 {
 	if (HasBody() == false)
@@ -115,6 +118,65 @@ vec3 PhysBody3D::GetPos() const
 	return position;
 }
 
+// --- Gets the distance between a physBody and the world origin (vec3(0.0f, 0.0f, 0.0f))
+float PhysBody3D::DistanceFromWorldOrigin(vec3 bodyPos) const
+{
+	vec3 origin(0.0f, 0.0f, 0.0f);
+
+	float posX = origin.x - bodyPos.x;
+	float posY = origin.y - bodyPos.y;
+	float posZ = origin.z - bodyPos.z;
+
+	if (posX < 0)
+	{
+		posX = posX * (-1);
+	}
+
+	if (posY < 0)
+	{
+		posY = posY * (-1);
+	}
+
+	if (posZ < 0)
+	{
+		posZ = posZ * (-1);
+	}
+
+	float distance = posX + posY + posZ;
+	//float distance = posX + posZ;
+
+	return distance;
+}
+
+float PhysBody3D::DistanceBetweenBodies(vec3 bodyPos) const
+{
+	vec3 firstBody = this->GetPos();
+
+	float posX = firstBody.x - bodyPos.x;
+	float posY = firstBody.y - bodyPos.y;
+	float posZ = firstBody.z - bodyPos.z;
+
+	if (posX < 0)
+	{
+		posX = posX * (-1);
+	}
+
+	if (posY < 0)
+	{
+		posY = posY * (-1);
+	}
+
+	if (posZ < 0)
+	{
+		posZ = posZ * (-1);
+	}
+
+	float distance = posX + posY + posZ;
+
+	return distance;
+}
+
+// --- Sets a body as a Sensor, which means that it will detect a collision but it can be gone through (returns no contact)
 void PhysBody3D::SetAsSensor(bool is_sensor)
 {
 	if (this->is_sensor != is_sensor)
@@ -131,6 +193,7 @@ void PhysBody3D::SetAsSensor(bool is_sensor)
 	}
 }
 
+// --- Resets the transform of a body to a neutral state (IdentityMatrix)
 void PhysBody3D::ResetTransform()
 {
 	mat4x4 matrix = IdentityMatrix;
@@ -161,7 +224,7 @@ void PhysBody3D::Stop()
 		body->clearForces();
 }
 
-void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass, bool is_sensor)
+void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass, bool is_sensor, bool is_environment)
 {
 	assert(HasBody() == false);
 
@@ -190,6 +253,8 @@ void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass
 		this->collision_listeners.add(App->player);
 		this->collision_listeners.add(App->player2);
 	}
+
+	this->is_environment = is_environment;				//Way to keep track of elements in the physics world that are part of the arena.
 
  	App->physics->AddBodyToWorld(body);
 }
