@@ -47,7 +47,7 @@ enum update_status
 #define CAM_OFFSET 1
 
 // -------------------- Vehicle Movement Variables --------------------
-#define MAX_ACCELERATION 3650.0f
+#define MAX_ACCELERATION 5500.0f
 #define TURN_DEGREES 25.0f * DEGTORAD
 #define BRAKE_POWER 1250.0f
 

@@ -62,29 +62,6 @@ update_status ModulePlayer::Update(float dt)
 		LOG("Player 1 Restart at %d lives", lives);
 		RestartPlayer1(vec3(0, 12, 10));
 	}
-	
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-	{
-		SpawnThrowableItem(new Sphere());
-		App->audio->PlayFx(3, 0);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-	{
-		RestartPlayer1(vec3(0, 12, 10));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
-	{
-		brake = BRAKE_POWER;
-	}
-
-	/*if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
-	{
-		scale += 0.1f;
-
-		GenerateP1Vehicle();
-	}*/
 
 	P1vehicle->ApplyEngineForce(acceleration);
 	P1vehicle->Turn(turn);
@@ -223,9 +200,10 @@ void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 	lives = 3;
 }
 
+//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
 void ModulePlayer::DriveInputsP1()
 {
-	//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
+	// -------------------------------- MAIN ACTIONS --------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
 	{			
 															//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode)
@@ -271,6 +249,30 @@ void ModulePlayer::DriveInputsP1()
 			App->audio->PlayFx(2, 0);
 		}
 	}
+
+	// -------------------------------- EXTRA ACTIONS --------------------------------
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		SpawnThrowableItem(new Sphere());
+		App->audio->PlayFx(3, 0);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	{
+		RestartPlayer1(vec3(0, 12, 10));
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
+	{
+		brake = BRAKE_POWER;
+	}
+
+	/*if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
+	{
+		scale += 0.1f;
+
+		GenerateP1Vehicle();
+	}*/
 }
 
 void ModulePlayer::GenerateP1Vehicle()
