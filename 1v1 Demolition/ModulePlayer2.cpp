@@ -173,9 +173,11 @@ void ModulePlayer2::DriveInputsP2()
 	//------------------------------------------- PLAYER 2 INPUTS -------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_KP_8) == KEY_REPEAT)
 	{
+		
 		if (P2vehicle->GetKmh() >= 0.0f)
 		{
 			acceleration = MAX_ACCELERATION;
+			App->audio->PlayFx(2, 0);
 		}
 		else
 		{
@@ -198,6 +200,7 @@ void ModulePlayer2::DriveInputsP2()
 	if (App->input->GetKey(SDL_SCANCODE_KP_5) == KEY_REPEAT)
 	{
 		//brake = BRAKE_POWER;
+		App->audio->PlayFx(3, 0);
 
 		if (P2vehicle->GetKmh() <= 0.0f)
 		{

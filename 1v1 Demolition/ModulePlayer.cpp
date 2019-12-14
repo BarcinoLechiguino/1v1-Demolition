@@ -30,6 +30,15 @@ bool ModulePlayer::Start()
 
 	P1vehicle->SetPos(0, 12, 10);
 
+	//Loading FX
+	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
+	App->audio->LoadFx("audio/FX/Accelerate.wav");
+	App->audio->LoadFx("audio/FX/Car_Braking.wav");
+	App->audio->LoadFx("audio/FX/Shoot_1.wav");
+	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
+	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
+	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
+
 	return true;
 }
 
@@ -217,10 +226,13 @@ void ModulePlayer::DriveInputsP1()
 {
 	//------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
-	{																		//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode).
+	{			
+															//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode)
 		if (P1vehicle->GetKmh() >= 0.0f)
 		{
 			acceleration = MAX_ACCELERATION;
+			App->audio->PlayFx(2, 0);
+			
 		}
 		else if (P1vehicle->GetKmh() >= 125.0f)
 		{
@@ -247,7 +259,7 @@ void ModulePlayer::DriveInputsP1()
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		//brake = BRAKE_POWER;
-
+		
 		if (P1vehicle->GetKmh() <= 0.0f)
 		{
 			acceleration -= MAX_ACCELERATION;
@@ -255,6 +267,7 @@ void ModulePlayer::DriveInputsP1()
 		else
 		{
 			brake = BRAKE_POWER;
+			
 		}
 	}
 }
@@ -396,14 +409,7 @@ void ModulePlayer::GenerateP1Vehicle()
 
 bool ModulePlayer::LoadAudio()
 {
-	//Loading FX
-	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
-	App->audio->LoadFx("audio/FX/Accelerate.wav");
-	App->audio->LoadFx("audio/FX/Car_Braking.wav");
-	App->audio->LoadFx("audio/FX/Shoot_1.wav");
-	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
-	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
-	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
+	
 
 	return true;
 }
