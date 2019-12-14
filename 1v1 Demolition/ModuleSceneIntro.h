@@ -52,7 +52,10 @@ public:
 	float GetLerpSpeed(vec3 position, vec3 target, float speed) const;		//Gets the lerp speed for the camera according to the position of the camera and its target position.
 	void LerpCamera(vec3 cameraPosition, vec3 targetPosition);				//Method that changes the camera's poisition according to the lerp speed received from GetLerpSpeed().
 
+	void AddPrimitive(Primitive* p);
 	p2DynArray<Primitive*> primitives;						//Temporal. Just to check that the  vehicle throw item method works. Maybe create an AddPrimitive method.
+
+	void LoadArena();
 
 private:
 	void HandleDebugInput();

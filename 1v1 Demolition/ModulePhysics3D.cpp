@@ -280,6 +280,12 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass, bool is_s
 	world->addRigidBody(body);
 	bodies.add(pbody);
 
+	if (is_sensor == true)
+	{
+		pbody->collision_listeners.add(App->player);
+		pbody->collision_listeners.add(App->player2);
+	}
+
 	return pbody;
 }
 

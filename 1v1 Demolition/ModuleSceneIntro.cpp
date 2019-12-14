@@ -28,26 +28,9 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
-	//Cube* cube = new Cube();
-	/*Cube* cube = new Cube();
-	cube->SetPos(0.0f, 1.0f, 0.0f);
-	primitives.PushBack(cube);
-	App->physics->AddBody(*cube, 0.0f);*/
-
-	Sphere* sphere = new Sphere(1.0f);
-	sphere->SetPos(0.0f, 0.0f, 0.0f);
-	primitives.PushBack(sphere);
-	App->physics->AddBody(*sphere, 0.0f, true);
-
-
+	LoadArena();
 
 	//-------------------------------------------------------------------
-	//App->camera->LookAt(App->player->vehicle->GetTransform());
-	/*vec3 vehiclePos;
-	App->player->vehicle->GetPos(vehiclePos);
-	
-	App->camera->LookAt(vec3(vehiclePos.x, 0, 0));*/
-
 	//const int SnakeLength = 7;
 	//const float StartingSize = 0.5f;
 	//const float SizeIncrement = 0.2f;
@@ -313,19 +296,22 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition)
 	}
 }
 
-//void ModuleSceneIntro::SpawnThrowableItem(Primitive* p)
-//{
-//	primitives.PushBack(p);
-//
-//	App->player->P1vehicle->vehicle->getForwardVector().getZ();
-//
-//	btVector3 buffer = App->player->P1vehicle->vehicle->getForwardVector();
-//	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
-//
-//	vec3 playerPos = { App->player->P1vehicle->GetPos().x, App->player->P1vehicle->GetPos().y, App->player->P1vehicle->GetPos().z };
-//
-//	p->SetPos(playerPos.x, playerPos.y + 2, playerPos.z + 5);
-//
-//	p->body.collision_listeners.add(this);
-//	p->body.Push(-fwdVector.z * 1000.f);
-//}
+void ModuleSceneIntro::LoadArena()
+{
+	//Cube* cube = new Cube();
+	/*Cube* cube = new Cube();
+	cube->SetPos(0.0f, 1.0f, 0.0f);
+	primitives.PushBack(cube);
+	App->physics->AddBody(*cube, 0.0f);*/
+
+	Sphere* ammo_pickup = new Sphere(1.0f, 0.0f, true);
+	ammo_pickup->SetPos(0.0f, 0.0f, 0.0f);
+	//ammo_pickup->color = Red;
+	primitives.PushBack(ammo_pickup);
+	//App->physics->AddBody(*ammo_pickup, 0.0f, true);
+
+	/*Sphere ammo_pickup(1.0f, 0.0f);
+	ammo_pickup.SetPos(0.0f, 0.0f, 0.0f);
+	primitives.PushBack(&ammo_pickup);
+	App->physics->AddBody(ammo_pickup, 0.0f, true);*/
+}
