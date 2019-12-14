@@ -40,11 +40,13 @@ public:
 	//void DeletePrimitive();
 	void DeletePrimitive(Primitive* p);
 
+	void CameraMovement();
 	float GetZoom() const;														//Gets the amount of zoom required taking into account the distance between players (ratio).
 	float GetLerpSpeed(vec3 position, vec3 target, float speed) const;			//Gets the lerp speed for the camera according to the position of the camera and its target position.
 	void LerpCamera(vec3 cameraPosition, vec3 targetPosition, float speed);		//Method that changes the camera's poisition according to the lerp speed received from GetLerpSpeed().
 
 	void LoadArena();															//
+	void RestartGame();
 
 private:
 	void HandleDebugInput();

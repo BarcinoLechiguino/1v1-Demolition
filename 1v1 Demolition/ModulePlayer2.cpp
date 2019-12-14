@@ -7,6 +7,7 @@
 
 ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled)
 , P2vehicle(NULL)
+, spawnPoint(5, 12, 10)
 , lives(3)
 , alive(true)
 , scale(1.0f)
@@ -24,8 +25,6 @@ bool ModulePlayer2::Start()
 	LOG("Loading player");
 
 	GenerateP2Vehicle();
-
-	P2vehicle->SetPos(5, 12, 10);
 
 	LoadAudioP2();
 
@@ -45,12 +44,14 @@ update_status ModulePlayer2::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	DriveInputsP2();
-
-	if (lives <= 0 || lives > 3)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
+	if (!App->debug)
 	{
-		RestartPlayer2(vec3(5, 12, 10));
+		DriveInputsP2();										//Inputs P1
 	}
+
+	SpecialInputsP2();											//Throw Item & Restart.
+
+	CheckLivesP2();												//Checks how many lives Player 2 has left. If P2 has no lives, s/he is reset.
 
 	P2vehicle->ApplyEngineForce(acceleration);
 	P2vehicle->Turn(turn);
@@ -190,20 +191,49 @@ void ModulePlayer2::DriveInputsP2()
 	}
 	
 	// -------------------------------- EXTRA ACTIONS --------------------------------
+	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_REPEAT)
+	{
+		acceleration = MAX_ACCELERATION * 5;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_REPEAT)
+	{
+		brake = BRAKE_POWER;
+	}
+}
+
+void ModulePlayer2::SpecialInputsP2()
+{
 	if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
 	{
 		SpawnThrowableItem(new Sphere());
 		App->audio->PlayFx(3, 0);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
 	{
 		RestartPlayer2(vec3(5, 12, 10));
 	}
+}
 
-	if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_REPEAT)
+// --- Checks how many lives Player 2 has left. If P2 has no lives, s/he is reset.
+void ModulePlayer2::CheckLivesP2()
+{
+	uint prevLives;
+
+	if (lives <= 3)
 	{
-		brake = BRAKE_POWER;
+		prevLives = lives;
+	}
+
+	if (lives > 3)
+	{
+		lives = prevLives - 1;
+	}
+	
+	if (lives <= 0)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
+	{
+		RestartPlayer2(spawnPoint);
 	}
 }
 
@@ -335,6 +365,7 @@ void ModulePlayer2::GenerateP2Vehicle()
 	car.wheels[3].steering = false;
 
 	P2vehicle = App->physics->AddVehicle(car);
+	P2vehicle->SetPos(spawnPoint);
 }
 
 void ModulePlayer2::LoadAudioP2()

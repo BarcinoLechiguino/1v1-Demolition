@@ -9,10 +9,6 @@
 struct PhysVehicle3D;
 struct VehicleInfo;
 
-//#define MAX_ACCELERATION 1000.0f
-//#define TURN_DEGREES 15.0f * DEGTORAD
-//#define BRAKE_POWER 1000.0f
-
 class ModulePlayer : public Module
 {
 public:
@@ -24,12 +20,14 @@ public:
 	bool CleanUp();
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2) override;
+	void LoadAudioP1();													//Loads all player relevant audio.
 
 	void SpawnThrowableItem(Primitive* p);
 	void RestartPlayer1(vec3 respawnPosition);
 	void GenerateP1Vehicle();
 	void DriveInputsP1();
-	void LoadAudioP1();									//Loads all player relevant audio.
+	void SpecialInputsP1();
+	void CheckLivesP1();
 
 public:
 
@@ -40,12 +38,9 @@ public:
 	float acceleration;
 	float brake;
 
-	//btRigidBody* prevCollBody;						//Keeps track of the previous body that the vehicle collided with.
-	//btRigidBody* prevCollBody[MAX_BODIES];			//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
 	PhysBody3D* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
-
+	vec3 spawnPoint;									//vec3 that has the first spawn position in the map recorded down.
 	uint lives;
 	bool alive;
-
 	float scale;
 };

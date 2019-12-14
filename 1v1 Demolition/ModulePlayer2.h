@@ -20,12 +20,15 @@ public:
 	bool CleanUp();
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2) override;
+	void LoadAudioP2();
 
 	void SpawnThrowableItem(Primitive* p);
 	void RestartPlayer2(vec3 respawnPosition);
 	void GenerateP2Vehicle();
 	void DriveInputsP2();
-	void LoadAudioP2();
+	void SpecialInputsP2();
+	void CheckLivesP2();
+
 
 public:
 	PhysVehicle3D* P2vehicle;
@@ -34,7 +37,8 @@ public:
 	float brake;
 
 	PhysBody3D* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
-	uint lives;
-	bool alive;
-	float scale;
+	vec3 spawnPoint;									//vec3 that has the first spawn position in the map recorded down.
+	uint lives;											//Lives of P2.
+	bool alive;											//Keeps track whether P2 is alive or not.
+	float scale;										//Scaling factor of P2's vehicle.
 };

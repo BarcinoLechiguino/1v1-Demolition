@@ -21,7 +21,7 @@ class PhysBody3D
 {
 public:
 	PhysBody3D();
-	PhysBody3D(btRigidBody* body);						//REVISE THIS. Second constructor. May be problematic(?).
+	PhysBody3D(btRigidBody* body);
 	~PhysBody3D();
 
 	void SetBody(Sphere* primitive, float mass, bool is_sensor = false, bool is_environment = false);
@@ -34,8 +34,10 @@ public:
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
 	void ResetTransform();
+
 	void SetPos(float x, float y, float z);
-	vec3 GetPos() const;								//Temporal measure (?). Used to get a vehicle's position.
+	void SetPos(vec3 position);
+	vec3 GetPos() const;
 
 	void SetSpeed(vec3 speed);
 	void Push(vec3 force);
@@ -50,9 +52,9 @@ private:
 	btRigidBody* body;
 	btCollisionShape* colShape;
 	btDefaultMotionState* motionState;
+
 public:
 	Primitive* parentPrimitive;
-	//p2DynArray<Module*> collision_listeners;
 	p2List<Module*> collision_listeners;
 
 	bool is_sensor;										//Bool that keeps track whether a physBody is a sensor or not.

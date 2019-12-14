@@ -104,6 +104,19 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->activate();
 }
 
+void PhysBody3D::SetPos(vec3 position)
+{
+	if (HasBody() == false)
+		return;
+
+	btVector3 origin = { position.x, position.y, position.z };
+
+	btTransform trans = body->getWorldTransform();
+	trans.setOrigin(origin);
+	body->setWorldTransform(trans);
+	body->activate();
+}
+
 // --- Gets the position of an object in the physics world.
 vec3 PhysBody3D::GetPos() const
 {

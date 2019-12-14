@@ -9,6 +9,7 @@
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 , P1vehicle(NULL)
+, spawnPoint(0, 12, 10)
 , lives(3)
 , alive(true)
 , scale(1.0f)
@@ -26,8 +27,6 @@ bool ModulePlayer::Start()
 	LOG("Loading player");
 
 	GenerateP1Vehicle();
-
-	P1vehicle->SetPos(0, 12, 10);
 
 	LoadAudioP1();
 
@@ -47,13 +46,14 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 	
-	DriveInputsP1();												//Inputs P1
-
-	if (lives <= 0 || lives > 3)									//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
+	if (!App->debug)
 	{
-		LOG("Player 1 Restart at %d lives", lives);
-		RestartPlayer1(vec3(0, 12, 10));
+		DriveInputsP1();											//Inputs P1
 	}
+	
+	SpecialInputsP1();												//Throw Item & Restart.
+
+	CheckLivesP1();													//Checks how many lives Player 2 has left. If P1 has no lives, s/he is reset.
 
 	P1vehicle->ApplyEngineForce(acceleration);
 	P1vehicle->Turn(turn);
@@ -136,35 +136,6 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 				}
 			}
 		}
-		
-		//for (int i = 0; i < MAX_BODIES; i++)
-		//{	
-		//	if (prevCollBody[i] == body1->GetBody())
-		//	{
-		//		//continue;
-		//		break;
-		//	}
-		//	
-		//	if (prevCollBody[i] == NULL)
-		//	{
-		//		lives--;
-		//		LOG("Return Player 1 Lives: %d", lives);
-
-		//		prevCollBody[i] = body1->GetBody();
-
-		//		break;
-		//	}
-
-		//	if (prevCollBody[MAX_BODIES - 1] != NULL)
-		//	{
-		//		for (int i = 0; i < MAX_BODIES; i++)
-		//		{	
-		//			prevCollBody[i] = NULL;
-		//			
-		//			App->scene_intro->DeletePrimitive();
-		//		}
-		//	}
-		//}
 	}
 }
 
@@ -204,7 +175,7 @@ void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 void ModulePlayer::DriveInputsP1()
 {
 	// -------------------------------- MAIN ACTIONS --------------------------------
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)					//Change to WASD.
 	{			
 															//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode)
 		if (P1vehicle->GetKmh() >= 0.0f)
@@ -218,19 +189,19 @@ void ModulePlayer::DriveInputsP1()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
 		if (turn < TURN_DEGREES)
 			turn += TURN_DEGREES;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
 		if (turn > -TURN_DEGREES)
 			turn -= TURN_DEGREES;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
 		if (P1vehicle->GetKmh() <= 0.0f)
 		{
@@ -244,20 +215,48 @@ void ModulePlayer::DriveInputsP1()
 	}
 
 	// -------------------------------- EXTRA ACTIONS --------------------------------
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+	{
+		acceleration = MAX_ACCELERATION * 5;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
+	{
+		brake = BRAKE_POWER;
+	}
+}
+
+void ModulePlayer::SpecialInputsP1()
+{
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		SpawnThrowableItem(new Sphere());
 		App->audio->PlayFx(3, 0);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
 	{
-		RestartPlayer1(vec3(0, 12, 10));
+		RestartPlayer1(spawnPoint);
+	}
+}
+
+void ModulePlayer::CheckLivesP1()
+{
+	uint prevLives;
+	
+	if (lives <= 3)
+	{
+		prevLives = lives;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
+	if (lives > 3)
 	{
-		brake = BRAKE_POWER;
+		lives = prevLives - 1;
+	}
+
+	if (lives <= 0)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
+	{
+		RestartPlayer1(spawnPoint);
 	}
 }
 
@@ -389,6 +388,7 @@ void ModulePlayer::GenerateP1Vehicle()
 	car.wheels[3].steering = false;
 
 	P1vehicle = App->physics->AddVehicle(car);
+	P1vehicle->SetPos(spawnPoint);
 }
 
 void ModulePlayer::LoadAudioP1()
