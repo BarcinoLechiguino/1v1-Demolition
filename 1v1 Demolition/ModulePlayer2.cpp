@@ -53,6 +53,7 @@ update_status ModulePlayer2::Update(float dt)
 	{
 		//App->scene_intro->SpawnThrowableItem(new Sphere());
 		SpawnThrowableItem(new Sphere());
+		App->audio->PlayFx(4, 0);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
@@ -209,6 +210,7 @@ void ModulePlayer2::DriveInputsP2()
 		else
 		{
 			brake = BRAKE_POWER;
+			App->audio->PlayFx(3, 0);
 		}
 	}
 }

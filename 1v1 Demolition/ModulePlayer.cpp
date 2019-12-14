@@ -66,6 +66,7 @@ update_status ModulePlayer::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		SpawnThrowableItem(new Sphere());
+		App->audio->PlayFx(4, 0);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
@@ -260,6 +261,7 @@ void ModulePlayer::DriveInputsP1()
 	{
 		//brake = BRAKE_POWER;
 		
+
 		if (P1vehicle->GetKmh() <= 0.0f)
 		{
 			acceleration -= MAX_ACCELERATION;
@@ -267,7 +269,7 @@ void ModulePlayer::DriveInputsP1()
 		else
 		{
 			brake = BRAKE_POWER;
-			
+			App->audio->PlayFx(3, 0);
 		}
 	}
 }
