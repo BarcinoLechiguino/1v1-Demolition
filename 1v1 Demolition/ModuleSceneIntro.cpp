@@ -32,10 +32,12 @@ bool ModuleSceneIntro::Start()
 	primitives.PushBack(cube);
 	App->physics->AddBody(*cube, 0.0f);*/
 
-	/*Sphere* sphere = new Sphere(1.0f);
+	Sphere* sphere = new Sphere(1.0f);
 	sphere->SetPos(0.0f, 0.0f, 0.0f);
 	primitives.PushBack(sphere);
-	App->physics->AddBody(*sphere, 0.0f);*/
+	App->physics->AddBody(*sphere, 0.0f, true);
+
+
 
 	//-------------------------------------------------------------------
 	//App->camera->LookAt(App->player->vehicle->GetTransform());

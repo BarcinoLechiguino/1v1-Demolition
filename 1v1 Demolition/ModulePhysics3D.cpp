@@ -256,7 +256,7 @@ void ModulePhysics3D::RemoveBodyFromWorld(btRigidBody * body)
 	world->removeRigidBody(body);
 }
 
-PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
+PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass, bool is_sensor)
 {
 	btCollisionShape* colShape = new btSphereShape(sphere.GetRadius());								//REVISE THIS Getters here.
 	shapes.add(colShape);
@@ -275,6 +275,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
 
+	pbody->SetAsSensor(is_sensor);
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);

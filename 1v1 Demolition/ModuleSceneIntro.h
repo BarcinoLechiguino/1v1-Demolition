@@ -31,7 +31,7 @@ public:
 	Sphere s_snake2[MAX_SNAKE];
 	*/
 
-	PhysBody3D* pb_chassis;
+	/*PhysBody3D* pb_chassis;
 	Cube p_chassis;
 
 	PhysBody3D* pb_wheel;
@@ -42,6 +42,9 @@ public:
 
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
+
+	PhysBody3D* sensor_pb;
+	Sphere Sensor;*/
 
 	void DebugSpawnPrimitive(Primitive* p);					//Temporal. Just to check that the vehicle input work.
 

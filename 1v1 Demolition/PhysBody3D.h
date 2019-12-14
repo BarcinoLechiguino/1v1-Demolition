@@ -29,6 +29,7 @@ public:
 	void SetBody(Cylinder* primitive, float depth, float mass);
 	bool HasBody() const;
 	btRigidBody* GetBody() const;
+	void SetAsSensor(bool is_sensor);
 
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
@@ -50,6 +51,8 @@ public:
 	Primitive* parentPrimitive;
 	//p2DynArray<Module*> collision_listeners;
 	p2List<Module*> collision_listeners;
+
+	bool is_sensor;										//Bool that keeps track whether a physBody is a sensor or not.
 };
 
 #endif // __PhysBody3D_H__

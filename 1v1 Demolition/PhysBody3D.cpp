@@ -11,6 +11,7 @@ PhysBody3D::PhysBody3D()
 	, colShape(nullptr)
 	, motionState(nullptr)
 	, parentPrimitive(nullptr)
+	, is_sensor(false)
 	/*, collision_listeners()*/
 {
 	
@@ -44,16 +45,16 @@ void PhysBody3D::SetBody(Sphere* primitive, float mass)
 
 void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass)
 {
-	/*btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
+	btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
 
-	SetBody(new btBoxShape(btSize), primitive, mass);*/
+	SetBody(new btBoxShape(btSize), primitive, mass);
 }
 
 void PhysBody3D::SetBody(Cylinder* primitive, float depth, float mass)
 {
-	/*btVector3 btSize = { primitive->GetRadius(), primitive->GetHeight(), depth };
+	btVector3 btSize = { primitive->GetRadius(), primitive->GetHeight(), depth };
 	
-	SetBody(new btCylinderShape(btSize), primitive, mass);*/
+	SetBody(new btCylinderShape(btSize), primitive, mass);
 }
 
 bool PhysBody3D::HasBody() const
@@ -110,6 +111,22 @@ vec3 PhysBody3D::GetPos() const
 	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};
 
 	return position;
+}
+
+void PhysBody3D::SetAsSensor(bool is_sensor)
+{
+	if (this->is_sensor != is_sensor)
+	{
+		this->is_sensor = is_sensor;
+		if (is_sensor == true)
+		{
+			body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);		//Add “CF_NO_CONTACT_RESPONSE”” to Current Flags
+		}
+		else
+		{
+			body->setCollisionFlags(body->getCollisionFlags() &~ btCollisionObject::CF_NO_CONTACT_RESPONSE);	//Remove “CF_NO_CONTACT_RESPONSE” from Current Flags
+		}
+	}
 }
 
 void PhysBody3D::ResetTransform()
