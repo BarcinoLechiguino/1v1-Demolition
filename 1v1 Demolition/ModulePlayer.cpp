@@ -30,6 +30,15 @@ bool ModulePlayer::Start()
 
 	P1vehicle->SetPos(0, 12, 10);
 
+	//Loading FX
+	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
+	App->audio->LoadFx("audio/FX/Accelerate.wav");
+	App->audio->LoadFx("audio/FX/Car_Braking.wav");
+	App->audio->LoadFx("audio/FX/Shoot_1.wav");
+	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
+	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
+	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
+
 	return true;
 }
 
@@ -196,10 +205,13 @@ void ModulePlayer::DriveInputsP1()
 {
 	// -------------------------------- MAIN ACTIONS --------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)					//Change to WASD.
-	{																		//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode).
+	{			
+															//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode)
 		if (P1vehicle->GetKmh() >= 0.0f)
 		{
 			acceleration = MAX_ACCELERATION;
+			App->audio->PlayFx(2, 0);
+			
 		}
 		else if (P1vehicle->GetKmh() >= 125.0f)
 		{
@@ -226,6 +238,7 @@ void ModulePlayer::DriveInputsP1()
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		//brake = BRAKE_POWER;
+		
 
 		if (P1vehicle->GetKmh() <= 0.0f)
 		{
@@ -234,6 +247,7 @@ void ModulePlayer::DriveInputsP1()
 		else
 		{
 			brake = BRAKE_POWER;
+			App->audio->PlayFx(3, 0);
 		}
 	}
 
@@ -241,6 +255,7 @@ void ModulePlayer::DriveInputsP1()
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		SpawnThrowableItem(new Sphere());
+		App->audio->PlayFx(4, 0);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
@@ -316,7 +331,7 @@ void ModulePlayer::GenerateP1Vehicle()
 	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
 	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
 
-	car.mass = 1750.0f;
+	car.mass = 1950.0f;
 	car.suspensionStiffness = 15.88f;
 	car.suspensionCompression = 0.83f;
 	car.suspensionDamping = 0.88f;
@@ -394,4 +409,11 @@ void ModulePlayer::GenerateP1Vehicle()
 		P1vehicle = App->physics->AddVehicle(car);
 		alreadyLoaded = true;
 	}
+}
+
+bool ModulePlayer::LoadAudio()
+{
+	
+
+	return true;
 }

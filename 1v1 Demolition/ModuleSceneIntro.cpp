@@ -21,6 +21,8 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	App->audio->PlayMusic("audio/Songs/Main_Theme.ogg");
+
 	//App->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);
 
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
