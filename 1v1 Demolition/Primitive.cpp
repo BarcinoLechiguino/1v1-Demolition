@@ -22,6 +22,19 @@ PrimitiveTypes Primitive::GetType() const
 void Primitive::Update()
 {
 	body.GetTransform(&transform);
+
+	if (body.GetBody()->isActive() == false)
+	{
+		if (body.is_sensor != true)
+		{
+			App->physics->RemoveBodyFromWorld(body.GetBody());
+			App->scene_intro->CleanUp();
+		}
+		
+		//this->body = nullptr;
+		//App->scene_intro->CleanUp();
+		//delete this;
+	}
 }
 
 // ------------------------------------------------------------
@@ -116,13 +129,13 @@ void Primitive::Scale(float x, float y, float z)
 //	type = PrimitiveTypes::Primitive_Cube;
 //}
 
-Cube::Cube(const vec3& _size, float mass) : Primitive(), size(_size)
+Cube::Cube(const vec3& _size, float mass, bool is_sensor) : Primitive(), size(_size)
 {
 	type = PrimitiveTypes::Primitive_Cube;
-	body.SetBody(this, _size, mass);
+	body.SetBody(this, _size, mass, is_sensor);
 }
 
-Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+Cube::Cube(float sizeX, float sizeY, float sizeZ, bool is_sensor) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
@@ -209,10 +222,16 @@ void Sphere::InnerRender() const
 
 
 // CYLINDER ============================================
-Cylinder::Cylinder(float radius, float height, float mass, float depth) : Primitive(), radius(radius), height(height)
+Cylinder::Cylinder(float radius, float height, float mass, float depth, bool is_sensor) : Primitive(), radius(radius), height(height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
-	body.SetBody(this, depth, mass);				//Change later, depth represents the z of the btVector3 that btCylinder shape requires.
+	body.SetBody(this, depth, mass, is_sensor);			//Change later, depth represents the z of the btVector3 that btCylinder shape requires.
+}
+
+Cylinder::Cylinder(bool is_sensor, const vec3& size, float mass) : Primitive(), radius(size.x), height(size.y)
+{
+	type = PrimitiveTypes::Primitive_Cylinder;
+	body.SetBody(this, size.z, mass, is_sensor);
 }
 
 float Cylinder::GetRadius() const

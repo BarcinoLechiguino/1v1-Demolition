@@ -24,9 +24,9 @@ public:
 	PhysBody3D(btRigidBody* body);						//REVISE THIS. Second constructor. May be problematic(?).
 	~PhysBody3D();
 
-	void SetBody(Sphere* primitive, float mass, bool is_sensor);
-	void SetBody(Cube* primitive, vec3 size, float mass);
-	void SetBody(Cylinder* primitive, float depth, float mass);
+	void SetBody(Sphere* primitive, float mass, bool is_sensor = false);
+	void SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor = false);
+	void SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor = false);
 	bool HasBody() const;
 	btRigidBody* GetBody() const;
 	void SetAsSensor(bool is_sensor);

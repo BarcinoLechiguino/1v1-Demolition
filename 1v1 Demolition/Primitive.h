@@ -42,8 +42,8 @@ class Cube : public Primitive
 {
 public :
 	//Cube();															//REVISE THIS. 2 new constructors: Cube() and Cube(float, float, float)
-	Cube(const vec3& size = vec3(1.f,1.f,1.f), float mass = 1.f);
-	Cube(float sizeX, float sizeY, float sizeZ);
+	Cube(const vec3& size = vec3(1.f,1.f,1.f), float mass = 1.f, bool is_sensor = false);
+	Cube(float sizeX, float sizeY, float sizeZ, bool is_sensor = false);
 	vec3 GetSize() const;
 	void SetSize(const vec3 newSize);								//REVISE THIS. Check both the setter function and the const float argument.
 protected:
@@ -71,7 +71,8 @@ private:
 class Cylinder : public Primitive
 {
 public:
-	Cylinder(float radius = 1.f, float height = 2.f, float mass = 1.f, float depth = 1.f);
+	Cylinder(float radius = 1.f, float height = 2.f, float mass = 1.f, float depth = 1.f,  bool is_sensor = false);
+	Cylinder(bool is_sensor, const vec3& size = vec3(1.f, 2.f, 1.f), float mass = 1.f);
 
 	float GetRadius() const;
 	void SetRadius(float newRadius);					//REVISE THIS. Check both the setter function and the const float argument.

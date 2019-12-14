@@ -30,81 +30,6 @@ bool ModuleSceneIntro::Start()
 
 	LoadArena();
 
-	//-------------------------------------------------------------------
-	//const int SnakeLength = 7;
-	//const float StartingSize = 0.5f;
-	//const float SizeIncrement = 0.2f;
-	//const float BallDistance = 0.3f;
-
-	//float XPos = 0.f;
-	//float Size = StartingSize;
-
-	//Sphere* previousSphere = nullptr;		//Buffer where the previously iterated sphere will be kept.
-	//float prevSize = StartingSize;			//Stores the previous sphere's size.
-
-	//for (int n = 0; n < SnakeLength; n++)
-	//{
-	//	Sphere* s = new Sphere(Size);
-	//	primitives.PushBack(s);
-	//	s->SetPos(XPos, 10.f, 2.5f);
-
-	//	//int sphereMidPosX = Size + (BallDistance / 2);			//Position in X of the center between 2 spheres in this setup.
-	//	btVector3 center = { Size + (BallDistance / 2), 0, 0 };		//Center vector between 2 spheres.
-
-	//	btScalar prevCenterDist = (prevSize + (BallDistance / 2));
-	//	btScalar centerDist = (Size + (BallDistance / 2));
-
-	//	//TODO 2: Link all the spheres with your P2P constraints
-	//	if (primitives.Count() > 1 && previousSphere != nullptr)		//If there are more than 2 primitives in the primitives list and previousSphere is not NULL.
-	//	{
-	//		//App->physics->AddConstraintP2P(*s, *previousSphere, center, -center);
-	//		App->physics->AddConstraintP2P(*s, *previousSphere, 
-	//			vec3(centerDist, 0, 0), vec3(-prevCenterDist, 0, 0));
-	//	}
-
-	//	previousSphere = s;					//The new sphere is set in the buffer.
-	//	prevSize = Size;					//Previous size of the 
-
-	//	XPos += Size + Size + SizeIncrement + BallDistance;
-	//	Size += SizeIncrement;
-	//}
-
-	////TODO 4: Link some other spheres with your Hinge constraint
-	////Variables for the hinge constraint spheres. The first letter of each variable's name is in lower case.
-	//const float startingSize = 0.5f;
-	//const float sizeIncrement = 0.2f;
-	//const float ballDistance = 0.3f;
-
-	//float xPos = 0.f;
-	//float size = startingSize;
-
-	//Sphere* previousHinge = nullptr;
-	//float previousSize = startingSize;
-
-	//for (int n = 0; n < SnakeLength; n++)
-	//{
-	//	Sphere* hinge_S = new Sphere(size);
-	//	primitives.PushBack(hinge_S);
-	//	hinge_S->SetPos(xPos, 10.f, 10.0f);
-
-	//	//btScalar centerDist = (previousSize + ballDistance + size) / 2;
-	//	btScalar prevCenterDist = (previousSize + (ballDistance / 2));
-	//	btScalar centerDist = (size + (ballDistance / 2));
-
-	//	//TODO 2: Link all the spheres with your P2P constraints
-	//	if (previousHinge != nullptr)			//If there are more than 2 primitives in the primitives list and previousSphere is not NULL.
-	//	{
-	//		App->physics->AddConstraintHinge(*hinge_S, *previousHinge, vec3(centerDist, 0, 0),
-	//			vec3(-prevCenterDist, 0, 0), vec3(0, 1, 0), vec3(0, 1, 0));
-	//	}
-
-	//	previousHinge = hinge_S;					//The new sphere is set in the buffer.
-	//	previousSize = size;						//The previousSize is set with the size of the current sphere.
-
-	//	xPos += size + size + sizeIncrement + ballDistance;
-	//	size += sizeIncrement;
-	//}
-
 	return ret;
 }
 
@@ -112,6 +37,19 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+
+	for (int i = 0; i < primitives.Count(); i++)									//Revise this.
+	{
+		if (primitives[i]->body.is_sensor == false)
+		{
+			App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+			primitives.Pop(primitives[i]);
+		}	
+	}
+	
+	//primitives.Clear();
+
+	//Reload the 
 
 	return true;
 }
@@ -215,6 +153,12 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+// --- Adds a primitive to the primitives dynArray.
+void ModuleSceneIntro::AddPrimitive(Primitive * p)
+{
+	primitives.PushBack(p);
+}
+
 void ModuleSceneIntro::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 {
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
@@ -272,6 +216,7 @@ float ModuleSceneIntro::GetZoom() const
 	return cameraZoom;
 }
 
+// --- Gets the lerp speed according to a position, a target, and an offset.
 float ModuleSceneIntro::GetLerpSpeed(vec3 position, vec3 target, float speed) const
 {
 	float pos = sqrt(position.x * position.x + position.y * position.y + position.z * position.z);
@@ -284,15 +229,17 @@ float ModuleSceneIntro::GetLerpSpeed(vec3 position, vec3 target, float speed) co
 	//return pos + lerpSpeed;
 }
 
-void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition)
+
+// --- Method that moves the camera according to the lerp speed calculated 
+void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, float speed)
 {
 	if (App->camera->Position.x < targetPosition.x && App->camera->Position.z < targetPosition.z);
 	{
-		App->camera->Position += GetLerpSpeed(cameraPosition, targetPosition, 0.025f);
+		App->camera->Position += GetLerpSpeed(cameraPosition, targetPosition, speed);
 	}
 	if (App->camera->Position.x > targetPosition.x && App->camera->Position.z > targetPosition.z)
 	{
-		App->camera->Position -= GetLerpSpeed(cameraPosition, targetPosition, 0.025f);
+		App->camera->Position -= GetLerpSpeed(cameraPosition, targetPosition, speed);
 	}
 }
 
@@ -302,16 +249,15 @@ void ModuleSceneIntro::LoadArena()
 
 
 	// ----------------------------------- WALLS -----------------------------------
-	//Cube* cube = new Cube();
-	/*Cube* cube = new Cube();
-	cube->SetPos(0.0f, 1.0f, 0.0f);
+	Cube* cube = new Cube(vec3(1.f, 1.f, 1.f), 0.0f, true);
+	cube->SetPos(5.0f, 1.0f, 0.0f);
 	primitives.PushBack(cube);
-	App->physics->AddBody(*cube, 0.0f);*/
+
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
 
 
-	// -------------------------------- AMMO PICK-UP SENSORS --------------------------------
+	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
 	Sphere* ammo_pickup = new Sphere(1.0f, 0.0f, true);
 	ammo_pickup->SetPos(0.0f, 0.0f, 0.0f);
 	//ammo_pickup->color = Red;

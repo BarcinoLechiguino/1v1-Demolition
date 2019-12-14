@@ -43,18 +43,19 @@ void PhysBody3D::SetBody(Sphere* primitive, float mass, bool is_sensor)
 		primitive, mass, is_sensor);
 }
 
-void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass)
+void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor)
 {
-	btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
+	//btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
+	btVector3 btSize = { size.x, size.y, size.z };
 
-	SetBody(new btBoxShape(btSize), primitive, mass);
+	SetBody(new btBoxShape(btSize * 0.5f), primitive, mass, is_sensor);
 }
 
-void PhysBody3D::SetBody(Cylinder* primitive, float depth, float mass)
+void PhysBody3D::SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor)
 {
 	btVector3 btSize = { primitive->GetRadius(), primitive->GetHeight(), depth };
 	
-	SetBody(new btCylinderShape(btSize), primitive, mass);
+	SetBody(new btCylinderShape(btSize * 0.5f), primitive, mass, is_sensor);
 }
 
 bool PhysBody3D::HasBody() const
@@ -74,6 +75,7 @@ void PhysBody3D::GetTransform(float* matrix) const
 		return;
 
 	body->getWorldTransform().getOpenGLMatrix(matrix);
+	//body->activate();
 }
 
 // ---------------------------------------------------------
@@ -181,21 +183,13 @@ void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass
 
 	body->setUserPointer(this);
 
-	/*this->SetAsSensor(is_sensor);
-
-	if (is_sensor == true)
-	{
-		this->collision_listeners.add(App->player);
-		this->collision_listeners.add(App->player2);
-	}*/
-
- 	App->physics->AddBodyToWorld(body);
-
 	this->SetAsSensor(is_sensor);
 
-	if (is_sensor == true)
+	if (is_sensor == true)								//With this both players will detect a collision with the sensor.
 	{
 		this->collision_listeners.add(App->player);
 		this->collision_listeners.add(App->player2);
 	}
+
+ 	App->physics->AddBodyToWorld(body);
 }

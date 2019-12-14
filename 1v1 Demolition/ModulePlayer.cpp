@@ -86,14 +86,16 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 {
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
 
-	if (body1->parentPrimitive != nullptr)
+	if (body1->parentPrimitive != nullptr && body2->GetBody() == P1vehicle->GetBody())
 	{
-		body1->parentPrimitive->color = color;
+		//body1->parentPrimitive->color = color;
+		body1->parentPrimitive->color = Blue;
 	}
 
 	if (body2->parentPrimitive != nullptr)
 	{
-		body2->parentPrimitive->color = color;
+		//body2->parentPrimitive->color = color;
+		body2->parentPrimitive->color = Blue;
 	}
 	
 	/*if (body1->GetBody() == P1vehicle->GetBody())
@@ -170,7 +172,7 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 
 void ModulePlayer::SpawnThrowableItem(Primitive* p)
 {
-	App->scene_intro->primitives.PushBack(p);
+	App->scene_intro->AddPrimitive(p);
 
 	btVector3 buffer = P1vehicle->vehicle->getForwardVector();
 	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
@@ -182,6 +184,8 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 
 	p->body.collision_listeners.add(App->player2);									//listener set to player 2 so the collision is detected by Player 2's OnCollision() method.
 	p->body.Push(fwdVector * 5000.f);
+
+	p->color = Blue;
 }
 
 void ModulePlayer::RestartPlayer1(vec3 respawnPosition)

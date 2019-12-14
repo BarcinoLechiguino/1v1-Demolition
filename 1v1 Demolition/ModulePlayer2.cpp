@@ -92,9 +92,10 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
  {
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
 
-	if (body1->parentPrimitive != nullptr)
+	if (body1->parentPrimitive != nullptr && body2->GetBody() == App->player2->P2vehicle->GetBody())
 	{
-		body1->parentPrimitive->color = color;
+		//body1->parentPrimitive->color = color;
+		body1->parentPrimitive->color = Red;
 	}
 
 	if (body2->parentPrimitive != nullptr)
@@ -141,9 +142,9 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 
 void ModulePlayer2::SpawnThrowableItem(Primitive* p)
 {
-	App->scene_intro->primitives.PushBack(p);
+	App->scene_intro->AddPrimitive(p);										//Adds the "item" to the primitives array.
 
-	vec3 P2_Pos = P2vehicle->GetPos();
+	vec3 P2_Pos = P2vehicle->GetPos();												//
 
 	btVector3 buffer = P2vehicle->vehicle->getForwardVector();
 	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
@@ -152,6 +153,8 @@ void ModulePlayer2::SpawnThrowableItem(Primitive* p)
 
 	p->body.collision_listeners.add(App->player);									//listener set to Player 1 so the collision is detected by Player 1's OnCollision() method.
 	p->body.Push(fwdVector * 5000.f);
+
+	p->color = Red;
 }
 
 void ModulePlayer2::RestartPlayer2(vec3 respawnPosition)
@@ -199,9 +202,6 @@ void ModulePlayer2::DriveInputsP2()
 
 	if (App->input->GetKey(SDL_SCANCODE_KP_5) == KEY_REPEAT)
 	{
-		//brake = BRAKE_POWER;
-		App->audio->PlayFx(3, 0);
-
 		if (P2vehicle->GetKmh() <= 0.0f)
 		{
 			acceleration -= MAX_ACCELERATION;
@@ -210,6 +210,11 @@ void ModulePlayer2::DriveInputsP2()
 		{
 			brake = BRAKE_POWER;
 			App->audio->PlayFx(2, 0);
+
+			/*if (acceleration != 0.0f)
+			{
+				App->audio->PlayFx(2, 0);
+			}*/
 		}
 	}
 }
