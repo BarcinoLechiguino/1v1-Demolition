@@ -36,4 +36,6 @@ public:
 	btRigidBody* prevCollBody;					//Keeps track of the previous body that the vehicle collided with.
 	uint lives;
 	bool alive;
+
+	float scale;
 };

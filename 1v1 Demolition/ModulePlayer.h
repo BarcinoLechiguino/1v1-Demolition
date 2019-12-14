@@ -2,10 +2,12 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
+#include "PhysVehicle3D.h"		//REVISE THIS
 
-#define MAX_BODIES 30
+#define MAX_BODIES 3
 
 struct PhysVehicle3D;
+struct VehicleInfo;
 
 //#define MAX_ACCELERATION 1000.0f
 //#define TURN_DEGREES 15.0f * DEGTORAD
@@ -30,14 +32,19 @@ public:
 
 public:
 
+	VehicleInfo car;
 	PhysVehicle3D* P1vehicle;
 	PhysVehicle3D* vehicle2;
 	float turn;
 	float acceleration;
 	float brake;
 
-	btRigidBody* prevCollBody;								//Keeps track of the previous body that the vehicle collided with.
-	//btRigidBody* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
+	//btRigidBody* prevCollBody;						//Keeps track of the previous body that the vehicle collided with.
+	btRigidBody* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
+	//p2DynArray<btRigidBody*> prevCollBody;
 	uint lives;
 	bool alive;
+	bool alreadyLoaded;									//Maybe can be useful in increasing the size of the car bc of a power-up.
+
+	float scale;
 };

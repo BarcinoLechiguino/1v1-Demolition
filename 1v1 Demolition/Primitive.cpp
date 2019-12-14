@@ -119,6 +119,8 @@ void Primitive::Scale(float x, float y, float z)
 Cube::Cube(const vec3& _size, float mass) : Primitive(), size(_size)
 {
 	type = PrimitiveTypes::Primitive_Cube;
+	body.SetBody(this, _size, mass);
+	//App->physics->AddBody(*this, mass);
 }
 
 Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
@@ -208,9 +210,10 @@ void Sphere::InnerRender() const
 
 
 // CYLINDER ============================================
-Cylinder::Cylinder(float radius, float height, float mass) : Primitive(), radius(radius), height(height)
+Cylinder::Cylinder(float radius, float height, float mass, float depth) : Primitive(), radius(radius), height(height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
+	body.SetBody(this, depth, mass);				//Change later, depth represents the z of the btVector3 that btCylinder shape requires.
 }
 
 float Cylinder::GetRadius() const

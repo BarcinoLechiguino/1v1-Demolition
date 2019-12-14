@@ -38,8 +38,22 @@ PhysBody3D::~PhysBody3D()
 
 void PhysBody3D::SetBody(Sphere* primitive, float mass)
 {
-	SetBody(new btSphereShape(primitive->GetRadius()),
+	SetBody(new btSphereShape(primitive->GetRadius()), 
 		primitive, mass);
+}
+
+void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass)
+{
+	/*btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
+
+	SetBody(new btBoxShape(btSize), primitive, mass);*/
+}
+
+void PhysBody3D::SetBody(Cylinder* primitive, float depth, float mass)
+{
+	/*btVector3 btSize = { primitive->GetRadius(), primitive->GetHeight(), depth };
+	
+	SetBody(new btCylinderShape(btSize), primitive, mass);*/
 }
 
 bool PhysBody3D::HasBody() const
@@ -85,17 +99,15 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	body->activate();
 }
 
-vec3 PhysBody3D::GetPos() const										//REVISE THIS HERE. Delete Get Pos?
+vec3 PhysBody3D::GetPos() const
 {
 	if (HasBody() == false)
 		return vec3(0, 0, 0);
 
-	btTransform trans = body->getWorldTransform();					//Broken 
+	btTransform trans = body->getWorldTransform();
 	btVector3 buffer = trans.getOrigin();
 
 	vec3 position = {buffer.getX(), buffer.getY(), buffer.getZ()};
-	
-	//LOG("Pos (%.2f %.2f %.2f)", buffer.getX(), buffer.getY(), buffer.getZ());
 
 	return position;
 }
@@ -152,5 +164,6 @@ void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass
 
 	body->setUserPointer(this);
 
-	App->physics->AddBodyToWorld(body);
+ 	App->physics->AddBodyToWorld(body);
+	//App->physics->AddBody(body);
 }
