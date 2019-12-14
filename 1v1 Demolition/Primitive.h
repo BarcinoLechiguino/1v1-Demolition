@@ -56,7 +56,8 @@ private:
 class Sphere : public Primitive
 {
 public:
-	Sphere(float radius = 1.f, float mass = 1.f);
+	Sphere(float radius = 1.f, float mass = 1.f, bool is_sensor = false);
+	//Sphere(float radius = 1.f, float mass = 1.f, bool is_sensor = false);
 
 	float GetRadius() const;
 	void SetRadius(const float newRadius);					//REVISE THIS. Check both the setter function and the const float argument.

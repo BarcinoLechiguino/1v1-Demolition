@@ -37,10 +37,10 @@ PhysBody3D::~PhysBody3D()
 	}
 }
 
-void PhysBody3D::SetBody(Sphere* primitive, float mass)
+void PhysBody3D::SetBody(Sphere* primitive, float mass, bool is_sensor)
 {
 	SetBody(new btSphereShape(primitive->GetRadius()), 
-		primitive, mass);
+		primitive, mass, is_sensor);
 }
 
 void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass)
@@ -159,7 +159,7 @@ void PhysBody3D::Stop()
 		body->clearForces();
 }
 
-void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass)
+void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass, bool is_sensor)
 {
 	assert(HasBody() == false);
 
@@ -181,6 +181,21 @@ void PhysBody3D::SetBody(btCollisionShape * shape, Primitive* parent, float mass
 
 	body->setUserPointer(this);
 
+	/*this->SetAsSensor(is_sensor);
+
+	if (is_sensor == true)
+	{
+		this->collision_listeners.add(App->player);
+		this->collision_listeners.add(App->player2);
+	}*/
+
  	App->physics->AddBodyToWorld(body);
-	//App->physics->AddBody(body);
+
+	this->SetAsSensor(is_sensor);
+
+	if (is_sensor == true)
+	{
+		this->collision_listeners.add(App->player);
+		this->collision_listeners.add(App->player2);
+	}
 }

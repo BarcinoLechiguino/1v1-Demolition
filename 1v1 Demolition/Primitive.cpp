@@ -120,7 +120,6 @@ Cube::Cube(const vec3& _size, float mass) : Primitive(), size(_size)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 	body.SetBody(this, _size, mass);
-	//App->physics->AddBody(*this, mass);
 }
 
 Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
@@ -187,10 +186,10 @@ void Cube::InnerRender() const
 
 // SPHERE ============================================
 
-Sphere::Sphere(float _radius, float mass) : Primitive(), radius(_radius)
+Sphere::Sphere(float _radius, float mass, bool is_sensor) : Primitive(), radius(_radius)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
-	body.SetBody(this, mass);
+	body.SetBody(this, mass, is_sensor);
 }
 
 float Sphere::GetRadius() const

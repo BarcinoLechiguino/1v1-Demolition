@@ -133,6 +133,16 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			prevCollBody = body1->GetBody();
 		}*/
 
+		if (body1->is_sensor == true)
+		{
+			RestartPlayer1(vec3(0, 12, 10));
+			/*delete body1;
+
+			body1->collision_listeners.find(body1)
+			body1->collision_listeners.del();*/
+			return;
+		}
+		
 		for (int i = 0; i < MAX_BODIES; i++)
 		{	
 			if (prevCollBody[i] == body1->GetBody())
@@ -166,68 +176,9 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 							App->scene_intro->primitives.Pop(App->scene_intro->primitives[i]);
 						}
 					}*/
-
-					//prevCollBody[i] = NULL;
 				}
-				
-				/*int j = 0;
-
-				for (int w = 0; w < MAX_BODIES; w++)
-				{
-					if (prevCollBody[w] != NULL)
-					{
-						j++;
-					}
-				}
-
-				LOG("Not Null Count %d", j);
-				
-				if (j == MAX_BODIES)
-				{
-					for (int i = 0; i < MAX_BODIES; i++)
-					{
-						prevCollBody[i] = NULL;
-					}
-				}*/	
 			}
 		}
-		
-		//if (prevCollBody.Count() == 0 /*|| prevCollBody. != body1->GetBody()*/)
-		//{
-		//	lives--;
-
-		//	LOG("Return Player 1 Lives: %d", lives);
-
-		//	prevCollBody.PushBack(body1->GetBody());
-		//}
-
-		//for (int i = 0; i < prevCollBody.Count(); i++)
-		//{
-		//	/*if (prevCollBody[i] != body1->GetBody())
-		//	{
-		//		lives--;
-
-		//		LOG("Return Player 1 Lives: %d", lives);
-
-		//		prevCollBody.PushBack(body1->GetBody());
-		//		break;
-		//	}*/
-
-		//	if (App->player->prevCollBody[i] == body1->GetBody())
-		//	{
-		//		continue;
-		//	}
-
-		//	if (App->player->prevCollBody[i] == NULL /*|| App->player->prevCollBody[i] != body1->GetBody()*/)
-		//	{
-		//		App->player->lives--;
-
-		//		LOG("Return Player 1 Lives: %d", App->player->lives);
-
-		//		App->player->prevCollBody[i] = body1->GetBody();
-		//		break;
-		//	}
-		//}
 	}
 }
 
