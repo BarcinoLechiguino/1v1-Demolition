@@ -29,6 +29,7 @@ public:
 	void RestartPlayer1(vec3 respawnPosition);
 	void GenerateP1Vehicle();
 	void DriveInputsP1();
+	bool LoadAudio();									//Loads all player relevant audio.
 
 public:
 

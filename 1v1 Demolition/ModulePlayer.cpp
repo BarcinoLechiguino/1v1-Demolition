@@ -442,3 +442,17 @@ void ModulePlayer::GenerateP1Vehicle()
 		alreadyLoaded = true;
 	}
 }
+
+bool ModulePlayer::LoadAudio()
+{
+	//Loading FX
+	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
+	App->audio->LoadFx("audio/FX/Accelerate.wav");
+	App->audio->LoadFx("audio/FX/Car_Braking.wav");
+	App->audio->LoadFx("audio/FX/Shoot_1.wav");
+	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
+	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
+	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
+
+	return true;
+}
