@@ -32,7 +32,6 @@ bool ModulePlayer::Start()
 
 	//Loading FX
 	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
-	App->audio->LoadFx("audio/FX/Accelerate.wav");
 	App->audio->LoadFx("audio/FX/Car_Braking.wav");
 	App->audio->LoadFx("audio/FX/Shoot_1.wav");
 	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
@@ -210,7 +209,6 @@ void ModulePlayer::DriveInputsP1()
 		if (P1vehicle->GetKmh() >= 0.0f)
 		{
 			acceleration = MAX_ACCELERATION;
-			App->audio->PlayFx(2, 0);
 			
 		}
 		else if (P1vehicle->GetKmh() >= 125.0f)
@@ -247,7 +245,7 @@ void ModulePlayer::DriveInputsP1()
 		else
 		{
 			brake = BRAKE_POWER;
-			App->audio->PlayFx(3, 0);
+			App->audio->PlayFx(2, 0);
 		}
 	}
 
@@ -255,7 +253,7 @@ void ModulePlayer::DriveInputsP1()
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		SpawnThrowableItem(new Sphere());
-		App->audio->PlayFx(4, 0);
+		App->audio->PlayFx(3, 0);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
