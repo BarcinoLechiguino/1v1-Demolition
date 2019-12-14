@@ -296,17 +296,24 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition)
 
 void ModuleSceneIntro::LoadArena()
 {
+	// -------------------------------- GROUND & BOUNDS -----------------------------
+
+
+	// ----------------------------------- WALLS -----------------------------------
 	//Cube* cube = new Cube();
 	/*Cube* cube = new Cube();
 	cube->SetPos(0.0f, 1.0f, 0.0f);
 	primitives.PushBack(cube);
 	App->physics->AddBody(*cube, 0.0f);*/
 
+	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
+
+
+	// -------------------------------- AMMO PICK-UP SENSORS --------------------------------
 	Sphere* ammo_pickup = new Sphere(1.0f, 0.0f, true);
 	ammo_pickup->SetPos(0.0f, 0.0f, 0.0f);
 	//ammo_pickup->color = Red;
 	primitives.PushBack(ammo_pickup);
-	//App->physics->AddBody(*ammo_pickup, 0.0f, true);
 
 	/*Sphere ammo_pickup(1.0f, 0.0f);
 	ammo_pickup.SetPos(0.0f, 0.0f, 0.0f);
