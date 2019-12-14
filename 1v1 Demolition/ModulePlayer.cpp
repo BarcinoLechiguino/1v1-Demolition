@@ -37,6 +37,7 @@ bool ModulePlayer::Start()
 	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
 	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
 	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
+	App->audio->LoadFx("audio/FX/Gun_Reload_sound_effect.wav");
 
 	return true;
 }
