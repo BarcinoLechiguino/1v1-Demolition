@@ -25,6 +25,8 @@ public:
 	~PhysBody3D();
 
 	void SetBody(Sphere* primitive, float mass);
+	void SetBody(Cube* primitive, vec3 size, float mass);
+	void SetBody(Cylinder* primitive, float depth, float mass);
 	bool HasBody() const;
 	btRigidBody* GetBody() const;
 

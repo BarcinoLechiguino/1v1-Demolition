@@ -70,7 +70,7 @@ private:
 class Cylinder : public Primitive
 {
 public:
-	Cylinder(float radius = 1.f, float height = 2.f, float mass = 1.f);
+	Cylinder(float radius = 1.f, float height = 2.f, float mass = 1.f, float depth = 1.f);
 
 	float GetRadius() const;
 	void SetRadius(float newRadius);					//REVISE THIS. Check both the setter function and the const float argument.

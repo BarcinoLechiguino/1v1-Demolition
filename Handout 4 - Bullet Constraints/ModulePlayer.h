@@ -4,7 +4,7 @@
 #include "p2Point.h"
 #include "PhysVehicle3D.h"		//REVISE THIS
 
-#define MAX_BODIES 30
+#define MAX_BODIES 3
 
 struct PhysVehicle3D;
 struct VehicleInfo;
@@ -39,11 +39,12 @@ public:
 	float acceleration;
 	float brake;
 
-	btRigidBody* prevCollBody;								//Keeps track of the previous body that the vehicle collided with.
-	//btRigidBody* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
+	//btRigidBody* prevCollBody;						//Keeps track of the previous body that the vehicle collided with.
+	btRigidBody* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
+	//p2DynArray<btRigidBody*> prevCollBody;
 	uint lives;
 	bool alive;
-	bool alreadyLoaded;										//Maybe can be useful in increasing the size of the car bc of a power-up.
+	bool alreadyLoaded;									//Maybe can be useful in increasing the size of the car bc of a power-up.
 
 	float scale;
 };

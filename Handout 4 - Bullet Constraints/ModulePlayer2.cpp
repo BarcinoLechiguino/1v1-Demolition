@@ -147,7 +147,7 @@ void ModulePlayer2::SpawnThrowableItem(Primitive* p)
 	btVector3 buffer = P2vehicle->vehicle->getForwardVector();
 	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
 
-	p->SetPos(P2_Pos.x, P2_Pos.y, -fwdVector.z);
+	p->SetPos(P2_Pos.x, P2_Pos.y + 2, P2_Pos.z);
 
 	p->body.collision_listeners.add(App->player);									//listener set to Player 1 so the collision is detected by Player 1's OnCollision() method.
 	p->body.Push(fwdVector * 5000.f);

@@ -26,6 +26,18 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
+	//Cube* cube = new Cube();
+	/*Cube* cube = new Cube();
+	cube->SetPos(0.0f, 1.0f, 0.0f);
+	primitives.PushBack(cube);
+	App->physics->AddBody(*cube, 0.0f);*/
+
+	/*Sphere* sphere = new Sphere(1.0f);
+	sphere->SetPos(0.0f, 0.0f, 0.0f);
+	primitives.PushBack(sphere);
+	App->physics->AddBody(*sphere, 0.0f);*/
+
+	//-------------------------------------------------------------------
 	//App->camera->LookAt(App->player->vehicle->GetTransform());
 	/*vec3 vehiclePos;
 	App->player->vehicle->GetPos(vehiclePos);
@@ -134,7 +146,7 @@ void ModuleSceneIntro::HandleDebugInput()
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		//TODO: NEW CODE
+		//TODO: NEW CODE		//Change Ball colour on click.
 		//A snippet of new code that may be useful for you. Nothing to do here really
 
 		//Get a vector indicating the direction from the camera viewpoint to the "mouse"
@@ -159,7 +171,8 @@ void ModuleSceneIntro::DebugSpawnPrimitive(Primitive * p)
 	primitives.PushBack(p);
 	p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 	//p->body.collision_listeners.PushBack(this);
-	p->body.collision_listeners.add(this);
+	//p->body.collision_listeners.add(this);
+	p->body.collision_listeners.add(App->player);
 	p->body.Push(-App->camera->Z * 1000.f);
 }
 

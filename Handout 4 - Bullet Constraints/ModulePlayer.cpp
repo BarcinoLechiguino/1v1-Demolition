@@ -13,6 +13,7 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 , alive(true)
 , scale(1.0f)
 , alreadyLoaded(false)
+, prevCollBody()
 {
 	turn = acceleration = brake = 0.0f;
 }
@@ -49,6 +50,7 @@ update_status ModulePlayer::Update(float dt)
 
 	if (lives <= 0 || lives > 3)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
 	{
+		LOG("Player 1 Restart at %d lives", lives);
 		RestartPlayer1(vec3(0, 12, 10));
 	}
 	
@@ -108,7 +110,7 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 		body2->parentPrimitive->color = color;
 	}
 	
-	if (body1->GetBody() == P1vehicle->GetBody())
+	/*if (body1->GetBody() == P1vehicle->GetBody())
 	{
 		if (prevCollBody == NULL || prevCollBody != body2->GetBody())
 		{
@@ -118,31 +120,114 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 
 			prevCollBody = body2->GetBody();
 		}
-	}
+	}*/
 
 	if (body2->GetBody() == P1vehicle->GetBody())
 	{
-		if (prevCollBody == NULL || prevCollBody != body1->GetBody())
+		/*if (prevCollBody == NULL || prevCollBody != body1->GetBody())
 		{
 			lives--;
 
 			LOG("Return Player 1 Lives: %d", lives);
 
 			prevCollBody = body1->GetBody();
-		}
+		}*/
 
-		/*for (int i = 0; i < MAX_BODIES; i++)
-		{
-			if (App->player->prevCollBody[i] == NULL || App->player->prevCollBody[i] != body1->GetBody())
+		for (int i = 0; i < MAX_BODIES; i++)
+		{	
+			if (prevCollBody[i] == body1->GetBody())
 			{
-				App->player->lives--;
-
-				LOG("Return Player 1 Lives: %d", App->player->lives);
-
-				App->player->prevCollBody[i] = body1->GetBody();
+				//continue;
 				break;
 			}
-		}*/
+			
+			if (prevCollBody[i] == NULL)
+			{
+				lives--;
+				LOG("Return Player 1 Lives: %d", lives);
+
+				prevCollBody[i] = body1->GetBody();
+
+				break;
+			}
+
+			if (prevCollBody[MAX_BODIES - 1] != NULL)
+			{
+				for (int i = 0; i < MAX_BODIES; i++)
+				{	
+					prevCollBody[i] = NULL;
+					
+					/*for (int i = 0; i < App->scene_intro->primitives.Count(); i++)
+					{
+						if (App->scene_intro->primitives[i]->body.GetBody() == prevCollBody[i])
+						{
+							delete App->scene_intro->primitives[i]->body.GetBody();
+							delete App->scene_intro->primitives[i];
+							App->scene_intro->primitives.Pop(App->scene_intro->primitives[i]);
+						}
+					}*/
+
+					//prevCollBody[i] = NULL;
+				}
+				
+				/*int j = 0;
+
+				for (int w = 0; w < MAX_BODIES; w++)
+				{
+					if (prevCollBody[w] != NULL)
+					{
+						j++;
+					}
+				}
+
+				LOG("Not Null Count %d", j);
+				
+				if (j == MAX_BODIES)
+				{
+					for (int i = 0; i < MAX_BODIES; i++)
+					{
+						prevCollBody[i] = NULL;
+					}
+				}*/	
+			}
+		}
+		
+		//if (prevCollBody.Count() == 0 /*|| prevCollBody. != body1->GetBody()*/)
+		//{
+		//	lives--;
+
+		//	LOG("Return Player 1 Lives: %d", lives);
+
+		//	prevCollBody.PushBack(body1->GetBody());
+		//}
+
+		//for (int i = 0; i < prevCollBody.Count(); i++)
+		//{
+		//	/*if (prevCollBody[i] != body1->GetBody())
+		//	{
+		//		lives--;
+
+		//		LOG("Return Player 1 Lives: %d", lives);
+
+		//		prevCollBody.PushBack(body1->GetBody());
+		//		break;
+		//	}*/
+
+		//	if (App->player->prevCollBody[i] == body1->GetBody())
+		//	{
+		//		continue;
+		//	}
+
+		//	if (App->player->prevCollBody[i] == NULL /*|| App->player->prevCollBody[i] != body1->GetBody()*/)
+		//	{
+		//		App->player->lives--;
+
+		//		LOG("Return Player 1 Lives: %d", App->player->lives);
+
+		//		App->player->prevCollBody[i] = body1->GetBody();
+		//		break;
+		//	}
+		//}
 	}
 }
 
@@ -150,16 +235,16 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 {
 	App->scene_intro->primitives.PushBack(p);
 
-	P1vehicle->vehicle->getForwardVector().getZ();
-
 	btVector3 buffer = P1vehicle->vehicle->getForwardVector();
 	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };
 
-	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y + 2, P1vehicle->GetPos().z + 5);
+	p->SetPos(P1vehicle->GetPos().x, P1vehicle->GetPos().y + 2, P1vehicle->GetPos().z );
 	//p->SetPos(fwdVector.x, fwdVector.y, fwdVector.z);
 
+	LOG("Forward vector is (%d %d %d)", fwdVector.x, fwdVector.y, fwdVector.z);
+
 	p->body.collision_listeners.add(App->player2);									//listener set to player 2 so the collision is detected by Player 2's OnCollision() method.
-	p->body.Push(fwdVector.z * 1000.f);
+	p->body.Push(fwdVector * 5000.f);
 }
 
 void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
