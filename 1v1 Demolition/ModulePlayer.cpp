@@ -10,8 +10,10 @@
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 , P1vehicle(NULL)
 , spawnPoint(0, 12, 10)
-, lives(3)
+, lives(MAX_LIVES)
 , alive(true)
+, ammo(MAX_AMMO)
+, loaded(false)
 , scale(1.0f)
 , prevCollBody()
 {
@@ -106,7 +108,19 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	{
 		if (body1->is_sensor == true)
 		{
-			RestartPlayer1(vec3(0, 12, 10));
+			//RestartPlayer1(spawnPoint);
+			
+			if (ammo < MAX_AMMO)
+			{
+				ammo = MAX_AMMO;
+			}
+
+			/*if (loaded != false)
+			{
+				ammo = 3;
+				loaded = true;
+			}*/
+
 			return;
 		}
 
@@ -168,7 +182,8 @@ void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 	P1vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
 	P1vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
 
-	lives = 3;
+	lives = MAX_LIVES;
+	ammo = MAX_AMMO;
 }
 
 //------------------------------------------- PLAYER 1 INPUTS -------------------------------------------
@@ -230,8 +245,16 @@ void ModulePlayer::SpecialInputsP1()
 {
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
-		SpawnThrowableItem(new Sphere());
-		App->audio->PlayFx(3, 0);
+		if (ammo != 0)
+		{
+			ammo--;
+			SpawnThrowableItem(new Sphere());
+			App->audio->PlayFx(3, 0);
+		}
+		else
+		{
+
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
@@ -244,12 +267,12 @@ void ModulePlayer::CheckLivesP1()
 {
 	uint prevLives;
 	
-	if (lives <= 3)
+	if (lives <= MAX_LIVES)
 	{
 		prevLives = lives;
 	}
 
-	if (lives > 3)
+	if (lives > MAX_LIVES)
 	{
 		lives = prevLives - 1;
 	}
@@ -315,7 +338,7 @@ void ModulePlayer::GenerateP1Vehicle()
 	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
 	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
 
-	car.mass					= 1600.0f;		//Original: 1500.0f, Heavy: 1950.0f
+	car.mass					= 1750.0f;		//Original: 1500.0f, Heavy: 1950.0f
 	car.suspensionStiffness		= 15.88f;		//F1: 200.0f
 	car.suspensionCompression	= 0.83f;
 	car.suspensionDamping		= 0.88f;

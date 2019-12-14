@@ -6,7 +6,7 @@
 
 # Goal of the Game
 
-The goal of the game is, by the use of projectiles, destroy the other player's car. 
+The goal of the game is, by the use of projectiles, destroy the other player's car.  Each player starts with 4 projectiles and, once shot, they need to be recharged by reaching the nearest "ammo pack".
 
 
 

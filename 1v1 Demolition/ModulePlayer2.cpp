@@ -8,8 +8,10 @@
 ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled)
 , P2vehicle(NULL)
 , spawnPoint(5, 12, 10)
-, lives(3)
+, lives(MAX_LIVES)
 , alive(true)
+, ammo(MAX_AMMO)
+, loaded(false)
 , scale(1.0f)
 , prevCollBody()
 {
@@ -85,7 +87,13 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	{
 		if (body1->is_sensor == true)
 		{
-			RestartPlayer2(vec3(5, 12, 10));
+			//RestartPlayer2(spawnPoint);
+
+			if (ammo < MAX_AMMO)
+			{
+				ammo = MAX_AMMO;
+			}
+
 			return;
 		}
 
@@ -145,7 +153,8 @@ void ModulePlayer2::RestartPlayer2(vec3 respawnPosition)
 	P2vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
 	P2vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
 
-	lives = 3;
+	lives = MAX_LIVES;
+	ammo = MAX_AMMO;
 }
 
 //------------------------------------------- PLAYER 2 INPUTS -------------------------------------------
@@ -206,8 +215,16 @@ void ModulePlayer2::SpecialInputsP2()
 {
 	if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
 	{
-		SpawnThrowableItem(new Sphere());
-		App->audio->PlayFx(3, 0);
+		if (ammo != 0)
+		{
+			ammo--;
+			SpawnThrowableItem(new Sphere());
+			App->audio->PlayFx(3, 0);
+		}
+		else
+		{
+
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
@@ -221,12 +238,12 @@ void ModulePlayer2::CheckLivesP2()
 {
 	uint prevLives;
 
-	if (lives <= 3)
+	if (lives <= MAX_LIVES)
 	{
 		prevLives = lives;
 	}
 
-	if (lives > 3)
+	if (lives > MAX_LIVES)
 	{
 		lives = prevLives - 1;
 	}

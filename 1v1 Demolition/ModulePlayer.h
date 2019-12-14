@@ -4,8 +4,6 @@
 #include "p2Point.h"
 #include "PhysVehicle3D.h"		//REVISE THIS
 
-#define MAX_BODIES 3
-
 struct PhysVehicle3D;
 struct VehicleInfo;
 
@@ -40,7 +38,10 @@ public:
 
 	PhysBody3D* prevCollBody[MAX_BODIES];				//Keeps track of up to 30 of the bodies that the vehicle collided with previously.
 	vec3 spawnPoint;									//vec3 that has the first spawn position in the map recorded down.
-	uint lives;
-	bool alive;
-	float scale;
+	uint lives;											//Keeps track of the amount of lives P1 has left.
+	bool alive;											//Keeps track whether P1 is alive or not.
+	uint ammo;											//Amount of times P1 can throw items.
+	bool loaded;										//Keeps track whether or not the player has recharged ammo.
+
+	float scale;										//Scaling factor of P1's vehicle
 };

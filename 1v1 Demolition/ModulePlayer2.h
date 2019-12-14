@@ -5,10 +5,6 @@
 
 struct PhysVehicle3D;
 
-//#define MAX_ACCELERATION 1000.0f
-//#define TURN_DEGREES 25.0f * DEGTORAD
-//#define BRAKE_POWER 1000.0f
-
 class ModulePlayer2 : public Module
 {
 public:
@@ -40,5 +36,8 @@ public:
 	vec3 spawnPoint;									//vec3 that has the first spawn position in the map recorded down.
 	uint lives;											//Lives of P2.
 	bool alive;											//Keeps track whether P2 is alive or not.
+	uint ammo;											//Amount of times P2 can throw items.
+	bool loaded;										//Keeps track whether or not the player has recharged ammo.
+
 	float scale;										//Scaling factor of P2's vehicle.
 };

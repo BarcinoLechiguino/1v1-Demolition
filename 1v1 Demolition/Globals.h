@@ -41,17 +41,20 @@ enum update_status
 // 3D Context variables
 #define SKYBOX_ALPHA 1.f					//Defines the alpha/transparency of the skybox in the 3D context.
 
-// Player Variables 
-// ------------------------- General Variables ------------------------
+// ---------------------- PLAYER VARIABLES ---------------------- 
+// General Variables
 #define HALF 0.5f
 #define CAM_OFFSET 1
 
-// -------------------- Vehicle Movement Variables --------------------
-//#define MAX_ACCELERATION 5500.0f
-//#define MAX_ACCELERATION 3650.0f
+// Vehicle Movement Variables
 #define MAX_ACCELERATION 4500.0f			//Fast: 5500.0f, Slow but steady: 3650.0f 
 #define TURN_DEGREES 40.0f * DEGTORAD		//Slow Turn: 25.0f
 #define BRAKE_POWER 1250.0f
+
+// Gameplay Variables
+#define MAX_BODIES 30
+#define MAX_LIVES 3
+#define MAX_AMMO 4
 
 class Application;
 
