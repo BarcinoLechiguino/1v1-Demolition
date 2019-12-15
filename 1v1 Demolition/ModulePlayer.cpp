@@ -425,4 +425,5 @@ void ModulePlayer::LoadAudioP1()
 	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
 	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
 	App->audio->LoadFx("audio/FX/Gun_Reload_sound_effect.wav");
+	App->audio->LoadFx("audio/FX/No ammo.wav");
 }
