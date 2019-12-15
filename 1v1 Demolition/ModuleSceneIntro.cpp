@@ -410,6 +410,7 @@ void ModuleSceneIntro::CheckRoundWins()
 
 			App->player->roundsWonP1 = 0;
 			App->player2->roundsWonP2 = 0;
+			App->audio->PlayFx(9, 0);
 		}
 
 		if (App->player2->roundsWonP2 == 3)
@@ -418,6 +419,7 @@ void ModuleSceneIntro::CheckRoundWins()
 
 			App->player->roundsWonP1 = 0;
 			App->player2->roundsWonP2 = 0;
+			App->audio->PlayFx(10, 0);
 		}
 		
 		RestartGame();
