@@ -55,6 +55,8 @@ enum update_status
 #define MAX_BODIES 30
 #define MAX_LIVES 3
 #define MAX_AMMO 4
+#define Y_OFFSET 1
+#define PROJECTILE_FORCE 5000.0f
 
 class Application;
 

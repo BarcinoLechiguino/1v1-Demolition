@@ -10,6 +10,8 @@
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 , P1vehicle(NULL)
 , spawnPoint(40, 8, 40)
+, originalAngle(-135)
+, axis(0, 1, 0)
 , lives(MAX_LIVES)
 , alive(true)
 , ammo(MAX_AMMO)
@@ -65,6 +67,7 @@ update_status ModulePlayer::Update(float dt)
 	P1vehicle->Brake(brake);  
 
 	P1vehicle->Render();
+
 
 	//char title[80];
 	//sprintf_s(title, "P1 Speed: %.1f Km/h / P2 Speed: %.1f Km/h", 
@@ -133,7 +136,16 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	}
 }
 
-void ModulePlayer::SpawnThrowableItem(Primitive* p)
+void ModulePlayer::SetVehicleRotationP1(float angle, const vec3& u)
+{
+	mat4x4 trans;
+	P1vehicle->GetTransform(&trans);
+
+	trans.rotate(angle, u);
+	P1vehicle->SetTransform(&trans);
+}
+
+void ModulePlayer::SpawnProjectile(Primitive* p)
 {
 	App->scene_intro->AddPrimitive(p);												//Adds the "item" to the primitives array.
 
@@ -142,13 +154,10 @@ void ModulePlayer::SpawnThrowableItem(Primitive* p)
 	btVector3 buffer = P1vehicle->vehicle->getForwardVector();						//Buffer for P1vehicle's forward vector.
 	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };				//vec3 set with the buffer of the forward vector.
 
-	vec3 fwdAerial = (P1_Pos * fwdVector);
-
-	p->SetPos(P1_Pos.x, P1_Pos.y + 2, P1_Pos.z);									//Sets the position from where the item will spawn.
-	//p->SetPos(fwdAerial.x, fwdAerial.y + 2, fwdAerial.z);							//Sets the position from where the item will spawn.									
+	p->SetPos(P1_Pos.x, P1_Pos.y + Y_OFFSET, P1_Pos.z);								//Sets the position from where the item will spawn.								
 
 	p->body.collision_listeners.add(App->player2);									//listener set to player 2 so the collision is detected by Player 2's OnCollision() method.
-	p->body.Push(fwdVector * 5000.f);												//Adds a force to the spawned projectile in the directon of fwdVector.
+	p->body.Push(fwdVector * PROJECTILE_FORCE);										//Adds a force to the spawned projectile in the directon of fwdVector.
 
 	p->color = Blue;																//The colour of the spawned item will be blue when P1 spawns it.
 }
@@ -161,6 +170,7 @@ void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 
 	P1vehicle->ResetTransform();													//Set transform to its original position. (1, 1, 1)
 	P1vehicle->SetPos(respawnPosition.x, respawnPosition.y, respawnPosition.z);		//Sets the position to the one passed as argument.
+	SetVehicleRotationP1(originalAngle, vec3(0, 1, 0));								//Sets the rotation to the original one.
 
 	lives = MAX_LIVES;
 	ammo = MAX_AMMO;
@@ -238,7 +248,7 @@ void ModulePlayer::SpecialInputsP1()
 		if (ammo != 0)
 		{
 			ammo--;
-			SpawnThrowableItem(new Sphere(1.2f, 1.2f));
+			SpawnProjectile(new Sphere(1.2f, 1.2f));
 			App->audio->PlayFx(3, 0);
 		}
 		else
@@ -406,11 +416,7 @@ void ModulePlayer::GenerateP1Vehicle()
 
 	P1vehicle = App->physics->AddVehicle(car);
 	P1vehicle->SetPos(spawnPoint);
-
-	mat4x4 trans;
-	P1vehicle->GetTransform(&trans);
-
-	LOG("P1 Transform %f", &trans);
+	SetVehicleRotationP1(originalAngle, vec3(0, 1, 0));				// Rotates the vehicle to match its spawn point.
 }
 
 void ModulePlayer::LoadAudioP1()

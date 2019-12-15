@@ -76,20 +76,6 @@ bool ModulePhysics3D::Start()
 
 		btRigidBody* body = new btRigidBody(rbInfo);
 		world->addRigidBody(body);
-
-		//// Big cylinder as ground
-		//btCollisionShape* colShape = new btCylinderShape(btVector3(100.0f, 2.0f, 100.0f));
-
-		//mat4x4 glMatrix = IdentityMatrix;
-		//glMatrix.translate(0.f, -2.f, 0.f);
-		//btTransform startTransform;
-		//startTransform.setFromOpenGLMatrix(&glMatrix);
-
-		//btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-		//btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
-
-		//btRigidBody* body = new btRigidBody(rbInfo);
-		//world->addRigidBody(body);
 	}
 
 	return true;
