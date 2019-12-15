@@ -41,7 +41,7 @@ public:
 	//Change btVector3s for vec3s? --> With this change the method does not depend on Bullet at argument level. It depends on glmath.h. REVISE THIS HERE --> Should it be changed?
 	//Change "Primitive&"s for PhysBodies ?
 	void AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, bool can_collide = false);
-	void AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB, bool can_collide = false);
+	void AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB, bool can_collide = true);
 
 	p2List<PhysVehicle3D*>					vehicles;
 

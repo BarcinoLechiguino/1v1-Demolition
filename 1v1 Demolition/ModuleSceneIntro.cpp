@@ -29,7 +29,9 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
-	//top_constrained_cube = nullptr;
+	//Scenario Constraints
+	top_constrained_cube = nullptr;
+	bottom_constrained_cube = nullptr;
 
 	LoadArena();
 
@@ -81,6 +83,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	
 	//Applying torque to the arena's constraints.
 	top_constrained_cube->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
+	bottom_constrained_cube->body.GetBody()->applyTorque(btVector3(0.0f, -50000.0f, 0.0f));
 
 	/*for (uint n = 0; n < arena_elements.Count(); n++)
 		arena_elements[n]->Update();*/
@@ -321,28 +324,36 @@ void ModuleSceneIntro::LoadArena()
 	SetCube(vec3(53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-East Border Wall.
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
-	Cube* top_column = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
-	top_column->SetPos(20.0f, 5.0f, 20.0f);
-	primitives.PushBack(top_column);
-	top_column->color = Red;
-
-	/*Cube* */top_constrained_cube = new Cube(vec3(5.0f, 9.0f, 1.0f), 1000.0f, false, true);
-	top_constrained_cube->SetPos(26.0f, 5.0f, 20.0f);
-	primitives.PushBack(top_constrained_cube);
-	top_constrained_cube->color = Blue;
+	Cube* top_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);
+	top_constrained_cube = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);
 
 	App->physics->AddConstraintHinge(*top_column, *top_constrained_cube,
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+
+	/*Cube* bottom_column = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
+	bottom_column->SetPos(20.0f, 5.0f, -20.0f);
+	primitives.PushBack(bottom_column);
+	bottom_column->color = Red;*/
+
+	Cube* bottom_column = SetCube();
+
+	bottom_constrained_cube = new Cube(vec3(5.0f, 9.0f, 1.0f), 1000.0f, false, true);
+	bottom_constrained_cube->SetPos(26.0f, 5.0f, -20.0f);
+	primitives.PushBack(bottom_constrained_cube);
+	bottom_constrained_cube->color = Blue;
+
+	App->physics->AddConstraintHinge(*bottom_column, *bottom_constrained_cube,
 		vec3(0.0f, 0.0f, 0.0f), vec3(-6.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
 	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//Ammo Pick-up at the Arena's center.		
-	SetSphere(vec3(55.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//North Ammo Pick-up.
-	SetSphere(vec3(-55.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);	//South Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, 55.0f), 2.0f, 0.0f, true, true);		//West Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, -55.0f), 2.0f, 0.0f, true, true);	//East Ammp Pick-up.
+	SetSphere(vec3(58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//North Ammo Pick-up.
+	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);	//South Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);		//West Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);	//East Ammp Pick-up.
 }
 
-void ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
+Cube* ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
 {
 	furniture = new Cube(size, mass, is_sensor, is_environment);						//Creates a cube primitive (and its body at Cube's class constructor).
 	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
@@ -352,18 +363,22 @@ void ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mas
 
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
 	furniture->color = color;															//Sets the element's colour.
+
+	return (Cube*)furniture;
 }
 
-void ModuleSceneIntro::SetSphere(const vec3& position, float radius, float mass, bool is_sensor, bool is_environment)
+Sphere* ModuleSceneIntro::SetSphere(const vec3& position, float radius, float mass, bool is_sensor, bool is_environment)
 {
 	furniture = new Sphere(radius, mass, is_sensor, is_environment);					//Creates a sphere primitive (and its body at Sphere's class constructor).
 	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
 	primitives.PushBack(furniture);														//Adds the new element to the primitives array.
 
 	furniture->color = White;															//Sets the element's colour.
+
+	return (Sphere*)furniture;
 }
 
-void ModuleSceneIntro::SetCylinder(const vec3& position, float radius, float height, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
+Cylinder* ModuleSceneIntro::SetCylinder(const vec3& position, float radius, float height, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
 {
 	furniture = new Cylinder(radius, height, mass, is_sensor, is_environment);			//Creates a cylinder primitive (and its body at Cylinder's class constructor).
 	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
@@ -373,6 +388,8 @@ void ModuleSceneIntro::SetCylinder(const vec3& position, float radius, float hei
 
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
 	furniture->color = color;															//Sets the element's colour.
+
+	return (Cylinder*)furniture;
 }
 
 void ModuleSceneIntro::CheckWins()

@@ -56,17 +56,6 @@ void PhysVehicle3D::Render()
 
 	chassis.color = Blue;
 
-	//info.chassis(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
-	/*info.chassis = new Cube(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
-	vehicle->getChassisWorldTransform().getOpenGLMatrix(&info.chassis->transform);
-	btVector3 offset(info.chassis_offset.x, info.chassis_offset.y, info.chassis_offset.z);
-	offset = offset.rotate(q.getAxis(), q.getAngle());
-
-	info.chassis->transform.M[12] += offset.getX();
-	info.chassis->transform.M[13] += offset.getY();
-	info.chassis->transform.M[14] += offset.getZ();
-
-	info.chassis->color = Black;*/
 
 	//---CABIN
 	Cube cabin(info.cabin_size.x, info.cabin_size.y, info.cabin_size.z);
@@ -214,7 +203,6 @@ void PhysVehicle3D::Render()
 	neon.color = Green;
 
 	chassis.Render();
-	//info.chassis->Render();
 	cabin.Render();
 	L_light.Render();
 	R_light.Render();
@@ -239,8 +227,6 @@ void PhysVehicle3D::Render()
 
 
 	chassis.Render();*/
-
-
 }
 
 // ----------------------------------------------------------------------------

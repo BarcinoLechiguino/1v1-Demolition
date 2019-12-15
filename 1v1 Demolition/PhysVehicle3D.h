@@ -26,8 +26,6 @@ struct VehicleInfo
 {
 	~VehicleInfo();
 
-	//Cube* chassis;
-	
 	vec3 chassis_size;
 	vec3 chassis_offset;
 	vec3 cabin_size;
@@ -83,5 +81,3 @@ public:
 	VehicleInfo info;
 	btRaycastVehicle* vehicle;
 };
-
-//extern Cube chassis;
