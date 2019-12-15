@@ -20,6 +20,10 @@ Player 1's projectiles are blue in colour and Player 2's are red. These colors c
 
 Projectiles that have changed colours are harmless to the players. Those who have not, however, can still damage them.
 
+If for whatever reason a vehicle is flipped over, each player has a specific input key assigned to flip their vehicle back to its original state.
+
+Normal acceleration (W/8) makes the vehicle move slowly, and turbo (LSHIFT/ KP Plus) propels the vehicle forward,
+
 
 
 # Controls
@@ -38,6 +42,8 @@ Projectiles that have changed colours are harmless to the players. Those who hav
 
   - Space Bar: Use Item. (If Player 1 has any)
 
+  - E Key: Flip over the vehicle. (In case it was upside down.)
+  
     
 
 ## Player 2
@@ -54,6 +60,8 @@ Projectiles that have changed colours are harmless to the players. Those who hav
 
   - 0 Key (Keypad): Use Item. (If Player 2 has any)
 
+  - 7 Key: Flip over the vehicle. (In case it was upside down.)
+  
     
 
 # Debug Keys
@@ -85,6 +93,13 @@ Projectiles that have changed colours are harmless to the players. Those who hav
 
 - **Ángel González:** https://github.com/BarcinoLechiguino
 - **Gerard Romeu:** https://github.com/Gromeu2000
+
+
+
+# Work Distribution
+
+
+
 
 
 # Link to Repository

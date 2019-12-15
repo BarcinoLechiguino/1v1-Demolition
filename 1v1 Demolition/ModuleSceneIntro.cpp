@@ -43,14 +43,16 @@ bool ModuleSceneIntro::CleanUp()
 
 	for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
 	{
-		App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
-		//delete primitives[i];
-		primitives.Pop(primitives[i]);
+		DeletePrimitive(primitives[i]);
+		
+		//App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+		////delete primitives[i];
+		//primitives.Pop(primitives[i]);
 	}
 
 //	delete top_constrained_cube;							//Apply this to all? Crashes on exit
 	
-	primitives.Clear();
+	//primitives.Clear();
 	LoadArena();
 
 	return true;
@@ -74,6 +76,8 @@ update_status ModuleSceneIntro::Update(float dt)
 	for (uint n = 0; n < primitives.Count(); n++)
 		primitives[n]->Update();
 
+	//Checking Victory Conditions
+	CheckWins();
 	
 	//Applying torque to the arena's constraints.
 	top_constrained_cube->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
@@ -306,17 +310,6 @@ void ModuleSceneIntro::LoadArena()
 	SetCube(vec3(0.0f, 2.5f, 25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//East Center Wall.
 
 	// --- Arena's bounds
-	//SetCube(vec3(-80.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 35.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North Border Wall.
-	//SetCube(vec3(80.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 35.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South Border Wall.
-	//SetCube(vec3(0.0f, 2.5f, -80.0f), vec3(35.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//West Border Wall.
-	//SetCube(vec3(0.0f, 2.5f, 80.0f), vec3(35.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//East Border Wall.
-	//
-	//SetCube(vec3(-56.0f, 2.5f, 56.0f), vec3(5.f, 5.f, 35.f), 0.0f, 45, vec3(0, 1, 0), false, true);		//North-West Border Wall.
-	//SetCube(vec3(56.0f, 2.5f, 56.0f), vec3(5.f, 5.f, 35.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-West Border Wall.
-	//SetCube(vec3(-56.0f, 2.5f, -56.0f), vec3(35.f, 5.f, 5.f), 0.0f, 45, vec3(0, 1, 0), false, true);	//North-East Border Wall.
-	//SetCube(vec3(56.0f, 2.5f, -56.0f), vec3(35.f, 5.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);	//South-East Border Wall.
-
-	//Temporal
 	SetCube(vec3(-75.0f, 3.f, 0.0f), vec3(5.f, 6.1f, 64.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North Border Wall.
 	SetCube(vec3(75.0f, 3.f, 0.0f), vec3(5.f, 6.1f, 64.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South Border Wall.
 	SetCube(vec3(0.0f, 3.f, -75.0f), vec3(64.f, 6.1f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//West Border Wall.
@@ -324,8 +317,8 @@ void ModuleSceneIntro::LoadArena()
 
 	SetCube(vec3(-53.0f, 3.f, 53.0f), vec3(5.f, 6.f, 64.f), 0.0f, 45, vec3(0, 1, 0), false, true);		//North-West Border Wall.
 	SetCube(vec3(53.0f, 3.f, 53.0f), vec3(5.f, 6.f, 64.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-West Border Wall.
-	SetCube(vec3(-53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, 1, 0), false, true);	//North-East Border Wall.
-	SetCube(vec3(53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);	//South-East Border Wall.
+	SetCube(vec3(-53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, 1, 0), false, true);		//North-East Border Wall.
+	SetCube(vec3(53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-East Border Wall.
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
 	Cube* top_column = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
@@ -342,21 +335,11 @@ void ModuleSceneIntro::LoadArena()
 		vec3(0.0f, 0.0f, 0.0f), vec3(-6.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
-	Sphere* ammo_pickup = new Sphere(2.0f, 0.0f, true, true);
-	ammo_pickup->SetPos(0.0f, 0.0f, 0.0f);
-	primitives.PushBack(ammo_pickup);
-	//arena_elements.PushBack(ammo_pickup);
-	//ammo_pickup->color = Red;
-
-	Cube* cube = new Cube(vec3(1.f, 1.f, 1.f), 0.0f, true, true);
-	cube->SetPos(5.0f, 1.0f, 0.0f);
-	primitives.PushBack(cube);
-	//arena_elements.PushBack(cube);
-
-	/*Sphere ammo_pickup(1.0f, 0.0f);
-	ammo_pickup.SetPos(0.0f, 0.0f, 0.0f);
-	primitives.PushBack(&ammo_pickup);
-	App->physics->AddBody(ammo_pickup, 0.0f, true);*/
+	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//Ammo Pick-up at the Arena's center.		
+	SetSphere(vec3(55.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//North Ammo Pick-up.
+	SetSphere(vec3(-55.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);	//South Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, 55.0f), 2.0f, 0.0f, true, true);		//West Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, -55.0f), 2.0f, 0.0f, true, true);	//East Ammp Pick-up.
 }
 
 void ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
@@ -390,6 +373,16 @@ void ModuleSceneIntro::SetCylinder(const vec3& position, float radius, float hei
 
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
 	furniture->color = color;															//Sets the element's colour.
+}
+
+void ModuleSceneIntro::CheckWins()
+{
+	if (App->player->winsP1 == 3 || App->player2->winsP2 == 3)
+	{
+		App->player->winsP1 = 0;
+		App->player2->winsP2 = 0;
+		RestartGame();
+	}
 }
 
 void ModuleSceneIntro::RestartGame()

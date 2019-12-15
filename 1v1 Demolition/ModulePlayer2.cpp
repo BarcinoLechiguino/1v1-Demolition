@@ -12,6 +12,8 @@ ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app,
 , alive(true)
 , ammo(MAX_AMMO)
 , loaded(false)
+, firstTurbo(false)
+, winsP2(0)
 , scale(1.0f)
 , prevCollBody()
 {
@@ -210,11 +212,19 @@ void ModulePlayer2::DriveInputsP2()
 	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_REPEAT)
 	{
 		acceleration = MAX_ACCELERATION * 5;
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_REPEAT)
+		if (!firstTurbo)
+		{
+			App->audio->PlayFx(1, 0);
+			firstTurbo = true;
+		}
+	}
+	
+	if (App->input->GetKey(SDL_SCANCODE_KP_7) == KEY_REPEAT)
 	{
-		brake = BRAKE_POWER;
+		vec3 originalPos = P2vehicle->GetPos();
+		P2vehicle->ResetTransform();
+		P2vehicle->SetPos(originalPos);
 	}
 }
 
@@ -226,7 +236,7 @@ void ModulePlayer2::SpecialInputsP2()
 		{
 			ammo--;
 			SpawnThrowableItem(new Sphere(1.2f, 1.2f));
-			App->audio->PlayFx(3, 0);
+			App->audio->PlayFx(5, 0);
 		}
 		else
 		{
@@ -259,6 +269,9 @@ void ModulePlayer2::CheckLivesP2()
 	if (lives <= 0)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
 	{
 		RestartPlayer2(spawnPoint);
+		App->audio->PlayFx(6, 0);
+
+		App->player->winsP1++;
 	}
 }
 

@@ -43,6 +43,7 @@ public:
 	void SetSphere(const vec3& position, float radius, float mass, bool is_sensor = false, bool is_environment = false);												//Creates and sets a sphere on the world. Used to set Arena elements.
 	void SetCylinder(const vec3& position, float radius, float height, float mass, float angle, const vec3& axis, bool is_sensor = false, bool is_environment = false);	//Creates and sets a sphere on the world. Used to set Arena elements.
 
+	void CheckWins();
 	void RestartGame();																				//Resets everyithing except Arena elements.
 
 private:

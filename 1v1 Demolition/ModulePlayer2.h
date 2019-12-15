@@ -39,6 +39,9 @@ public:
 	bool alive;											//Keeps track whether P2 is alive or not.
 	uint ammo;											//Amount of times P2 can throw items.
 	bool loaded;										//Keeps track whether or not the player has recharged ammo.
+	bool firstTurbo;
+
+	uint winsP2;
 
 	float scale;										//Scaling factor of P2's vehicle.
 };

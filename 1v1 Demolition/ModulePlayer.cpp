@@ -14,6 +14,8 @@ ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, s
 , alive(true)
 , ammo(MAX_AMMO)
 , loaded(false)
+, firstTurbo(false)
+, winsP1(0)
 , scale(1.0f)
 , prevCollBody()
 {
@@ -243,9 +245,11 @@ void ModulePlayer::DriveInputsP1()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
 	{
-		brake = BRAKE_POWER;
+		vec3 originalPos = P1vehicle->GetPos();
+		P1vehicle->ResetTransform();
+		P1vehicle->SetPos(originalPos);
 	}
 }
 
@@ -290,6 +294,8 @@ void ModulePlayer::CheckLivesP1()
 	{
 		RestartPlayer1(spawnPoint);
 		App->audio->PlayFx(5, 0);
+
+		App->player2->winsP2++;
 	}
 }
 
