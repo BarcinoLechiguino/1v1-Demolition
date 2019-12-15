@@ -52,7 +52,7 @@ bool ModuleSceneIntro::CleanUp()
 
 //	delete top_constrained_cube;							//Apply this to all? Crashes on exit
 	
-	//primitives.Clear();
+	primitives.Clear();
 	LoadArena();
 
 	return true;
