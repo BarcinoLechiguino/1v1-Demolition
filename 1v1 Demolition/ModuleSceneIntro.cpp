@@ -79,7 +79,7 @@ update_status ModuleSceneIntro::Update(float dt)
 		primitives[n]->Update();
 
 	//Checking Victory Conditions
-	CheckWins();
+	CheckRoundWins();
 	
 	//Applying torque to the arena's constraints.
 	centerLeft_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
@@ -387,20 +387,34 @@ Cylinder* ModuleSceneIntro::SetCylinder(const vec3& position, float radius, floa
 	return (Cylinder*)furniture;
 }
 
-void ModuleSceneIntro::CheckWins()
+void ModuleSceneIntro::CheckRoundWins()
 {
-	if (App->player->winsP1 == 3 || App->player2->winsP2 == 3)
+	if (App->player->roundsWonP1 == 3 || App->player2->roundsWonP2 == 3)
 	{
-		App->player->winsP1 = 0;
-		App->player2->winsP2 = 0;
+		if (App->player->roundsWonP1 == 3)
+		{
+			App->player->winsP1++;																		//Adds a win to P1
+
+			App->player->roundsWonP1 = 0;
+			App->player2->roundsWonP2 = 0;
+		}
+
+		if (App->player2->roundsWonP2 == 3)
+		{
+			App->player2->winsP2++;																		//Adds a win to P2
+
+			App->player->roundsWonP1 = 0;
+			App->player2->roundsWonP2 = 0;
+		}
+		
 		RestartGame();
 	}
 }
 
 void ModuleSceneIntro::RestartGame()
 {
-	App->player->RestartPlayer1(vec3(0, 12, 10));
-	App->player2->RestartPlayer2(vec3(5, 12, 10));
+	App->player->RestartPlayer1(App->player->spawnPoint);
+	App->player2->RestartPlayer2(App->player2->spawnPoint);
 
 	CleanUp();
 }

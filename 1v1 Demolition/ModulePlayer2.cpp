@@ -13,6 +13,7 @@ ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app,
 , ammo(MAX_AMMO)
 , loaded(false)
 , firstTurbo(false)
+, roundsWonP2(0)
 , winsP2(0)
 , scale(1.0f)
 , prevCollBody()
@@ -267,7 +268,7 @@ void ModulePlayer2::CheckLivesP2()
 		RestartPlayer2(spawnPoint);
 		App->audio->PlayFx(6, 0);
 
-		App->player->winsP1++;
+		App->player->roundsWonP1++;
 	}
 }
 
@@ -332,7 +333,7 @@ void ModulePlayer2::GenerateP2Vehicle()
 	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
 	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
 
-	car.mass					= 1600.0f;		//Original: 1500.0f, Heavy: 1950.0f
+	car.mass					= 1800.0f;		//Original: 1500.0f, Heavy: 1950.0f
 	car.suspensionStiffness		= 15.88f;
 	car.suspensionCompression	= 0.83f;
 	car.suspensionDamping		= 0.88f;

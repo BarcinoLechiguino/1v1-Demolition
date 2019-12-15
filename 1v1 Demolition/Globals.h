@@ -48,7 +48,7 @@ enum update_status
 
 // Vehicle Movement Variables
 #define MAX_ACCELERATION 5200.0f			//Fast: 5500.0f, Slow but steady: 3650.0f 
-#define TURN_DEGREES 35.0f * DEGTORAD		//Slow Turn: 25.0f
+#define TURN_DEGREES 40.0f * DEGTORAD		//Slow Turn: 25.0f
 #define BRAKE_POWER 1250.0f
 
 // Gameplay Variables

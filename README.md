@@ -12,7 +12,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 # Game Mechanics
 
-Each player starts with 3 lives. A life is subtracted when a player is hitted by the opponent's projectiles. When the amount of lives reach 0, the player loses and is reset back to the starting position.
+Each player starts with 3 lives. A life is subtracted when a player is hitted by the opponent's projectiles. When the amount of lives reach 0, the player loses and is reset back to the starting position. This grants the other player a round win. At 3 round wins the game ends.
 
 Each player starts with 4 projectiles and, once shot, they need to be recharged by reaching the nearest "ammo pack". 
 
@@ -23,6 +23,8 @@ Projectiles that have changed colours are harmless to the players. Those who hav
 If for whatever reason a vehicle is flipped over, each player has a specific input key assigned to flip their vehicle back to its original state.
 
 Normal acceleration (W/8) makes the vehicle move slowly, and turbo (LSHIFT/ KP Plus) propels the vehicle forward,
+
+Players' ammo, lives, round Wins and game wins can be checked out in the window title.
 
 
 

@@ -44,7 +44,8 @@ public:
 	bool loaded;										//Keeps track whether or not the player has recharged ammo.
 	bool firstTurbo;
 
-	uint winsP1;
+	uint roundsWonP1;									//Keeps track of the amount of rounds P1 has won.
+	uint winsP1;										//Keeps track of the amount of wins that P1 has.
 
 	float scale;										//Scaling factor of P1's vehicle
 };
