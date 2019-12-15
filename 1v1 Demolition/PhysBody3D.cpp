@@ -45,7 +45,6 @@ void PhysBody3D::SetBody(Sphere* primitive, float mass, bool is_sensor, bool is_
 
 void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor, bool is_environment)
 {
-	//btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
 	btVector3 btSize = { size.x, size.y, size.z };
 
 	SetBody(new btBoxShape(btSize * HALF),
@@ -54,7 +53,6 @@ void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor,
 
 void PhysBody3D::SetBody(Cylinder* primitive, float mass, bool is_sensor, bool is_environment)
 {
-	//btVector3 btSize = { primitive->GetRadius(), primitive->GetHeight() * 0.5f, depth };
 	btVector3 btSize = { primitive->GetHeight() * HALF, primitive->GetRadius(), 0.0f };
 	
 	SetBody(new btCylinderShapeX(btSize),
@@ -157,7 +155,6 @@ float PhysBody3D::DistanceFromWorldOrigin(vec3 bodyPos) const
 	}
 
 	float distance = posX + posY + posZ;
-	//float distance = posX + posZ;
 
 	return distance;
 }

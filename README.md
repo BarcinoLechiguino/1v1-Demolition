@@ -1,6 +1,6 @@
 # 1v1 Demolition
 
-1v1 Demolition is a simple 3D Racing Brawling Game developed by Ángel González and Gerard Romeu, two 2nd year students of the Bachelor Degree in Video Game Design and Development at UPC CITM/TTC, Barcelona. It has been made from scratch in C++ with Visual Studio using the OpenGL and Bullet libraries.
+1v1 Demolition is a simple 3D Racing Brawler Game developed by Ángel González and Gerard Romeu, two 2nd year students of the Bachelor Degree in Video Game Design and Development at UPC CITM/TTC, Barcelona. It has been made from scratch in C++ with Visual Studio using the OpenGL and Bullet libraries.
 
 
 
@@ -68,7 +68,7 @@ Players' ammo, lives, round Wins and game wins can be checked out in the window 
 
 # Debug Keys
 
-* **F1**: Debug Mode (Show PhysBodies, spawn PhysBodies and Free Camera Movement)
+* **F1**: Debug Mode (Spawn PhysBodies and Free Camera Movement)
 
   * Free Camera Inputs:
     * **S Key**: Increase the camera's position in the Z Axis.
@@ -122,7 +122,7 @@ Players' ammo, lives, round Wins and game wins can be checked out in the window 
 
    - Song & FX implementation.
    - Vehicle Design.
-   - Player 1 & Player 2 initial Implementation.
+   - Player 1 & Player 2 Vehicle Basic Movement Implementation.
 
 
 # Link to Repository
