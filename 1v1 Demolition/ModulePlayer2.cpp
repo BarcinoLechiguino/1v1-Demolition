@@ -74,26 +74,32 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 
 	if (body1->parentPrimitive != nullptr && body2->GetBody() == App->player2->P2vehicle->GetBody())
 	{
-		//body1->parentPrimitive->color = color;
 		body1->parentPrimitive->color = Red;
 	}
 
-	if (body2->parentPrimitive != nullptr && body2->is_environment == false)
+	if (body2->parentPrimitive != nullptr && body2->is_environment == false && body1->is_sensor == false)
 	{
-		//body2->parentPrimitive->color = color;
 		body2->parentPrimitive->color = Blue;
+
+		//if (ammo < MAX_AMMO)
+		//{
+		//	ammo = MAX_AMMO;
+
+		//	//RELOAD SFX
+		//	App->audio->PlayFx(7, 0);
+		//}
 	}
 
 	if (body2->GetBody() == P2vehicle->GetBody())
 	{
 		if (body1->is_sensor == true)
 		{
-			//RestartPlayer2(spawnPoint);
-
 			if (ammo < MAX_AMMO)
 			{
 				ammo = MAX_AMMO;
+
 				//RELOAD SFX
+				App->audio->PlayFx(7, 0);
 			}
 
 			return;
@@ -103,7 +109,6 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 		{
 			if (prevCollBody[i] == body1)
 			{
-				//continue;
 				break;
 			}
 
@@ -112,7 +117,7 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 				lives--;
 				prevCollBody[i] = body1;
 
-				//CAR HIT SFX
+				App->audio->PlayFx(4, 0);					//CAR HIT SFX
 
 				break;
 			}
@@ -226,6 +231,7 @@ void ModulePlayer2::SpecialInputsP2()
 		else
 		{
 			//NO AMMO SFX
+			App->audio->PlayFx(8, 0);
 		}
 	}
 
@@ -274,6 +280,11 @@ void ModulePlayer2::GenerateP2Vehicle()
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
 	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
+	//chassis.color = Black;
+	/*if (car.chassis != nullptr)
+	{
+		car.chassis->color = Black;
+	}*/
 
 	car.cabin_size.Set(3.4f * scale, 1.5f * scale, 3.0f * scale);
 	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
@@ -391,11 +402,12 @@ void ModulePlayer2::GenerateP2Vehicle()
 void ModulePlayer2::LoadAudioP2()
 {
 	//Loading FX
-	App->audio->LoadFx("audio/FX/Accelerate_First.wav");
+	/*App->audio->LoadFx("audio/FX/Accelerate_First.wav");
 	App->audio->LoadFx("audio/FX/Car_Braking.wav");
 	App->audio->LoadFx("audio/FX/Shoot_1.wav");
 	App->audio->LoadFx("audio/FX/Hit_Car_With_Object.wav");
 	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
 	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
 	App->audio->LoadFx("audio/FX/Gun_Reload_sound_effect.wav");
+	App->audio->LoadFx("audio/FX/No_ammo.wav");*/
 }

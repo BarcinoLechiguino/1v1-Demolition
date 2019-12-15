@@ -21,40 +21,35 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2) override;
 public:
-	Cube* top_constraint;
-	Primitive* furniture;
-	
-	/*PhysBody3D* pb_chassis;
-	Cube p_chassis;
+	Cube* top_constrained_cube;																		//Pointer of the element constrained to the top column. Done so torque can be added in the update.
+	Cube* bottom_constrained_cube;
+	/*Cube* top_constrained_cube;
+	Cube* top_constrained_cube;
+	Cube* top_constrained_cube;
+	Cube* top_constrained_cube;*/
 
-	PhysBody3D* pb_wheel;
-	Cylinder p_wheel;
+	Primitive* furniture;																			//Multiuse pointer that is used in the SetCube/Sphere/Cylinder methods.																		
 
-	PhysBody3D* pb_wheel2;
-	Cylinder p_wheel2;
+	void AddPrimitive(Primitive* p);																//Adds a primitive to the primitives dynArray.
+	void DeletePrimitive(Primitive* p);																//Deletes a primitive from the primitives dynArray.
 
-	PhysMotor3D* left_wheel;
-	PhysMotor3D* right_wheel;
+	void CameraMovement();																			//Method that is responsible of moving the camera around. Done for readability
+	float GetZoom() const;																			//Gets the amount of zoom required taking into account the distance between players (ratio).
+	float GetLerpSpeed(vec3 position, vec3 target, float speed) const;								//Gets the lerp speed for the camera according to the position of the camera and its target position.
+	void LerpCamera(vec3 cameraPosition, vec3 targetPosition, float speed);							//Method that changes the camera's poisition according to the lerp speed received from GetLerpSpeed().
 
-	PhysBody3D* sensor_pb;
-	Sphere Sensor;*/
+	void LoadArena();																				//Loads all Arena elements. Done for readability.
+	void SetCube(vec3 position, vec3 size, float mass, bool is_sensor, bool is_environment, float angle = 0, vec3 axis = (0, 0, 0));						//Creates and sets a cube on the world. Used to set Arena elements.
+	void SetSphere(vec3 position, float radius, float mass, bool is_sensor = false, bool is_environment = false);											//Creates and sets a sphere on the world. Used to set Arena elements.
+	void SetCylinder(vec3 position, float radius, float height, float mass, bool is_sensor, bool is_environment, float angle = 0, vec3 axis = (0, 0, 0));	//Creates and sets a sphere on the world. Used to set Arena elements.
 
-	void AddPrimitive(Primitive* p);											//Adds a primitive to the primitives array.
-	//void DeletePrimitive();
-	void DeletePrimitive(Primitive* p);
-
-	void CameraMovement();
-	float GetZoom() const;														//Gets the amount of zoom required taking into account the distance between players (ratio).
-	float GetLerpSpeed(vec3 position, vec3 target, float speed) const;			//Gets the lerp speed for the camera according to the position of the camera and its target position.
-	void LerpCamera(vec3 cameraPosition, vec3 targetPosition, float speed);		//Method that changes the camera's poisition according to the lerp speed received from GetLerpSpeed().
-
-	void LoadArena();															//
-	void RestartGame();
+	void RestartGame();																				//Resets everyithing except Arena elements.
 
 private:
-	void HandleDebugInput();
-	void DebugSpawnPrimitive(Primitive* p);
+	void HandleDebugInput();																		//Method that holds all the inputs that are activated when in debug mode.
+	void DebugSpawnPrimitive(Primitive* p);															//Spawns an element on the world. Used in debug mode.
 
-	p2DynArray<Primitive*> primitives;
+	p2DynArray<Primitive*> primitives;																//Array containing all elements that are currently existing in the world.
 	p2DynArray<Primitive*> arena_elements;
+	p2DynArray<Primitive*> torque_elements;
 };

@@ -29,7 +29,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
-	top_constraint = nullptr;
+	top_constrained_cube = nullptr;
 
 	LoadArena();
 
@@ -41,19 +41,19 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
-	//for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
-	//{
-	//	App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
-	//	primitives.Pop(primitives[i]);
+	for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
+	{
+		App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+		primitives.Pop(primitives[i]);
 
-	//	/*if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
-	//	{
-	//		App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
-	//		primitives.Pop(primitives[i]);
-	//	}	*/
-	//}
+		/*if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
+		{
+			App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+			primitives.Pop(primitives[i]);
+		}	*/
+	}
 
-	delete top_constraint;							//Apply this to all?
+	//delete top_constrained_cube;							//Apply this to all? Crashes on exit
 	
 	//primitives.Clear();
 	//LoadArena();
@@ -81,7 +81,8 @@ update_status ModuleSceneIntro::Update(float dt)
 		primitives[n]->Update();
 
 	
-	top_constraint->body.GetBody()->applyTorque(btVector3(0.0f, 500.0f, 0.0f));
+	//Applying torque to the arena's constraints.
+	top_constrained_cube->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
 
 	/*for (uint n = 0; n < arena_elements.Count(); n++)
 		arena_elements[n]->Update();*/
@@ -184,7 +185,7 @@ void ModuleSceneIntro::DebugSpawnPrimitive(Primitive * p)
 {
 	primitives.PushBack(p);
 	p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-	p->body.collision_listeners.add(this);													//Uncomment this to add this primitive to the colision_listener array
+	//p->body.collision_listeners.add(this);													//Uncomment this to add this primitive to the colision_listener array
 	//p->body.collision_listeners.add(App->player);
 	p->body.Push(-App->camera->Z * 1000.f);
 }
@@ -258,9 +259,9 @@ float ModuleSceneIntro::GetZoom() const
 
 	float cameraZoom = distance;
 
-	if (cameraZoom < 50)
+	if (cameraZoom < 60)
 	{
-		cameraZoom = 50;
+		cameraZoom = 60;
 	}
 
 	if (cameraZoom > 150)
@@ -301,48 +302,55 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, floa
 void ModuleSceneIntro::LoadArena()
 {
 	// -------------------------------- GROUND & BOUNDS -----------------------------
-	Cylinder* ground = new Cylinder(80.0f, 2.1f, 0.0f, false, true);
+	Cylinder* ground = new Cylinder(80.f, 2.1f, 0.f, false, true);
 	ground->SetPos(0.0f, -1.0f, 0.0f);
 	primitives.PushBack(ground);
 	ground->color = Beige;
 
 	ground->SetRotation(90, vec3(0, 0, 1));										//The cylinder appears rotated 90 degrees in Yaw, so that needs to be corrected.
-	
-	/*Cube * ground = new Cube(vec3(150.0f, 1.1f, 150.0f), 0.0f, false, true);
-	ground->SetPos(0.0f, -0.5f, 0.0f);
-	primitives.PushBack(ground);*/
 
 	// ----------------------------------- WALLS -----------------------------------
-	Cube* wall1 = new Cube(vec3(5.f, 5.f, 20.f), 0.0f, false, true);
-	wall1->SetPos(-5.0f, 5.0f, 0.0f);
-	primitives.PushBack(wall1);
+	Cube* north_center_wall = new Cube(vec3(5.f, 5.f, 18.f), 0.0f, false, true);
+	north_center_wall->SetPos(-25.0f, 2.5f, 0.0f);
+	primitives.PushBack(north_center_wall);
+
+	Cube* south_center_wall = new Cube(vec3(5.f, 5.f, 18.f), 0.0f, false, true);
+	south_center_wall->SetPos(25.0f, 2.5f, 0.0f);
+	primitives.PushBack(south_center_wall);
+
+	Cube* west_center_wall = new Cube(vec3(18.f, 5.f, 5.f), 0.0f, false, true);
+	west_center_wall->SetPos(0.0f, 2.5f, -25.0f);
+	primitives.PushBack(west_center_wall);
+	//west_center_wall->SetRotation();
 	//arena_elements.PushBack(wall1);
 
+	Cube* east_center_wall = new Cube(vec3(18.f, 5.f, 5.f), 0.0f, false, true);
+	east_center_wall->SetPos(0.0f, 2.5f, 25.0f);
+	primitives.PushBack(east_center_wall);
+
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
-	Cylinder* top_column = new Cylinder(5.0f, 10.0f, 0.0f, false, true);
-	top_column->SetPos(20.0f, 5.0f, 0.0f);
+	Cube* top_column = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
+	top_column->SetPos(20.0f, 5.0f, 20.0f);
 	primitives.PushBack(top_column);
-	top_column->color = Green;
-	top_column->SetRotation(90, vec3(0, 0, 1));
+	top_column->color = Red;
 
-	Cube* top_column_2 = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
-	top_column_2->SetPos(20.0f, 5.0f, 20.0f);
-	primitives.PushBack(top_column_2);
-	top_column_2->color = Red;
+	/*Cube* */top_constrained_cube = new Cube(vec3(5.0f, 9.0f, 1.0f), 1000.0f, false, true);
+	top_constrained_cube->SetPos(26.0f, 5.0f, 20.0f);
+	primitives.PushBack(top_constrained_cube);
+	top_constrained_cube->color = Blue;
 
-	/*Cube* */top_constraint = new Cube(vec3(2.5f, 5.0f, 1.0f), 1.0f, false, true);
-	top_constraint->SetPos(25.0f, 5.0f, 20.0f);
-	primitives.PushBack(top_constraint);
-	top_constraint->color = Blue;
+	App->physics->AddConstraintHinge(*top_column, *top_constrained_cube,
+		vec3(0.0f, 0.0f, 0.0f), vec3(-6.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 
-	App->physics->AddConstraintHinge(*top_column_2, *top_constraint,
-		vec3(0.0f, 0.0f, 0.0f), vec3(-5.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0));
+	//SetCube(vec3(0, 0, 0), vec3(10, 1, 10), 0.0f, false, true, 90, vec3(1, 0, 0));
 
-	top_constraint->body.Push(vec3(0, 1, 0) * 10000);
-
+	/*furniture = new Cube(vec3(5.0f, 9.0f, 1.0f), 1000.0f, false, true);
+	furniture->SetPos(26.0f, 5.0f, 20.0f);
+	primitives.PushBack(furniture);
+	furniture->color = Blue;*/
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
-	Sphere* ammo_pickup = new Sphere(1.0f, 0.0f, true, true);
+	Sphere* ammo_pickup = new Sphere(2.0f, 0.0f, true, true);
 	ammo_pickup->SetPos(0.0f, 0.0f, 0.0f);
 	primitives.PushBack(ammo_pickup);
 	//arena_elements.PushBack(ammo_pickup);
@@ -357,6 +365,39 @@ void ModuleSceneIntro::LoadArena()
 	ammo_pickup.SetPos(0.0f, 0.0f, 0.0f);
 	primitives.PushBack(&ammo_pickup);
 	App->physics->AddBody(ammo_pickup, 0.0f, true);*/
+}
+
+void ModuleSceneIntro::SetCube(vec3 position, vec3 size, float mass, bool is_sensor, bool is_environment, float angle, vec3 axis)
+{
+	furniture = new Cube(size, mass, is_sensor, is_environment);
+	furniture->SetPos(position.x, position.y, position.z);
+	primitives.PushBack(furniture);
+
+	furniture->SetRotation(angle, axis);
+
+	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
+	furniture->color = color;
+}
+
+void ModuleSceneIntro::SetSphere(vec3 position, float radius, float mass, bool is_sensor, bool is_environment)
+{
+	furniture = new Sphere(radius, mass, is_sensor, is_environment);
+	furniture->SetPos(position.x, position.y, position.z);
+	primitives.PushBack(furniture);
+
+	furniture->color = White;
+}
+
+void ModuleSceneIntro::SetCylinder(vec3 position, float radius, float height, float mass, bool is_sensor, bool is_environment, float angle, vec3 axis)
+{
+	furniture = new Cylinder(radius, height, mass, is_sensor, is_environment);
+	furniture->SetPos(position.x, position.y, position.z);
+	primitives.PushBack(furniture);
+
+	furniture->SetRotation(angle, axis);
+
+	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
+	furniture->color = color;
 }
 
 void ModuleSceneIntro::RestartGame()

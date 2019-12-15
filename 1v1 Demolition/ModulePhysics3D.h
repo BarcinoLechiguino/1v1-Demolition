@@ -40,8 +40,8 @@ public:
 	//A P2P constraint takes the center between the centers of the 2 bodies as the pivot. 
 	//Change btVector3s for vec3s? --> With this change the method does not depend on Bullet at argument level. It depends on glmath.h. REVISE THIS HERE --> Should it be changed?
 	//Change "Primitive&"s for PhysBodies ?
-	void AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB);
-	void AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB);
+	void AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, bool can_collide = false);
+	void AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB, bool can_collide = false);
 
 	p2List<PhysVehicle3D*>					vehicles;
 

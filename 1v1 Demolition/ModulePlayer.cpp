@@ -82,38 +82,36 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 
 	if (body1->parentPrimitive != nullptr && body2->GetBody() == P1vehicle->GetBody())
 	{
-		//body1->parentPrimitive->color = color;
 		body1->parentPrimitive->color = Blue;
 	}
 
-	if (body2->parentPrimitive != nullptr && body2->is_environment == false)
+	if (body2->parentPrimitive != nullptr && body2->is_environment == false && body1->is_sensor == false)
 	{
-		//body2->parentPrimitive->color = color;
 		body2->parentPrimitive->color = Red;
 	}
 	
-	/*if (body1->GetBody() == P1vehicle->GetBody())
-	{
-		if (prevCollBody == NULL || prevCollBody != body2->GetBody())
-		{
-			lives--;
+	//if (body1->GetBody() == P1vehicle->GetBody() /*App->player2->P2vehicle->GetBody()*/)
+	//{
+	//	/*if (prevCollBody == NULL || prevCollBody != body2->GetBody())
+	//	{
+	//		lives--;
 
-			LOG("Return Player 1 Lives: %d", lives);
+	//		LOG("Return Player 1 Lives: %d", lives);
 
-			prevCollBody = body2->GetBody();
-		}
-	}*/
+	//		prevCollBody = body2->GetBody();
+	//	}*/
+	//}
 
 	if (body2->GetBody() == P1vehicle->GetBody())
 	{
 		if (body1->is_sensor == true)
 		{
-			//RestartPlayer1(spawnPoint);
-			
 			if (ammo < MAX_AMMO)
 			{
 				ammo = MAX_AMMO;
+				
 				//RELOAD SFX
+				App->audio->PlayFx(7, 0);
 			}
 
 			/*if (loaded != false)
@@ -126,19 +124,20 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 		}
 
 		for (int i = 0; i < MAX_BODIES; i++)
-		{
+		{	
 			if (prevCollBody[i] == body1)
 			{
-				//continue;
 				break;
 			}
 
-			if (prevCollBody[i] == NULL)
+			if (prevCollBody[i] == NULL /*&& body1->parentPrimitive->color == Blue*/)
 			{
 				lives--;
 				prevCollBody[i] = body1;
 
-				//CAR HIT SFX
+				LOG("P1 Lives %d", lives);
+
+				App->audio->PlayFx(4, 0);										 //CAR HIT SFX
 
 				break;
 			}
@@ -191,12 +190,11 @@ void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
 void ModulePlayer::DriveInputsP1()
 {
 	// -------------------------------- MAIN ACTIONS --------------------------------
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)					//Change to WASD.
-	{			
-															//Need to change the camera controls too (Maybe leave it like that but only activate in debug mode)
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
 		if (P1vehicle->GetKmh() >= 0.0f)
 		{
-			acceleration = MAX_ACCELERATION;
+			acceleration = MAX_ACCELERATION/* * 2.0f*/;
 			
 		}
 		else
@@ -209,6 +207,9 @@ void ModulePlayer::DriveInputsP1()
 	{
 		if (turn < TURN_DEGREES)
 			turn += TURN_DEGREES;
+
+		if (acceleration > MAX_ACCELERATION)
+			acceleration = MAX_ACCELERATION;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
@@ -234,6 +235,12 @@ void ModulePlayer::DriveInputsP1()
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 	{
 		acceleration = MAX_ACCELERATION * 5;
+		
+		if (!firstTurbo)
+		{
+			App->audio->PlayFx(1, 0);
+			firstTurbo = true;
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_B) == KEY_REPEAT)
@@ -254,7 +261,8 @@ void ModulePlayer::SpecialInputsP1()
 		}
 		else
 		{
-
+			//EMPTY CLIP SFX
+			App->audio->PlayFx(8, 0);
 		}
 	}
 
@@ -266,7 +274,7 @@ void ModulePlayer::SpecialInputsP1()
 
 void ModulePlayer::CheckLivesP1()
 {
-	uint prevLives;
+	uint prevLives = MAX_LIVES;
 	
 	if (lives <= MAX_LIVES)
 	{
@@ -281,6 +289,7 @@ void ModulePlayer::CheckLivesP1()
 	if (lives <= 0)								//lives > 3 is a dirty safety measure for when lives are less than 0 and lives return the max uint value.
 	{
 		RestartPlayer1(spawnPoint);
+		App->audio->PlayFx(5, 0);
 	}
 }
 
@@ -425,5 +434,5 @@ void ModulePlayer::LoadAudioP1()
 	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
 	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
 	App->audio->LoadFx("audio/FX/Gun_Reload_sound_effect.wav");
-	App->audio->LoadFx("audio/FX/No ammo.wav");
+	App->audio->LoadFx("audio/FX/No_ammo.wav");
 }

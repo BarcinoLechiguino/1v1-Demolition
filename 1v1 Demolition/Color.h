@@ -23,6 +23,11 @@ struct Color
 	{
 		return (float*)this;
 	}
+
+	bool operator ==(const Color& v) const
+	{
+		return (r == v.r && g == v.g && b == v.b);
+	}
 };
 
 extern Color Red;

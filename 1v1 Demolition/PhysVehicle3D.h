@@ -1,10 +1,12 @@
 #pragma once
 
 #include "PhysBody3D.h"
+#include "Primitive.h"
 #include "glmath.h"
 
 class btRaycastVehicle;
 struct PhysBody3D;
+//class Primitive;
 
 struct Wheel
 {
@@ -24,6 +26,8 @@ struct VehicleInfo
 {
 	~VehicleInfo();
 
+	//Cube* chassis;
+	
 	vec3 chassis_size;
 	vec3 chassis_offset;
 	vec3 cabin_size;
@@ -79,3 +83,5 @@ public:
 	VehicleInfo info;
 	btRaycastVehicle* vehicle;
 };
+
+//extern Cube chassis;

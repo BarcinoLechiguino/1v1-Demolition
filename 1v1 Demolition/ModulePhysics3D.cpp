@@ -385,7 +385,7 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 	return pvehicle;
 }
 
-void ModulePhysics3D::AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB)
+void ModulePhysics3D::AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, bool can_collide)
 {
 	//To be able to use a P2P constraint with primitives (or PhysBodies), the btRigidBody of the Primitive/PhysBody needs to be passed.
 	//Constraint pointer that will be used to create new constraints.
@@ -394,12 +394,12 @@ void ModulePhysics3D::AddConstraintP2P(const Primitive& bodyA, const Primitive& 
 		*bodyB.body.GetBody(),
 		btVector3(pivotInA.x, pivotInA.y, pivotInA.z),
 		btVector3(pivotInB.x, pivotInB.y, pivotInB.z));
-	world->addConstraint(p2p, false);						//addConstraint receives as arguments a constraint (btTypedConstraint and its subclasses) and a bool that determines whether or not the constrained bodies will collide between them. 
+	world->addConstraint(p2p, can_collide);					//addConstraint receives as arguments a constraint (btTypedConstraint and its subclasses) and a bool that determines whether or not the constrained bodies will collide between them. 
 	constraints.add(p2p);									//Adds the new p2p constraint to the constraints list.
 	p2p->setDbgDrawSize(2.0f);								//REVISE THIS here.
 }
 
-void ModulePhysics3D::AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB)
+void ModulePhysics3D::AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB, bool can_collide)
 {
 	btTypedConstraint* hinge = new btHingeConstraint(
 		*bodyA.body.GetBody(),
@@ -408,7 +408,7 @@ void ModulePhysics3D::AddConstraintHinge(const Primitive& bodyA, const Primitive
 		btVector3(pivotInB.x, pivotInB.y, pivotInB.z),
 		btVector3(axisInA.x, axisInA.y, axisInA.z),
 		btVector3(axisInB.x, axisInB.y, axisInB.z));
-	world->addConstraint(hinge, false);
+	world->addConstraint(hinge, can_collide);
 	constraints.add(hinge);								//Adds the new hinge constraint to the constraints list.
 	hinge->setDbgDrawSize(2.0f);						//REVISE THIS here.
 }
