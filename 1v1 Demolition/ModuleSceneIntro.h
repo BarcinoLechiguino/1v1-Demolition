@@ -21,8 +21,8 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2) override;
 public:
-	Cube* top_constrained_cube;																		//Pointer of the element constrained to the top column. Done so torque can be added in the update.
-	Cube* bottom_constrained_cube;
+	Cube* topLeft_rotating_cube;																		//Pointer of the element constrained to the top column. Done so torque can be added in the update.
+	Cube* bottomRight_rotating_cube;
 	/*Cube* top_constrained_cube;
 	Cube* top_constrained_cube;
 	Cube* top_constrained_cube;

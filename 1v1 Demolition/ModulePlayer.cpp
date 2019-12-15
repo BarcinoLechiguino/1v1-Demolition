@@ -260,7 +260,7 @@ void ModulePlayer::SpecialInputsP1()
 		if (ammo != 0)
 		{
 			ammo--;
-			SpawnThrowableItem(new Sphere());
+			SpawnThrowableItem(new Sphere(1.2f, 1.2f));
 			App->audio->PlayFx(3, 0);
 		}
 		else

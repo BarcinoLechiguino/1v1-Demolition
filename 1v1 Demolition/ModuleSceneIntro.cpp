@@ -30,8 +30,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
 	//Scenario Constraints
-	top_constrained_cube = nullptr;
-	bottom_constrained_cube = nullptr;
+	topLeft_rotating_cube = nullptr;
+	bottomRight_rotating_cube = nullptr;
 
 	LoadArena();
 
@@ -82,8 +82,8 @@ update_status ModuleSceneIntro::Update(float dt)
 	CheckWins();
 	
 	//Applying torque to the arena's constraints.
-	top_constrained_cube->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
-	bottom_constrained_cube->body.GetBody()->applyTorque(btVector3(0.0f, -50000.0f, 0.0f));
+	topLeft_rotating_cube->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
+	bottomRight_rotating_cube->body.GetBody()->applyTorque(btVector3(0.0f, -50000.0f, 0.0f));
 
 	/*for (uint n = 0; n < arena_elements.Count(); n++)
 		arena_elements[n]->Update();*/
@@ -324,26 +324,19 @@ void ModuleSceneIntro::LoadArena()
 	SetCube(vec3(53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-East Border Wall.
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
-	Cube* top_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);
-	top_constrained_cube = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);
+	// --- Columns
+	Cube* topLeft_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);
+	topLeft_rotating_cube = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);
 
-	App->physics->AddConstraintHinge(*top_column, *top_constrained_cube,
+	Cube* bottom_column = SetCube(vec3(20.0f, 5.0f, -20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);
+	bottomRight_rotating_cube = SetCube(vec3(27.0f, 5.0f, -20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);
+
+	// --- Constraints
+	App->physics->AddConstraintHinge(*topLeft_column, *topLeft_rotating_cube,
 		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
-
-	/*Cube* bottom_column = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
-	bottom_column->SetPos(20.0f, 5.0f, -20.0f);
-	primitives.PushBack(bottom_column);
-	bottom_column->color = Red;*/
-
-	//Cube* bottom_column = SetCube();
-
-	bottom_constrained_cube = new Cube(vec3(5.0f, 9.0f, 1.0f), 1000.0f, false, true);
-	bottom_constrained_cube->SetPos(26.0f, 5.0f, -20.0f);
-	primitives.PushBack(bottom_constrained_cube);
-	bottom_constrained_cube->color = Blue;
-
-	App->physics->AddConstraintHinge(*bottom_column, *bottom_constrained_cube,
-		vec3(0.0f, 0.0f, 0.0f), vec3(-6.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+	
+	App->physics->AddConstraintHinge(*bottom_column, *bottomRight_rotating_cube,
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
 	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//Ammo Pick-up at the Arena's center.		
