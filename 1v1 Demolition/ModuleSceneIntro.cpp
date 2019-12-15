@@ -335,7 +335,7 @@ void ModuleSceneIntro::LoadArena()
 	primitives.PushBack(bottom_column);
 	bottom_column->color = Red;*/
 
-	Cube* bottom_column = SetCube();
+	//Cube* bottom_column = SetCube();
 
 	bottom_constrained_cube = new Cube(vec3(5.0f, 9.0f, 1.0f), 1000.0f, false, true);
 	bottom_constrained_cube->SetPos(26.0f, 5.0f, -20.0f);
