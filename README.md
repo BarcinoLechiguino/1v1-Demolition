@@ -14,7 +14,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 Each player starts with 3 lives. A life is subtracted when a player is hitted by the opponent's projectiles. When the amount of lives reach 0, the player loses and is reset back to the starting position. This grants the other player a round win. At 3 round wins the game ends.
 
-Each player starts with 4 projectiles and, once shot, they need to be recharged by reaching the nearest "ammo pack". 
+Each player starts with 4 projectiles and, once shot, they need to be recharged by reaching the nearest "ammo pack".  Ammo packs are white spheres spread out through the Arena. Once a player goes through one, it will change to red or blue (depends on the player).
 
 Player 1's projectiles are blue in colour and Player 2's are red. These colors change when the projectiles hit the opposing player (to red and blue respectively). 
 
