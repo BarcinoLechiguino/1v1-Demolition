@@ -100,19 +100,20 @@ Players' ammo, lives, round Wins and game wins can be checked out in the window 
 
 # Work Distribution
 
-- **Ángel González:**
+- **Ángel González:**  
 
-  - Element 1.
-
-  - Element 2.
-
-    
+   - Camera implementation
+   - Player OnCollision
+   - Game Loop & Win Lose Condition
+   - Sensors (ammo packs)
+   - Player 1 & Player 2 implementation
+   - Sceneario
 
 - **Gerard Romeu:**
 
-  - Element 1.
-  - Element 2.
-
+   - Song & FX implementation
+   - Player 1 & Player 2 implementation
+   - Creation of the car
 
 
 # Link to Repository
