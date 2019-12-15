@@ -12,7 +12,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's c
 
 # Game Mechanics
 
-Each player starts with 3 lives. A life is subtracted when a player is hit by the opponent's projectiles. When the amount of lives reach 0, the player loses and is reset back to the starting position.
+Each player starts with 3 lives. A life is subtracted when a player is hitted by the opponent's projectiles. When the amount of lives reach 0, the player loses and is reset back to the starting position.
 
 Each player starts with 4 projectiles and, once shot, they need to be recharged by reaching the nearest "ammo pack". 
 
@@ -87,31 +87,9 @@ Projectiles that have changed colours are harmless to the players. Those who hav
 - **Gerard Romeu:** https://github.com/Gromeu2000
 
 
-
-# Work Distribution
-
-* **Ángel González:**
-
-  * Element 1
-
-  * Element 2 
-
-  * Element 3
-
-    
-
-* **Gerard Romeu:**
-
-  * Element 1
-  * Element 2
-  * Element 3
-
-
-
 # Link to Repository
 
 <https://github.com/BarcinoLechiguino/3D-Racing-Game>
-
 
 
 # License
