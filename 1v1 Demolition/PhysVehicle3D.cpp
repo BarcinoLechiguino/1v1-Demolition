@@ -54,7 +54,7 @@ void PhysVehicle3D::Render()
 	chassis.transform.M[13] += offset.getY();
 	chassis.transform.M[14] += offset.getZ();
 
-	chassis.color = Blue;
+	chassis.color = Magenta;
 
 
 	//---CABIN
@@ -67,7 +67,7 @@ void PhysVehicle3D::Render()
 	cabin.transform.M[13] += cabinOffset.getY();
 	cabin.transform.M[14] += cabinOffset.getZ();
 
-	cabin.color = White;
+	cabin.color = Cyan;
 
 	//---LIGTHS---
 	//---LEFT
@@ -80,7 +80,7 @@ void PhysVehicle3D::Render()
 	L_light.transform.M[13] += LlightOffset.getY();
 	L_light.transform.M[14] += LlightOffset.getZ();
 
-	L_light.color = Black;
+	L_light.color = Yellow;
 
 	//---RIGHT
 	Cube R_light(info.R_light_size.x, info.R_light_size.y, info.R_light_size.z);
@@ -92,7 +92,7 @@ void PhysVehicle3D::Render()
 	R_light.transform.M[13] += RlightOffset.getY();
 	R_light.transform.M[14] += RlightOffset.getZ();
 
-	R_light.color = Black;
+	R_light.color = Yellow;
 
 	//---SPOILER L FOOT
 	Cube L_foot(info.L_spoiler_foot_size.x, info.L_spoiler_foot_size.y, info.L_spoiler_foot_size.z);
@@ -104,7 +104,7 @@ void PhysVehicle3D::Render()
 	L_foot.transform.M[13] += LfootOffset.getY();
 	L_foot.transform.M[14] += LfootOffset.getZ();
 
-	L_foot.color = Blue;
+	L_foot.color = Purple;
 
 	//---SPOILER R FOOT
 	Cube R_foot(info.R_spoiler_foot_size.x, info.R_spoiler_foot_size.y, info.R_spoiler_foot_size.z);
@@ -116,7 +116,7 @@ void PhysVehicle3D::Render()
 	R_foot.transform.M[13] += RfootOffset.getY();
 	R_foot.transform.M[14] += RfootOffset.getZ();
 
-	R_foot.color = Green;
+	R_foot.color = Purple;
 
 	//---SPOILER
 	Cube spoiler(info.spoiler_size.x, info.spoiler_size.y, info.spoiler_size.z);
@@ -128,7 +128,7 @@ void PhysVehicle3D::Render()
 	spoiler.transform.M[13] += spoilerOffset.getY();
 	spoiler.transform.M[14] += spoilerOffset.getZ();
 
-	spoiler.color = Red;
+	spoiler.color = Yellow;
 
 	//---FRONT
 	Cube front(info.front_size.x, info.front_size.y, info.front_size.z);
