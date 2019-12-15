@@ -300,40 +300,40 @@ void ModulePlayer::GenerateP1Vehicle()
 	//car.maxSuspensionForce = 6000.0f;		//6000.0f
 
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(3.0f * scale, 1.0f * scale, 6.0f * scale);
+	car.chassis_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);
 	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
-	car.cabin_size.Set(2.9f * scale, 1.5f * scale, 3.0f * scale);
+	car.cabin_size.Set(3.4f * scale, 1.6f * scale, 3.0f * scale);
 	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
-	car.L_light_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.L_light_size.Set(0.4f * scale, 0.f * scale, 6.05f * scale);
 	car.L_light_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
 
 	car.R_light_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
 	car.R_light_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.L_spoiler_foot_size.Set(0.2f * scale, 1.0f * scale, 0.4f * scale);
+	car.L_spoiler_foot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
 	car.L_spoiler_foot_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	car.R_spoiler_foot_size.Set(0.2f * scale, 1.0f * scale, 0.4f * scale);
+	car.R_spoiler_foot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
 	car.R_spoiler_foot_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	car.spoiler_size.Set(3.0f * scale, 0.2f * scale, 1.0f * scale);
+	car.spoiler_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
 	car.spoiler_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);
 
-	car.front_size.Set(3.0f * scale, 0.2f * scale, 1.0f * scale);
+	car.front_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
 	car.front_offset.Set(0.0f * scale, -0.4f * scale, 2.9f * scale);
 
-	car.front2_size.Set(3.0f * scale, 0.5f * scale, 0.2f * scale);
+	car.front2_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
 	car.front2_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
 
-	car.back_size.Set(3.0f * scale, 0.5f * scale, 0.2f * scale);
+	car.back_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
 	car.back_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
 
-	car.L_size.Set(0.2f * scale, 0.5f * scale, 3.0f * scale);
+	car.L_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
 	car.L_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);
 
-	car.R_size.Set(0.2f * scale, 0.5f * scale, 3.0f * scale);
+	car.R_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
 	car.R_offset.Set(1.5f * scale, 0.0f * scale, 0.0f * scale);
 
 	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
@@ -425,4 +425,5 @@ void ModulePlayer::LoadAudioP1()
 	App->audio->LoadFx("audio/FX/Crash_With_Obstacles.wav");
 	App->audio->LoadFx("audio/FX/Car_Crash_With_Car.wav");
 	App->audio->LoadFx("audio/FX/Gun_Reload_sound_effect.wav");
+	App->audio->LoadFx("audio/FX/No ammo.wav");
 }
