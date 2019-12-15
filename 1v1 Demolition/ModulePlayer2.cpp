@@ -7,7 +7,7 @@
 
 ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled)
 , P2vehicle(NULL)
-, spawnPoint(5, 12, 10)
+, spawnPoint(-40, 8, -40)
 , lives(MAX_LIVES)
 , alive(true)
 , ammo(MAX_AMMO)
@@ -62,10 +62,6 @@ update_status ModulePlayer2::Update(float dt)
 	P2vehicle->Brake(brake);
 
 	P2vehicle->Render();
-
-	/*char title[80];
-	sprintf_s(title, "%.1f Km/h", P2vehicle->GetKmh());
-	App->window->SetTitle(title);*/
 
 	return UPDATE_CONTINUE;
 }

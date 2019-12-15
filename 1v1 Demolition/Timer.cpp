@@ -41,4 +41,10 @@ Uint32 Timer::Read()
 	}
 }
 
+// ---------------------------------------------
+float Timer::ReadSec() const
+{
+	return (SDL_GetTicks() - started_at) / 1000.0f;		//Returns the amount of time that has passed from Start method call until this method's call. As data is received in ms, it is converted to seconds.
+}
+
 

@@ -1,11 +1,9 @@
 #include "Application.h"
 
-#include <functional>			//function pointers
-#include <vector>				//Vector 
-#include <algorithm>			//for_each()
-#include <memory>				//Smart pointers
+// --------------------------------------------------
+// --------------------------------------------------
 
-Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
+Application::Application() : debug(false), renderPrimitives(true), dt(0.16f), frame_count(0)
 {
 	window			= new ModuleWindow(this);
 	input			= new ModuleInput(this);
@@ -48,7 +46,8 @@ Application::~Application()
 	}
 }
 
-bool AFunction(int a, int b) { return true; }
+// --------------------------------------------
+// --------------------------------------------
 
 bool Application::Init()
 {
@@ -65,45 +64,8 @@ bool Application::Init()
 		item = item->next;
 	}
 	
-	//for (Module* it : modules)
-	//{
-	//	it->Init();
-	//}
-
-	//std::for_each(modules.begin(), modules.end(),			//for_each() method. Inits all modules from begin to end.
-	//	[](Module* m) 
-	//{
-	//	m->Init();
-	//});
-
-	////Lambda [](){}
-	////[](Module* m) {ANumber += 1; m->Init(); };			//[this/&...]
-	//[this](Module* m) {this->CleanUp(); m->Init(); };		//[this/&...] what it is capturing (variables that it will store), () Arguments of the function, {} Function method.
-	//
-	//std::vector<Module*>::iterator it = modules.begin();	//Iterator call
-	//modules.rbegin;											//Last element.
-	//modules.begin;											//First element.
-	//
-	//auto ANumber = 1u;										//Auto is set to unsigned integer.
-	//auto BNumber = 1.f;										//Auto is set to float.
-	//auto CNumber = 1.0;										//Auto is set to double.
-	//
-	//while(it != modules.end() && ret == true)				//Iterating the modules in a vector.
-	//{
-	//	(*it)->Init();										//
-	//	it++;												//Iterator->next
-	//}
-
-	//std::function<bool(int, int)> FunctionPtr = AFunction;				//<function type/what it returns (arguments)> Name
-	//FunctionPtr(1, 2);													//Accesses AFunction.
-
-	//std::function<update_status()> UpdatePtr = [this]() { return this->Update(); }; //Set as the pointer to the Update() function of Application.
-
-
-	//std::shared_ptr<Module> ModulePtr = std::make_shared<Module>();		//A share_pointer automatically deletes and keeps an object alive. Module will have a counter of how many shared_pointer points to it.
-	//std::weak_ptr<Module> WeakPtr = ModulePtr;							//Weak pointer allows to create a pointer towards an object that can be destroyed while this smart pointer points to it.
-
-	//ModulePtr2 = ModulePtr;												//Second smart_pointer.
+	// ----------------------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------------------
 
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
@@ -115,6 +77,7 @@ bool Application::Init()
 		item = item->next;
 	}
 	
+	startup_timer.Start();
 	ms_timer.Start();
 	return ret;
 }
@@ -122,6 +85,7 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	frame_count++;
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
 }
@@ -129,6 +93,14 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	float avg_fps = frame_count / startup_timer.ReadSec();			//Equals seconds to the returning value of the ReadSec() method, which returns the amount of time passed in seconds. Use timer->ReadSec() to have no decimals (as its a low resolution timer)
+	
+	const char* gameTitle = "1v1 Demolition";
+
+	char title[128];
+	sprintf_s(title, "%s / Av.FPS: %.2f / P1 Ammo: %d  / P2 Ammo: %d / P1 Lives: %d / P2 Lives: %d / P1 Wins: %d / P2 Wins: %d",
+		gameTitle, avg_fps, App->player->ammo, App->player2->ammo, App->player->lives, App->player2->lives, App->player->winsP1, App->player2->winsP2);
+	App->window->SetTitle(title);
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

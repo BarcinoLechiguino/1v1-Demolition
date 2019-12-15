@@ -9,7 +9,7 @@
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 , P1vehicle(NULL)
-, spawnPoint(0, 12, 10)
+, spawnPoint(40, 8, 40)
 , lives(MAX_LIVES)
 , alive(true)
 , ammo(MAX_AMMO)
@@ -65,15 +65,10 @@ update_status ModulePlayer::Update(float dt)
 
 	P1vehicle->Render();
 
-	/*vehicle2->ApplyEngineForce(acceleration);						//Hive Mind Version.
-	vehicle2->Turn(turn);
-	vehicle2->Brake(brake);
-	vehicle2->Render();*/
-
-	char title[80];
-	sprintf_s(title, "P1 Speed: %.1f Km/h / P2 Speed: %.1f Km/h", 
-		P1vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());	//Temporal measure to show both vehicles Km/h.
-	App->window->SetTitle(title);
+	//char title[80];
+	//sprintf_s(title, "P1 Speed: %.1f Km/h / P2 Speed: %.1f Km/h", 
+	//	P1vehicle->GetKmh(), App->player2->P2vehicle->GetKmh());	//Temporal measure to show both vehicles Km/h.
+	//App->window->SetTitle(title);
 
 	return UPDATE_CONTINUE;
 }
@@ -91,18 +86,6 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	{
 		body2->parentPrimitive->color = Red;
 	}
-	
-	//if (body1->GetBody() == P1vehicle->GetBody() /*App->player2->P2vehicle->GetBody()*/)
-	//{
-	//	/*if (prevCollBody == NULL || prevCollBody != body2->GetBody())
-	//	{
-	//		lives--;
-
-	//		LOG("Return Player 1 Lives: %d", lives);
-
-	//		prevCollBody = body2->GetBody();
-	//	}*/
-	//}
 
 	if (body2->GetBody() == P1vehicle->GetBody())
 	{
@@ -116,12 +99,6 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 				App->audio->PlayFx(7, 0);
 			}
 
-			/*if (loaded != false)
-			{
-				ammo = 3;
-				loaded = true;
-			}*/
-
 			return;
 		}
 
@@ -132,7 +109,7 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 				break;
 			}
 
-			if (prevCollBody[i] == NULL /*&& body1->parentPrimitive->color == Blue*/)
+			if (prevCollBody[i] == NULL)										//(&& body1->parentPrimitive->color == Blue) to compare the projectile's colour?
 			{
 				lives--;
 				prevCollBody[i] = body1;
@@ -428,6 +405,11 @@ void ModulePlayer::GenerateP1Vehicle()
 
 	P1vehicle = App->physics->AddVehicle(car);
 	P1vehicle->SetPos(spawnPoint);
+
+	mat4x4 trans;
+	P1vehicle->GetTransform(&trans);
+
+	LOG("P1 Transform %f", &trans);
 }
 
 void ModulePlayer::LoadAudioP1()

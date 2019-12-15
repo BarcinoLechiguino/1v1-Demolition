@@ -30,8 +30,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
 	//Scenario Constraints
-	topLeft_rotating_cube = nullptr;
-	bottomRight_rotating_cube = nullptr;
+	centerLeft_Rotor = nullptr;
+	centerRight_Rotor = nullptr;
 
 	LoadArena();
 
@@ -82,8 +82,8 @@ update_status ModuleSceneIntro::Update(float dt)
 	CheckWins();
 	
 	//Applying torque to the arena's constraints.
-	topLeft_rotating_cube->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
-	bottomRight_rotating_cube->body.GetBody()->applyTorque(btVector3(0.0f, -50000.0f, 0.0f));
+	centerLeft_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
+	centerRight_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, -50000.0f, 0.0f));
 
 	/*for (uint n = 0; n < arena_elements.Count(); n++)
 		arena_elements[n]->Update();*/
@@ -217,19 +217,19 @@ void ModuleSceneIntro::DeletePrimitive(Primitive* p)
 
 void ModuleSceneIntro::CameraMovement()
 {
-	vec3 P1_position = App->player->P1vehicle->GetPos();							//Gets the current position of Player 1.
-	vec3 P2_position = App->player2->P2vehicle->GetPos();							//Gets the current position of Player 2.
+	vec3 P1_position = App->player->P1vehicle->GetPos();						//Gets the current position of Player 1.
+	vec3 P2_position = App->player2->P2vehicle->GetPos();						//Gets the current position of Player 2.
 
-	vec3 midPos = {																	//Position vector that is set to be at the center poisition of both players.
-		(P1_position.x + P2_position.x) * HALF,										//MidPos in the X axis.
-		0,																			//MidPos in the Y axis.
-		(P1_position.z + P2_position.z) * HALF										//MidPos in the Z axis.
+	vec3 midPos = {																//Position vector that is set to be at the center poisition of both players.
+		(P1_position.x + P2_position.x) * HALF,									//MidPos in the X axis.
+		0,																		//MidPos in the Y axis.
+		(P1_position.z + P2_position.z) * HALF									//MidPos in the Z axis.
 	};
 
 	float camZoom = GetZoom();
 
 	vec3 avgPosition = { midPos.x + CAM_OFFSET, camZoom, midPos.z };
-	vec3 avgRefPoint = (P1_position + P2_position) * HALF;							//Calculates the position of the point of reference of the camera. Set to be at the center of both players.
+	vec3 avgRefPoint = (P1_position + P2_position) * HALF;						//Calculates the position of the point of reference of the camera. Set to be at the center of both players.
 
 	App->camera->Position = (avgPosition);										//Changes both the camera position and its reference point. Set Move to match the vehicle. OFFSET on x --> Horizontal, OFFSET on z --> Vertical.
 	App->camera->LookAt(avgRefPoint);											//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
@@ -239,8 +239,8 @@ void ModuleSceneIntro::CameraMovement()
 //Gets the amount of zoom required taking into account the distance between players (ratio).
 float ModuleSceneIntro::GetZoom() const
 {
-	vec3 P1_position = App->player->P1vehicle->GetPos();				//Gets the current position of Player 1.
-	vec3 P2_position = App->player2->P2vehicle->GetPos();				//Gets the current position of Player 2.
+	vec3 P1_position = App->player->P1vehicle->GetPos();						//Gets the current position of Player 1.
+	vec3 P2_position = App->player2->P2vehicle->GetPos();						//Gets the current position of Player 2.
 
 	float posX = P1_position.x - P2_position.x;
 	float posZ = P1_position.z - P2_position.z;
@@ -303,7 +303,7 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, floa
 void ModuleSceneIntro::LoadArena()
 {
 	// ---------------------------------- GROUND -----------------------------------
-	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);
+	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);				//Arena's ground.
 
 	// ----------------------------------- WALLS -----------------------------------
 	// --- Walls at the center of the arena.
@@ -325,62 +325,64 @@ void ModuleSceneIntro::LoadArena()
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
 	// --- Columns
-	Cube* topLeft_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);
-	topLeft_rotating_cube = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);
+	Cube* centerLeft_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//Center Right Column.
+	centerLeft_Rotor = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Right Column Rotor.
 
-	Cube* bottom_column = SetCube(vec3(20.0f, 5.0f, -20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);
-	bottomRight_rotating_cube = SetCube(vec3(27.0f, 5.0f, -20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);
+	Cube* centerRight_column = SetCube(vec3(20.0f, 5.0f, -20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);	//Center Left Column
+	centerRight_Rotor = SetCube(vec3(27.0f, 5.0f, -20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Left Column Rotor.
+
+
 
 	// --- Constraints
-	App->physics->AddConstraintHinge(*topLeft_column, *topLeft_rotating_cube,
+	App->physics->AddConstraintHinge(*centerLeft_column, *centerLeft_Rotor,
 		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 	
-	App->physics->AddConstraintHinge(*bottom_column, *bottomRight_rotating_cube,
+	App->physics->AddConstraintHinge(*centerRight_column, *centerRight_Rotor,
 		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
-	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//Ammo Pick-up at the Arena's center.		
-	SetSphere(vec3(58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);		//North Ammo Pick-up.
-	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);	//South Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);		//West Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);	//East Ammp Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);											//Ammo Pick-up at the Arena's center.		
+	SetSphere(vec3(58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);											//North Ammo Pick-up.
+	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);										//South Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);											//West Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);										//East Ammp Pick-up.
 }
 
 Cube* ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
 {
-	furniture = new Cube(size, mass, is_sensor, is_environment);						//Creates a cube primitive (and its body at Cube's class constructor).
-	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
-	primitives.PushBack(furniture);														//Adds the new element to the primitives array.
+	furniture = new Cube(size, mass, is_sensor, is_environment);										//Creates a cube primitive (and its body at Cube's class constructor).
+	furniture->SetPos(position.x, position.y, position.z);												//Sets the position of the element in the world.
+	primitives.PushBack(furniture);																		//Adds the new element to the primitives array.
 
-	furniture->SetRotation(angle, axis);												//Sets the amount of rotation that the element will have.
+	furniture->SetRotation(angle, axis);																//Sets the amount of rotation that the element will have.
 
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
-	furniture->color = color;															//Sets the element's colour.
+	furniture->color = color;																			//Sets the element's colour.
 
 	return (Cube*)furniture;
 }
 
 Sphere* ModuleSceneIntro::SetSphere(const vec3& position, float radius, float mass, bool is_sensor, bool is_environment)
 {
-	furniture = new Sphere(radius, mass, is_sensor, is_environment);					//Creates a sphere primitive (and its body at Sphere's class constructor).
-	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
-	primitives.PushBack(furniture);														//Adds the new element to the primitives array.
+	furniture = new Sphere(radius, mass, is_sensor, is_environment);									//Creates a sphere primitive (and its body at Sphere's class constructor).
+	furniture->SetPos(position.x, position.y, position.z);												//Sets the position of the element in the world.
+	primitives.PushBack(furniture);																		//Adds the new element to the primitives array.
 
-	furniture->color = White;															//Sets the element's colour.
+	furniture->color = White;																			//Sets the element's colour.
 
 	return (Sphere*)furniture;
 }
 
 Cylinder* ModuleSceneIntro::SetCylinder(const vec3& position, float radius, float height, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
 {
-	furniture = new Cylinder(radius, height, mass, is_sensor, is_environment);			//Creates a cylinder primitive (and its body at Cylinder's class constructor).
-	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
-	primitives.PushBack(furniture);														//Adds the new element to the primitives array.
+	furniture = new Cylinder(radius, height, mass, is_sensor, is_environment);							//Creates a cylinder primitive (and its body at Cylinder's class constructor).
+	furniture->SetPos(position.x, position.y, position.z);												//Sets the position of the element in the world.
+	primitives.PushBack(furniture);																		//Adds the new element to the primitives array.
 
-	furniture->SetRotation(angle, axis);												//Sets the amount of rotation that the element will have.
+	furniture->SetRotation(angle, axis);																//Sets the amount of rotation that the element will have.
 
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
-	furniture->color = color;															//Sets the element's colour.
+	furniture->color = color;																			//Sets the element's colour.
 
 	return (Cylinder*)furniture;
 }
@@ -399,16 +401,6 @@ void ModuleSceneIntro::RestartGame()
 {
 	App->player->RestartPlayer1(vec3(0, 12, 10));
 	App->player2->RestartPlayer2(vec3(5, 12, 10));
-
-	//for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
-	//{
-	//	if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
-	//	{
-	//		App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
-	//		delete primitives[i];
-	//		primitives.Pop(primitives[i]);
-	//	}
-	//}
 
 	CleanUp();
 }

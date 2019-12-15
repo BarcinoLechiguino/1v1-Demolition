@@ -6,7 +6,7 @@
 
 # Goal of the Game
 
-The goal of the game is, by the use of projectiles, destroy the other player's car. 
+The goal of the game is, by the use of projectiles, destroy the other player's vehicle.  The first player to destroy the opponent's vehicle 3 times wins.
 
 
 
@@ -98,13 +98,25 @@ Normal acceleration (W/8) makes the vehicle move slowly, and turbo (LSHIFT/ KP P
 
 # Work Distribution
 
+- **Ángel González:**
 
+  - Element 1.
+
+  - Element 2.
+
+    
+
+- **Gerard Romeu:**
+
+  - Element 1.
+  - Element 2.
 
 
 
 # Link to Repository
 
 <https://github.com/BarcinoLechiguino/3D-Racing-Game>
+
 
 
 # License

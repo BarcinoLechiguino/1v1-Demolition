@@ -30,13 +30,15 @@ public:
 	ModulePlayer*		player;
 	ModulePlayer2*		player2;
 
-	bool debug;
-	bool renderPrimitives;
+	bool				debug;
+	bool				renderPrimitives;
 private:
 
-	Timer	ms_timer;
-	float	dt;
-	p2List<Module*> list_modules;
+	Timer				ms_timer;
+	Timer				startup_timer;
+	float				dt;
+	int					frame_count;
+	p2List<Module*>		list_modules;
 
 public:
 
@@ -53,6 +55,6 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	std::vector<Module*> modules;			//Module array.
-	std::shared_ptr<Module> ModulePtr2;		//Shared_ptr
+	// -----------------------------------------------------
+	// -----------------------------------------------------
 };
