@@ -102,18 +102,27 @@ Players' ammo, lives, round Wins and game wins can be checked out in the window 
 
 - **Ángel González:**  
 
-   - Camera implementation
-   - Player OnCollision
-   - Game Loop & Win Lose Condition
-   - Sensors (ammo packs)
-   - Player 1 & Player 2 implementation
-   - Sceneario
+   - Camera Implementation.
+
+   - Camera Debug Key Implementation.
+
+   - Game Loop & Win Lose Condition Implementation.
+
+   - Constraints Implementation.
+
+   - Sensor Implementation (Ammo packs).
+
+   - Player 1 & Player 2 Implementation.
+
+   - Arena / Circuit Design and Implementation.
+
+     
 
 - **Gerard Romeu:**
 
-   - Song & FX implementation
-   - Player 1 & Player 2 implementation
-   - Creation of the car
+   - Song & FX implementation.
+   - Vehicle Design.
+   - Player 1 & Player 2 initial Implementation.
 
 
 # Link to Repository
