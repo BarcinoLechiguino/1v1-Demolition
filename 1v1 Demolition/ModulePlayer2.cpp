@@ -78,9 +78,10 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 		body1->parentPrimitive->color = Red;
 	}
 
-	if (body2->parentPrimitive != nullptr)
+	if (body2->parentPrimitive != nullptr && body2->is_environment == false)
 	{
-		body2->parentPrimitive->color = color;
+		//body2->parentPrimitive->color = color;
+		body2->parentPrimitive->color = Blue;
 	}
 
 	if (body2->GetBody() == P2vehicle->GetBody())
@@ -92,6 +93,7 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			if (ammo < MAX_AMMO)
 			{
 				ammo = MAX_AMMO;
+				//RELOAD SFX
 			}
 
 			return;
@@ -108,9 +110,9 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			if (prevCollBody[i] == NULL)
 			{
 				lives--;
-				LOG("Return Player 2 Lives: %d", lives);
-
 				prevCollBody[i] = body1;
+
+				//CAR HIT SFX
 
 				break;
 			}
@@ -218,18 +220,18 @@ void ModulePlayer2::SpecialInputsP2()
 		if (ammo != 0)
 		{
 			ammo--;
-			SpawnThrowableItem(new Sphere());
+			SpawnThrowableItem(new Sphere(1.2f, 1.2f));
 			App->audio->PlayFx(3, 0);
 		}
 		else
 		{
-
+			//NO AMMO SFX
 		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
 	{
-		RestartPlayer2(vec3(5, 12, 10));
+		RestartPlayer2(spawnPoint);
 	}
 }
 

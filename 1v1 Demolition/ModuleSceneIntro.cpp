@@ -290,7 +290,19 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, floa
 void ModuleSceneIntro::LoadArena()
 {
 	// -------------------------------- GROUND & BOUNDS -----------------------------
+	Cylinder* ground = new Cylinder(100.0f, 2.1f, 0.0f, 0.0f, false, true);
+	ground->SetPos(0.0f, -1.0f, 0.0f);
+	primitives.PushBack(ground);
 
+	//ground->SetRotation(90, vec3(0, 0, 1));										//The cylinder appears rotated 90 degrees in Yaw, so that needs to be corrected.
+
+	/*Cube * ground = new Cube(vec3(100.0f, 1.1f, 100.0f), 0.0f, false, true);
+	ground->SetPos(0.0f, -0.5f, 0.0f);
+	primitives.PushBack(ground);*/
+	
+	/*Cube * ground = new Cube(vec3(150.0f, 1.1f, 150.0f), 0.0f, false, true);
+	ground->SetPos(0.0f, -0.5f, 0.0f);
+	primitives.PushBack(ground);*/
 
 	// ----------------------------------- WALLS -----------------------------------
 	Cube* wall1 = new Cube(vec3(5.f, 5.f, 20.f), 0.0f, false, true);

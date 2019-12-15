@@ -86,7 +86,7 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 		body1->parentPrimitive->color = Blue;
 	}
 
-	if (body2->parentPrimitive != nullptr)
+	if (body2->parentPrimitive != nullptr && body2->is_environment == false)
 	{
 		//body2->parentPrimitive->color = color;
 		body2->parentPrimitive->color = Red;
@@ -113,6 +113,7 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			if (ammo < MAX_AMMO)
 			{
 				ammo = MAX_AMMO;
+				//RELOAD SFX
 			}
 
 			/*if (loaded != false)
@@ -135,9 +136,9 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			if (prevCollBody[i] == NULL)
 			{
 				lives--;
-				LOG("Return Player 1 Lives: %d", lives);
-
 				prevCollBody[i] = body1;
+
+				//CAR HIT SFX
 
 				break;
 			}
@@ -155,22 +156,22 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 
 void ModulePlayer::SpawnThrowableItem(Primitive* p)
 {
-	App->scene_intro->AddPrimitive(p);														//Adds the "item" to the primitives array.
+	App->scene_intro->AddPrimitive(p);												//Adds the "item" to the primitives array.
 
-	vec3 P1_Pos = P1vehicle->GetPos();														//Vec3 that will be set to P1vehicl's position vector.
+	vec3 P1_Pos = P1vehicle->GetPos();												//Vec3 that will be set to P1vehicl's position vector.
 
-	btVector3 buffer = P1vehicle->vehicle->getForwardVector();								//Buffer for P1vehicle's forward vector.
-	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };						//vec3 set with the buffer of the forward vector.
+	btVector3 buffer = P1vehicle->vehicle->getForwardVector();						//Buffer for P1vehicle's forward vector.
+	vec3 fwdVector = { buffer.getX(), buffer.getY(), buffer.getZ() };				//vec3 set with the buffer of the forward vector.
 
-	p->SetPos(P1_Pos.x, P1_Pos.y + 2, P1_Pos.z );											//Sets the position from where the item will spawn.
-	//p->SetPos(fwdVector.x, fwdVector.y, fwdVector.z);										
+	vec3 fwdAerial = (P1_Pos * fwdVector);
 
-	LOG("Forward vector is (%d %d %d)", fwdVector.x, fwdVector.y, fwdVector.z);				
+	p->SetPos(P1_Pos.x, P1_Pos.y + 2, P1_Pos.z);									//Sets the position from where the item will spawn.
+	//p->SetPos(fwdAerial.x, fwdAerial.y + 2, fwdAerial.z);							//Sets the position from where the item will spawn.									
 
-	p->body.collision_listeners.add(App->player2);											//listener set to player 2 so the collision is detected by Player 2's OnCollision() method.
-	p->body.Push(fwdVector * 5000.f);														//Adds a force to the spawned projectile in the directon of fwdVector.
+	p->body.collision_listeners.add(App->player2);									//listener set to player 2 so the collision is detected by Player 2's OnCollision() method.
+	p->body.Push(fwdVector * 5000.f);												//Adds a force to the spawned projectile in the directon of fwdVector.
 
-	p->color = Blue;																		//The colour of the spawned item will be blue when P1 spawns it.
+	p->color = Blue;																//The colour of the spawned item will be blue when P1 spawns it.
 }
 
 void ModulePlayer::RestartPlayer1(vec3 respawnPosition)

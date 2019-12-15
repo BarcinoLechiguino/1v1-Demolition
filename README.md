@@ -6,7 +6,19 @@
 
 # Goal of the Game
 
-The goal of the game is, by the use of projectiles, destroy the other player's car.  Each player starts with 4 projectiles and, once shot, they need to be recharged by reaching the nearest "ammo pack".
+The goal of the game is, by the use of projectiles, destroy the other player's car. 
+
+
+
+# Game Mechanics
+
+Each player starts with 3 lives. A life is subtracted when a player is hit by the opponent's projectiles. When the amount of lives reach 0, the player loses and is reset back to the starting position.
+
+Each player starts with 4 projectiles and, once shot, they need to be recharged by reaching the nearest "ammo pack". 
+
+Player 1's projectiles are blue in colour and Player 2's are red. These colors change when the projectiles hit the opposing player (to red and blue respectively). 
+
+Projectiles that have changed colours are harmless to the players. Those who have not, however, can still damage them.
 
 
 
