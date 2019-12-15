@@ -8,7 +8,7 @@
 #include "ModuleRenderer3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-//, top_constraint(nullptr)
+//, top_constrained_cube(nullptr)
 {
 	//app->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);		//Setting the skybox's color from ModuleSceneIntro. Color white.
 }
@@ -29,7 +29,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
-	top_constrained_cube = nullptr;
+	//top_constrained_cube = nullptr;
 
 	LoadArena();
 
@@ -44,10 +44,11 @@ bool ModuleSceneIntro::CleanUp()
 	for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
 	{
 		App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+		//delete primitives[i];
 		primitives.Pop(primitives[i]);
 	}
 
-	//delete top_constrained_cube;							//Apply this to all? Crashes on exit
+//	delete top_constrained_cube;							//Apply this to all? Crashes on exit
 	
 	primitives.Clear();
 	LoadArena();
@@ -294,38 +295,37 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, floa
 
 void ModuleSceneIntro::LoadArena()
 {
-	// -------------------------------- GROUND & BOUNDS -----------------------------
-	Cylinder* ground = new Cylinder(80.f, 2.1f, 0.f, false, true);
-	ground->SetPos(0.0f, -1.0f, 0.0f);
-	primitives.PushBack(ground);
-	ground->color = Beige;
-
-	ground->SetRotation(90, vec3(0, 0, 1));										//The cylinder appears rotated 90 degrees in Yaw, so that needs to be corrected.
+	// ---------------------------------- GROUND -----------------------------------
+	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);
 
 	// ----------------------------------- WALLS -----------------------------------
-	//Cube* north_center_wall = new Cube(vec3(5.f, 5.f, 18.f), 0.0f, false, true);
-	//north_center_wall->SetPos(-25.0f, 2.5f, 0.0f);
-	//primitives.PushBack(north_center_wall);
-
-	//Cube* south_center_wall = new Cube(vec3(5.f, 5.f, 18.f), 0.0f, false, true);
-	//south_center_wall->SetPos(25.0f, 2.5f, 0.0f);
-	//primitives.PushBack(south_center_wall);
-
-	//Cube* west_center_wall = new Cube(vec3(18.f, 5.f, 5.f), 0.0f, false, true);
-	//west_center_wall->SetPos(0.0f, 2.5f, -25.0f);
-	//primitives.PushBack(west_center_wall);
-	////west_center_wall->SetRotation();
-	////arena_elements.PushBack(wall1);
-
-	//Cube* east_center_wall = new Cube(vec3(18.f, 5.f, 5.f), 0.0f, false, true);
-	//east_center_wall->SetPos(0.0f, 2.5f, 25.0f);
-	//primitives.PushBack(east_center_wall);
-
 	// --- Walls at the center of the arena.
-	SetCube(vec3(-25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);	//North Center Wall.
-	SetCube(vec3(25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);	//South Center Wall.
-	SetCube(vec3(0.0f, 2.5f, -25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);	//West Center Wall.
-	SetCube(vec3(0.0f, 2.5f, 25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);	//East Center Wall.
+	SetCube(vec3(-25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North Center Wall.
+	SetCube(vec3(25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South Center Wall.
+	SetCube(vec3(0.0f, 2.5f, -25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//West Center Wall.
+	SetCube(vec3(0.0f, 2.5f, 25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//East Center Wall.
+
+	// --- Arena's bounds
+	//SetCube(vec3(-80.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 35.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North Border Wall.
+	//SetCube(vec3(80.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 35.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South Border Wall.
+	//SetCube(vec3(0.0f, 2.5f, -80.0f), vec3(35.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//West Border Wall.
+	//SetCube(vec3(0.0f, 2.5f, 80.0f), vec3(35.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//East Border Wall.
+	//
+	//SetCube(vec3(-56.0f, 2.5f, 56.0f), vec3(5.f, 5.f, 35.f), 0.0f, 45, vec3(0, 1, 0), false, true);		//North-West Border Wall.
+	//SetCube(vec3(56.0f, 2.5f, 56.0f), vec3(5.f, 5.f, 35.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-West Border Wall.
+	//SetCube(vec3(-56.0f, 2.5f, -56.0f), vec3(35.f, 5.f, 5.f), 0.0f, 45, vec3(0, 1, 0), false, true);	//North-East Border Wall.
+	//SetCube(vec3(56.0f, 2.5f, -56.0f), vec3(35.f, 5.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);	//South-East Border Wall.
+
+	//Temporal
+	SetCube(vec3(-75.0f, 3.f, 0.0f), vec3(5.f, 6.1f, 64.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North Border Wall.
+	SetCube(vec3(75.0f, 3.f, 0.0f), vec3(5.f, 6.1f, 64.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South Border Wall.
+	SetCube(vec3(0.0f, 3.f, -75.0f), vec3(64.f, 6.1f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//West Border Wall.
+	SetCube(vec3(0.0f, 3.f, 75.0f), vec3(64.f, 6.1f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//East Border Wall.
+
+	SetCube(vec3(-53.0f, 3.f, 53.0f), vec3(5.f, 6.f, 64.f), 0.0f, 45, vec3(0, 1, 0), false, true);		//North-West Border Wall.
+	SetCube(vec3(53.0f, 3.f, 53.0f), vec3(5.f, 6.f, 64.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-West Border Wall.
+	SetCube(vec3(-53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, 1, 0), false, true);	//North-East Border Wall.
+	SetCube(vec3(53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);	//South-East Border Wall.
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
 	Cube* top_column = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
@@ -361,35 +361,35 @@ void ModuleSceneIntro::LoadArena()
 
 void ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
 {
-	furniture = new Cube(size, mass, is_sensor, is_environment);
-	furniture->SetPos(position.x, position.y, position.z);
-	primitives.PushBack(furniture);
+	furniture = new Cube(size, mass, is_sensor, is_environment);						//Creates a cube primitive (and its body at Cube's class constructor).
+	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
+	primitives.PushBack(furniture);														//Adds the new element to the primitives array.
 
-	furniture->SetRotation(angle, axis);
+	furniture->SetRotation(angle, axis);												//Sets the amount of rotation that the element will have.
 
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
-	furniture->color = color;
+	furniture->color = color;															//Sets the element's colour.
 }
 
 void ModuleSceneIntro::SetSphere(const vec3& position, float radius, float mass, bool is_sensor, bool is_environment)
 {
-	furniture = new Sphere(radius, mass, is_sensor, is_environment);
-	furniture->SetPos(position.x, position.y, position.z);
-	primitives.PushBack(furniture);
+	furniture = new Sphere(radius, mass, is_sensor, is_environment);					//Creates a sphere primitive (and its body at Sphere's class constructor).
+	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
+	primitives.PushBack(furniture);														//Adds the new element to the primitives array.
 
-	furniture->color = White;
+	furniture->color = White;															//Sets the element's colour.
 }
 
 void ModuleSceneIntro::SetCylinder(const vec3& position, float radius, float height, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
 {
-	furniture = new Cylinder(radius, height, mass, is_sensor, is_environment);
-	furniture->SetPos(position.x, position.y, position.z);
-	primitives.PushBack(furniture);
+	furniture = new Cylinder(radius, height, mass, is_sensor, is_environment);			//Creates a cylinder primitive (and its body at Cylinder's class constructor).
+	furniture->SetPos(position.x, position.y, position.z);								//Sets the position of the element in the world.
+	primitives.PushBack(furniture);														//Adds the new element to the primitives array.
 
-	furniture->SetRotation(angle, axis);
+	furniture->SetRotation(angle, axis);												//Sets the amount of rotation that the element will have.
 
 	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
-	furniture->color = color;
+	furniture->color = color;															//Sets the element's colour.
 }
 
 void ModuleSceneIntro::RestartGame()
