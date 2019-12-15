@@ -21,6 +21,9 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2) override;
 public:
+	Cube* top_constraint;
+	Primitive* furniture;
+	
 	/*PhysBody3D* pb_chassis;
 	Cube p_chassis;
 

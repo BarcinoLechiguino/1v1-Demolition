@@ -71,7 +71,7 @@ private:
 class Cylinder : public Primitive
 {
 public:
-	Cylinder(float radius = 1.f, float height = 2.f, float depth = 1.f, float mass = 1.f,  bool is_sensor = false, bool is_environment = false);
+	Cylinder(float radius = 1.f, float height = 2.f, float mass = 1.f,  bool is_sensor = false, bool is_environment = false);
 	Cylinder(bool is_sensor, bool is_environment = false, const vec3& size = vec3(1.f, 2.f, 1.f), float mass = 1.f);
 
 	float GetRadius() const;

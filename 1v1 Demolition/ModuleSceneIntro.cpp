@@ -8,6 +8,7 @@
 #include "ModuleRenderer3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
+//, top_constraint(nullptr)
 {
 	//app->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);		//Setting the skybox's color from ModuleSceneIntro. Color white.
 }
@@ -28,6 +29,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
+	top_constraint = nullptr;
+
 	LoadArena();
 
 	return ret;
@@ -38,14 +41,19 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
-	for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
-	{
-		if (primitives[i]->body.is_sensor == false)
-		{
-			App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
-			primitives.Pop(primitives[i]);
-		}	
-	}
+	//for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
+	//{
+	//	App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+	//	primitives.Pop(primitives[i]);
+
+	//	/*if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
+	//	{
+	//		App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+	//		primitives.Pop(primitives[i]);
+	//	}	*/
+	//}
+
+	delete top_constraint;							//Apply this to all?
 	
 	//primitives.Clear();
 	//LoadArena();
@@ -71,6 +79,9 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	for (uint n = 0; n < primitives.Count(); n++)
 		primitives[n]->Update();
+
+	
+	top_constraint->body.GetBody()->applyTorque(btVector3(0.0f, 500.0f, 0.0f));
 
 	/*for (uint n = 0; n < arena_elements.Count(); n++)
 		arena_elements[n]->Update();*/
@@ -290,15 +301,12 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, floa
 void ModuleSceneIntro::LoadArena()
 {
 	// -------------------------------- GROUND & BOUNDS -----------------------------
-	Cylinder* ground = new Cylinder(100.0f, 2.1f, 0.0f, 0.0f, false, true);
+	Cylinder* ground = new Cylinder(80.0f, 2.1f, 0.0f, false, true);
 	ground->SetPos(0.0f, -1.0f, 0.0f);
 	primitives.PushBack(ground);
+	ground->color = Beige;
 
-	//ground->SetRotation(90, vec3(0, 0, 1));										//The cylinder appears rotated 90 degrees in Yaw, so that needs to be corrected.
-
-	/*Cube * ground = new Cube(vec3(100.0f, 1.1f, 100.0f), 0.0f, false, true);
-	ground->SetPos(0.0f, -0.5f, 0.0f);
-	primitives.PushBack(ground);*/
+	ground->SetRotation(90, vec3(0, 0, 1));										//The cylinder appears rotated 90 degrees in Yaw, so that needs to be corrected.
 	
 	/*Cube * ground = new Cube(vec3(150.0f, 1.1f, 150.0f), 0.0f, false, true);
 	ground->SetPos(0.0f, -0.5f, 0.0f);
@@ -311,6 +319,26 @@ void ModuleSceneIntro::LoadArena()
 	//arena_elements.PushBack(wall1);
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
+	Cylinder* top_column = new Cylinder(5.0f, 10.0f, 0.0f, false, true);
+	top_column->SetPos(20.0f, 5.0f, 0.0f);
+	primitives.PushBack(top_column);
+	top_column->color = Green;
+	top_column->SetRotation(90, vec3(0, 0, 1));
+
+	Cube* top_column_2 = new Cube(vec3(5.0f, 10.0f, 5.0f), 0.0f, false, true);
+	top_column_2->SetPos(20.0f, 5.0f, 20.0f);
+	primitives.PushBack(top_column_2);
+	top_column_2->color = Red;
+
+	/*Cube* */top_constraint = new Cube(vec3(2.5f, 5.0f, 1.0f), 1.0f, false, true);
+	top_constraint->SetPos(25.0f, 5.0f, 20.0f);
+	primitives.PushBack(top_constraint);
+	top_constraint->color = Blue;
+
+	App->physics->AddConstraintHinge(*top_column_2, *top_constraint,
+		vec3(0.0f, 0.0f, 0.0f), vec3(-5.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0));
+
+	top_constraint->body.Push(vec3(0, 1, 0) * 10000);
 
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
@@ -335,4 +363,15 @@ void ModuleSceneIntro::RestartGame()
 {
 	App->player->RestartPlayer1(vec3(0, 12, 10));
 	App->player2->RestartPlayer2(vec3(5, 12, 10));
+
+	for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
+	{
+		if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
+		{
+			App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+			delete primitives[i];
+			primitives.Pop(primitives[i]);
+		}
+	}
+	//CleanUp();
 }

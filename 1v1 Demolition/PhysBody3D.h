@@ -26,7 +26,7 @@ public:
 
 	void SetBody(Sphere* primitive, float mass, bool is_sensor = false, bool is_environment = false);
 	void SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor = false, bool is_environment = false);
-	void SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor = false, bool is_environment = false);
+	void SetBody(Cylinder* primitive, float mass, bool is_sensor = false, bool is_environment = false);
 	bool HasBody() const;
 	btRigidBody* GetBody() const;
 	void SetAsSensor(bool is_sensor);

@@ -218,17 +218,17 @@ void Sphere::InnerRender() const
 
 
 // CYLINDER ============================================
-Cylinder::Cylinder(float radius, float height, float depth, float mass, bool is_sensor, bool is_environment) : Primitive(), radius(radius), height(height)
+Cylinder::Cylinder(float radius, float height, float mass, bool is_sensor, bool is_environment) : Primitive(), radius(radius), height(height)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
-	body.SetBody(this, depth, mass, is_sensor, is_environment);			//Change later, depth represents the z of the btVector3 that btCylinder shape requires.
+	body.SetBody(this, mass, is_sensor, is_environment);			//Change later, depth represents the z of the btVector3 that btCylinder shape requires.
 	//App->physics->AddBody(this, mass);
 }
 
 Cylinder::Cylinder(bool is_sensor, bool is_environment, const vec3& size, float mass) : Primitive(), radius(size.x), height(size.y)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
-	body.SetBody(this, size.z, mass, is_sensor, is_environment);
+	body.SetBody(this, mass, is_sensor, is_environment);
 }
 
 float Cylinder::GetRadius() const

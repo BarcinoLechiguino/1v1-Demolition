@@ -48,14 +48,14 @@ void PhysBody3D::SetBody(Cube* primitive, vec3 size, float mass, bool is_sensor,
 	//btVector3 btSize = { primitive->GetSize().x, primitive->GetSize().y, primitive->GetSize().z };
 	btVector3 btSize = { size.x, size.y, size.z };
 
-	SetBody(new btBoxShape(btSize * 0.5f),
+	SetBody(new btBoxShape(btSize * HALF),
 		primitive, mass, is_sensor, is_environment);
 }
 
-void PhysBody3D::SetBody(Cylinder* primitive, float depth, float mass, bool is_sensor, bool is_environment)
+void PhysBody3D::SetBody(Cylinder* primitive, float mass, bool is_sensor, bool is_environment)
 {
 	//btVector3 btSize = { primitive->GetRadius(), primitive->GetHeight() * 0.5f, depth };
-	btVector3 btSize = { primitive->GetHeight() * 0.5f, primitive->GetRadius(), 0.0f };
+	btVector3 btSize = { primitive->GetHeight() * HALF, primitive->GetRadius(), 0.0f };
 	
 	SetBody(new btCylinderShapeX(btSize),
 		primitive, mass, is_sensor, is_environment);
