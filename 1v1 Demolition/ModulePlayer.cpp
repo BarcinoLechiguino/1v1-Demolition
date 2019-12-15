@@ -232,13 +232,6 @@ void ModulePlayer::DriveInputsP1()
 			firstTurbo = true;
 		}
 	}
-
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
-	{
-		vec3 originalPos = P1vehicle->GetPos();
-		P1vehicle->ResetTransform();
-		P1vehicle->SetPos(originalPos);
-	}
 }
 
 void ModulePlayer::SpecialInputsP1()
@@ -256,6 +249,14 @@ void ModulePlayer::SpecialInputsP1()
 			//EMPTY CLIP SFX
 			App->audio->PlayFx(8, 0);
 		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+	{
+		vec3 originalPos = P1vehicle->GetPos();
+		P1vehicle->ResetTransform();
+		P1vehicle->SetPos(originalPos);
+		SetVehicleRotationP1(originalAngle, vec3(0, 1, 0));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)

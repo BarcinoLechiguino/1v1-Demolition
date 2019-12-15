@@ -32,6 +32,8 @@ bool ModuleSceneIntro::Start()
 	//Scenario Constraints
 	centerLeft_Rotor = nullptr;
 	centerRight_Rotor = nullptr;
+	northWest_Rotor = nullptr;
+	southEast_Rotor = nullptr;
 
 	LoadArena();
 
@@ -46,14 +48,13 @@ bool ModuleSceneIntro::CleanUp()
 	for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
 	{
 		DeletePrimitive(primitives[i]);
-		
-		//App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
-		////delete primitives[i];
-		//primitives.Pop(primitives[i]);
 	}
 
-//	delete top_constrained_cube;							//Apply this to all? Crashes on exit
-	
+	centerLeft_Rotor = nullptr;
+	centerRight_Rotor = nullptr;
+	northWest_Rotor = nullptr;
+	southEast_Rotor = nullptr;
+
 	primitives.Clear();
 	LoadArena();
 
@@ -82,8 +83,10 @@ update_status ModuleSceneIntro::Update(float dt)
 	CheckRoundWins();
 	
 	//Applying torque to the arena's constraints.
-	centerLeft_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, 50000.0f, 0.0f));
-	centerRight_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, -50000.0f, 0.0f));
+	centerLeft_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, -ROTOR_TORQUE, 0.0f));
+	centerRight_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, -ROTOR_TORQUE, 0.0f));
+	northWest_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, ROTOR_TORQUE, 0.0f));
+	southEast_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, ROTOR_TORQUE, 0.0f));
 
 	/*for (uint n = 0; n < arena_elements.Count(); n++)
 		arena_elements[n]->Update();*/
@@ -303,49 +306,59 @@ void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, floa
 void ModuleSceneIntro::LoadArena()
 {
 	// ---------------------------------- GROUND -----------------------------------
-	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);				//Arena's ground.
+	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);											//Arena's ground.
 
 	// ----------------------------------- WALLS -----------------------------------
 	// --- Walls at the center of the arena.
-	SetCube(vec3(-25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North Center Wall.
-	SetCube(vec3(25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South Center Wall.
-	SetCube(vec3(0.0f, 2.5f, -25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//West Center Wall.
-	SetCube(vec3(0.0f, 2.5f, 25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//East Center Wall.
+	SetCube(vec3(-25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//North Center Wall.
+	SetCube(vec3(25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//South Center Wall.
+	SetCube(vec3(0.0f, 2.5f, -25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//West Center Wall.
+	SetCube(vec3(0.0f, 2.5f, 25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//East Center Wall.
 
 	// --- Arena's bounds
-	SetCube(vec3(-75.0f, 3.f, 0.0f), vec3(5.f, 6.1f, 64.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North Border Wall.
-	SetCube(vec3(75.0f, 3.f, 0.0f), vec3(5.f, 6.1f, 64.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South Border Wall.
-	SetCube(vec3(0.0f, 3.f, -75.0f), vec3(64.f, 6.1f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//West Border Wall.
-	SetCube(vec3(0.0f, 3.f, 75.0f), vec3(64.f, 6.1f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);		//East Border Wall.
+	SetCube(vec3(-75.0f, 3.5f, 0.0f), vec3(7.f, 7.1f, 65.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//North Border Wall.
+	SetCube(vec3(75.0f, 3.5f, 0.0f), vec3(7.f, 7.1f, 65.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//South Border Wall.
+	SetCube(vec3(0.0f, 3.5f, -75.0f), vec3(65.f, 7.1f, 7.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//West Border Wall.
+	SetCube(vec3(0.0f, 3.5f, 75.0f), vec3(65.f, 7.1f, 7.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//East Border Wall.
 
-	SetCube(vec3(-53.0f, 3.f, 53.0f), vec3(5.f, 6.f, 64.f), 0.0f, 45, vec3(0, 1, 0), false, true);		//North-West Border Wall.
-	SetCube(vec3(53.0f, 3.f, 53.0f), vec3(5.f, 6.f, 64.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-West Border Wall.
-	SetCube(vec3(-53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, 1, 0), false, true);		//North-East Border Wall.
-	SetCube(vec3(53.0f, 3.f, -53.0f), vec3(64.f, 6.f, 5.f), 0.0f, 45, vec3(0, -1, 0), false, true);		//South-East Border Wall.
+	SetCube(vec3(-53.0f, 3.5f, 53.0f), vec3(7.f, 7.f, 65.f), 0.0f, 45, vec3(0, 1, 0), false, true);									//North-West Border Wall.
+	SetCube(vec3(53.0f, 3.5f, 53.0f), vec3(7.f, 7.f, 65.f), 0.0f, 45, vec3(0, -1, 0), false, true);									//South-West Border Wall.
+	SetCube(vec3(-53.0f, 3.5f, -53.0f), vec3(65.f, 7.f, 7.f), 0.0f, 45, vec3(0, 1, 0), false, true);								//North-East Border Wall.
+	SetCube(vec3(53.0f, 3.5f, -53.0f), vec3(65.f, 7.f, 7.f), 0.0f, 45, vec3(0, -1, 0), false, true);								//South-East Border Wall.
 
 	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
 	// --- Columns
 	Cube* centerLeft_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//Center Right Column.
 	centerLeft_Rotor = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Right Column Rotor.
 
-	Cube* centerRight_column = SetCube(vec3(20.0f, 5.0f, -20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);	//Center Left Column
+	Cube* centerRight_column = SetCube(vec3(20.0f, 5.0f, -20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);	//Center Left Column.
 	centerRight_Rotor = SetCube(vec3(27.0f, 5.0f, -20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Left Column Rotor.
 
-
+	Cube* northWest_column = SetCube(vec3(-37.0f, 5.0f, 37.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North-West Column.
+	northWest_Rotor = SetCube(vec3(-44.0f, 5.0f, 37.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//North-West Column Rotor.
+	
+	Cube* southEast_column = SetCube(vec3(37.0f, 5.0f, -37.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South-East Column.
+	southEast_Rotor = SetCube(vec3(44.0f, 5.0f, -37.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//South-East Column Rotor.
 
 	// --- Constraints
-	App->physics->AddConstraintHinge(*centerLeft_column, *centerLeft_Rotor,
+	App->physics->AddConstraintHinge(*centerLeft_column, *centerLeft_Rotor,															//Center Right Column Constraint.
 		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 	
-	App->physics->AddConstraintHinge(*centerRight_column, *centerRight_Rotor,
+	App->physics->AddConstraintHinge(*centerRight_column, *centerRight_Rotor,														//Center Left Column Constraint.
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+
+	App->physics->AddConstraintHinge(*northWest_column, *northWest_Rotor,															//North-West Column Constraint.
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+
+	App->physics->AddConstraintHinge(*southEast_column, *southEast_Rotor,
 		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
 
 	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
-	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);											//Ammo Pick-up at the Arena's center.		
-	SetSphere(vec3(58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);											//North Ammo Pick-up.
-	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);										//South Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);											//West Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);										//East Ammp Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																		//Ammo Pick-up at the Arena's center.		
+	SetSphere(vec3(58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																		//North Ammo Pick-up.
+	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																	//South Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);																		//West Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);																	//East Ammp Pick-up.
 }
 
 Cube* ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
