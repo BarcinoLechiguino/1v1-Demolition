@@ -81,14 +81,6 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	if (body2->parentPrimitive != nullptr && body2->is_environment == false && body1->is_sensor == false)
 	{
 		body2->parentPrimitive->color = Blue;
-
-		//if (ammo < MAX_AMMO)
-		//{
-		//	ammo = MAX_AMMO;
-
-		//	//RELOAD SFX
-		//	App->audio->PlayFx(7, 0);
-		//}
 	}
 
 	if (body2->GetBody() == P2vehicle->GetBody())
@@ -227,13 +219,6 @@ void ModulePlayer2::DriveInputsP2()
 			firstTurbo = true;
 		}
 	}
-	
-	if (App->input->GetKey(SDL_SCANCODE_KP_7) == KEY_REPEAT)
-	{
-		vec3 originalPos = P2vehicle->GetPos();
-		P2vehicle->ResetTransform();
-		P2vehicle->SetPos(originalPos);
-	}
 }
 
 void ModulePlayer2::SpecialInputsP2()
@@ -251,6 +236,14 @@ void ModulePlayer2::SpecialInputsP2()
 			//NO AMMO SFX
 			App->audio->PlayFx(8, 0);
 		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_KP_7) == KEY_REPEAT)
+	{
+		vec3 originalPos = P2vehicle->GetPos();
+		P2vehicle->ResetTransform();
+		P2vehicle->SetPos(originalPos);
+		SetVehicleRotationP2(originalAngle, vec3(0, 1, 0));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
