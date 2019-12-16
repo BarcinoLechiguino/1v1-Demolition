@@ -217,7 +217,7 @@ void ModuleSceneIntro::DeletePrimitive(Primitive* p)
 
 void ModuleSceneIntro::DeleteConstrainedBody(Primitive* p)
 {
-	vec3 farAway(200, 0, 200);
+	vec3 farAway(300, -300, 300);
 
 	p->SetPos(farAway.x, farAway.y, farAway.z);
 	p->body.is_environment = false;
@@ -440,58 +440,87 @@ void ModuleSceneIntro::RoundWinsDisplay()
 {
 	if (App->player->roundsWonP1 == 1)
 	{
-		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCubeP1->color = Green;
+		Cube* winCubeP1 = SetCube(vec3(-65.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCubeP1->color = Blue;
 	}
 
 	if (App->player->roundsWonP1 == 2)
 	{
-		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCubeP1->color = Green;
-
-		Cube* winCube2P1 = SetCube(vec3(-75.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube2P1->color = Green;
+		Cube* winCube2P1 = SetCube(vec3(-65.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube2P1->color = Blue;
 
 	}
 
 	if (App->player->roundsWonP1 == 3)
 	{
-		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCubeP1->color = Green;
-
-		Cube* winCube2P1 = SetCube(vec3(-75.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube2P1->color = Green;
-
-		Cube* winCube3P1 = SetCube(vec3(-75.0f, 3.5f, 92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube3P1->color = Green;
+		Cube* winCube3P1 = SetCube(vec3(-65.0f, 3.5f, 93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube3P1->color = Blue;
 	}
 
 	if (App->player2->roundsWonP2 == 1)
 	{
-		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		Cube* winCubeP2 = SetCube(vec3(-65.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
 		winCubeP2->color = Red;
 	}
 
 	if (App->player2->roundsWonP2 == 2)
 	{
-		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCubeP2->color = Red;
-
-		Cube* winCube2P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		Cube* winCube2P2 = SetCube(vec3(-65.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
 		winCube2P2->color = Red;
 
 	}
 
 	if (App->player2->roundsWonP2 == 3)
 	{
-		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCubeP2->color = Red;
-
-		Cube* winCube2P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube2P2->color = Red;
-
-		Cube* winCube3P2 = SetCube(vec3(-75.0f, 3.5f, -92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		Cube* winCube3P2 = SetCube(vec3(-65.0f, 3.5f, -92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
 		winCube3P2->color = Red;
+	}
+}
+
+void ModuleSceneIntro::GameWinsDisplay()
+{
+	if (App->player->winsP1 == 1)
+	{
+		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		//winCubeP1->color = Blue;
+		winCubeP1->color = Cyan;
+	}
+
+	if (App->player->winsP1 == 2)
+	{
+		Cube* winCube2P1 = SetCube(vec3(-75.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		//winCube2P1->color = Blue;
+		winCube2P1->color = Cyan;
+
+	}
+
+	if (App->player->winsP1 == 3)
+	{
+		Cube* winCube3P1 = SetCube(vec3(-75.0f, 3.5f, 92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		//winCube3P1->color = Blue;
+		winCube3P1->color = Cyan;
+	}
+
+	if (App->player2->winsP2 == 1)
+	{
+		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		//winCubeP2->color = Red;
+		winCubeP2->color = Magenta;
+	}
+
+	if (App->player2->winsP2 == 2)
+	{
+		Cube* winCube2P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		//winCube2P2->color = Red;
+		winCube2P2->color = Magenta;
+
+	}
+
+	if (App->player2->winsP2 == 3)
+	{
+		Cube* winCube3P2 = SetCube(vec3(-75.0f, 3.5f, -92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		//winCube3P2->color = Red;
+		winCube3P2->color = Magenta;
 	}
 }
 

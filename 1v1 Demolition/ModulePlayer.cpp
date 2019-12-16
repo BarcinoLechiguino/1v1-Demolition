@@ -263,6 +263,20 @@ void ModulePlayer::SpecialInputsP1()
 	{
 		RestartPlayer1(spawnPoint);
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)		// Temporal
+	{
+		roundsWonP1++;
+		winsP1++;
+		App->scene_intro->RoundWinsDisplay();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)		// Temporal
+	{
+		App->player2->roundsWonP2++;
+		App->player2->winsP2++;
+		App->scene_intro->GameWinsDisplay();
+	}
 }
 
 void ModulePlayer::CheckLivesP1()

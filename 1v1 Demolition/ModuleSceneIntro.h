@@ -45,6 +45,7 @@ public:
 
 	void CheckRoundWins();
 	void RoundWinsDisplay();
+	void GameWinsDisplay();
 	void RestartGame();																				//Resets everyithing except Arena elements.
 
 private:
