@@ -127,6 +127,11 @@ update_status ModuleInput::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 		App->renderPrimitives = !App->renderPrimitives;
 
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
+		App->scene_intro->RespawnOnRoundEnd = !App->scene_intro->RespawnOnRoundEnd;
+	}
+
 	return UPDATE_CONTINUE;
 }
 

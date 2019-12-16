@@ -56,7 +56,7 @@ update_status ModulePlayer2::Update(float dt)
 		DriveInputsP2();										//Inputs P1
 	}
 
-	SpecialInputsP2();											//Throw Item & Restart.
+	SpecialInputsP2();											//Throw Item, Reset Transform & Restart.
 
 	CheckLivesP2();												//Checks how many lives Player 2 has left. If P2 has no lives, s/he is reset.
 
@@ -273,6 +273,11 @@ void ModulePlayer2::CheckLivesP2()
 	{
 		RestartPlayer2(spawnPoint);
 		App->audio->PlayFx(6, 0);
+
+		if (App->scene_intro->RespawnOnRoundEnd == true)
+		{
+			App->player->RestartPlayer1(App->player->spawnPoint);
+		}
 
 		App->player->roundsWonP1++;
 		App->scene_intro->RoundWinsDisplay();

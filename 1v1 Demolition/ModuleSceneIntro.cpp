@@ -31,12 +31,14 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
-	for (int i = 0; i < primitives.Count(); i++)									//REVISE THIS
+	for (int i = 0; i < primitives.Count(); i++)
 	{
 		DeletePrimitive(primitives[i]);
 	}
 
 	ClearConstraintElements();
+	
+	ClearDisplayElements();
 
 	primitives.Clear();
 	LoadArena();
@@ -62,7 +64,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	CheckProjectileCount();										// Checking the Projectile Count.
 	
-	CheckRoundWins();											// Checking Victory Conditions
+	CheckWins();											// Checking Victory Conditions
 	
 	ApplyTorqueToConstrainedElements();							// Applying torque to the arena's constraints.
 
@@ -82,7 +84,7 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
-		RestartGame();
+		RestartEverything();
 	}
 
 	return UPDATE_CONTINUE;
@@ -251,13 +253,16 @@ void ModuleSceneIntro::DeletePrimitive(Primitive* p)
 	}
 }
 
-void ModuleSceneIntro::DeleteConstrainedBody(Primitive* p)
+void ModuleSceneIntro::DeleteBody(Primitive* p)
 {
 	vec3 farAway(300, -300, 300);
 
-	p->SetPos(farAway.x, farAway.y, farAway.z);
-	p->body.is_environment = false;
-	p = nullptr;
+	if (p != nullptr && p->body.HasBody())
+	{
+		p->SetPos(farAway.x, farAway.y, farAway.z);
+		p->body.is_environment = false;
+		p = nullptr;
+	}
 }
 
 void ModuleSceneIntro::AddTorque(Primitive* p, vec3 torque)
@@ -315,13 +320,30 @@ void ModuleSceneIntro::InitGame()
 	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
 
 	// --- Initializing the Arena's Constraints
-	centerLeft_Rotor = nullptr;
-	centerRight_Rotor = nullptr;
-	northWest_Rotor = nullptr;
-	southEast_Rotor = nullptr;
+	furniture			= nullptr;
+	
+	centerLeft_Rotor	= nullptr;
+	centerRight_Rotor	= nullptr;
+	northWest_Rotor		= nullptr;
+	southEast_Rotor		= nullptr;
+
+	// --- Initializing the round wins and game wins display cubes.
+	roundWinCube1_P1	= nullptr; 
+	roundWinCube2_P1	= nullptr;
+	roundWinCube3_P1	= nullptr;
+	gameWinCube1_P1		= nullptr;
+	gameWinCube2_P1		= nullptr;
+	gameWinCube3_P1		= nullptr;
+
+	roundWinCube1_P2	= nullptr;
+	roundWinCube2_P2	= nullptr;
+	roundWinCube3_P2	= nullptr;
+	gameWinCube1_P2		= nullptr;																			
+	gameWinCube2_P2		= nullptr;
+	gameWinCube3_P2		= nullptr;
 
 	// --- Initializing the RespawnOnNewRound
-	RespawnOnRoundEnd = true;
+	RespawnOnRoundEnd	= true;
 
 	// --- Initializing Projectile Count
 	projectileCount = 0;
@@ -390,6 +412,7 @@ void ModuleSceneIntro::LoadArena()
 
 	// ----------------------------- ROUND WINS DISPLAY ------------------------------
 	RoundWinsDisplay();
+	GameWinsDisplay();
 }
 
 void ModuleSceneIntro::ApplyTorqueToConstrainedElements()
@@ -406,10 +429,10 @@ void ModuleSceneIntro::ClearConstraintElements()
 {
 	App->physics->DeleteConstraints();																	//Deletes all constraints existing in the physics world.
 
-	DeleteConstrainedBody(centerLeft_Rotor);															//Deleting the element constrained to the Center-Left column.
-	DeleteConstrainedBody(centerRight_Rotor);															//Deleting the element constrained to the Center-Right column.
-	DeleteConstrainedBody(northWest_Rotor);																//Deleting the element constrained to the North-West column.
-	DeleteConstrainedBody(southEast_Rotor);																//Deleting the element constrained to the South-East column.
+	DeleteBody(centerLeft_Rotor);															//Deleting the element constrained to the Center-Left column.
+	DeleteBody(centerRight_Rotor);															//Deleting the element constrained to the Center-Right column.
+	DeleteBody(northWest_Rotor);																//Deleting the element constrained to the North-West column.
+	DeleteBody(southEast_Rotor);																//Deleting the element constrained to the South-East column.
 }
 
 void ModuleSceneIntro::CheckProjectileCount()
@@ -422,7 +445,7 @@ void ModuleSceneIntro::CheckProjectileCount()
 
 void ModuleSceneIntro::ClearProjectiles()
 {
-	for (int i = 0; i < primitives.Count(); i++)														//REVISE THIS
+	for (int i = 0; i < primitives.Count(); i++)														//Deletes all currently existing projectiles when the MAX_PROJECTILE cap is reached.
 	{
 		DeletePrimitive(primitives[i]);
 	}
@@ -430,7 +453,7 @@ void ModuleSceneIntro::ClearProjectiles()
 	projectileCount = 0;
 }
 
-void ModuleSceneIntro::CheckRoundWins()
+void ModuleSceneIntro::CheckWins()
 {
 	if (App->player->roundsWonP1 == 3 || App->player2->roundsWonP2 == 3)
 	{
@@ -451,6 +474,12 @@ void ModuleSceneIntro::CheckRoundWins()
 			App->player2->roundsWonP2 = 0;
 			App->audio->PlayFx(10, 0);
 		}
+
+		if (App->player->winsP1 > 3 || App->player2->winsP2 > 3)
+		{
+			App->player->winsP1		= 0;
+			App->player2->winsP2	= 0;
+		}
 		
 		RestartGame();
 	}
@@ -458,96 +487,152 @@ void ModuleSceneIntro::CheckRoundWins()
 
 void ModuleSceneIntro::RoundWinsDisplay()
 {
+	//float roundPos = 65.0f;
+	float roundPos = 70.0f;
+	
+	// --- PLAYER 1'S ROUND WIN CUBES
 	if (App->player->roundsWonP1 == 1)
 	{
-		Cube* winCubeP1 = SetCube(vec3(-65.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCubeP1->color = Blue;
+		roundWinCube1_P1 = SetCube(vec3(roundPos, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
+		roundWinCube1_P1->color = Blue;
 	}
 
 	if (App->player->roundsWonP1 == 2)
 	{
-		Cube* winCube2P1 = SetCube(vec3(-65.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube2P1->color = Blue;
+		roundWinCube2_P1 = SetCube(vec3(roundPos, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Second Win Cube
+		roundWinCube2_P1->color = Blue;
 
 	}
 
 	if (App->player->roundsWonP1 == 3)
 	{
-		Cube* winCube3P1 = SetCube(vec3(-65.0f, 3.5f, 93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube3P1->color = Blue;
+		roundWinCube3_P1 = SetCube(vec3(roundPos, 3.5f, 93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Third Win Cube
+		roundWinCube3_P1->color = Blue;
 	}
 
+	// --- PLAYER 2'S ROUND WIN CUBES
 	if (App->player2->roundsWonP2 == 1)
 	{
-		Cube* winCubeP2 = SetCube(vec3(-65.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCubeP2->color = Red;
+		roundWinCube1_P2 = SetCube(vec3(-65.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's First Win Cube
+		roundWinCube1_P2->color = Red;
 	}
 
 	if (App->player2->roundsWonP2 == 2)
 	{
-		Cube* winCube2P2 = SetCube(vec3(-65.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube2P2->color = Red;
+		roundWinCube2_P2 = SetCube(vec3(-65.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Second Win Cube
+		roundWinCube2_P2->color = Red;
 
 	}
 
 	if (App->player2->roundsWonP2 == 3)
 	{
-		Cube* winCube3P2 = SetCube(vec3(-65.0f, 3.5f, -92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		winCube3P2->color = Red;
+		roundWinCube3_P2 = SetCube(vec3(-65.0f, 3.5f, -93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Third Win Cube
+		roundWinCube3_P2->color = Red;
 	}
 }
 
 void ModuleSceneIntro::GameWinsDisplay()
 {
+	//float winPos = 75.0f;
+	float winPos = 60.0f;
+	
+	// --- PLAYER 1's GAME WIN CUBES
 	if (App->player->winsP1 == 1)
 	{
-		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		//winCubeP1->color = Blue;
-		winCubeP1->color = Cyan;
+		gameWinCube1_P1 = SetCube(vec3(winPos, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
+		gameWinCube1_P1->color = Cyan;
 	}
 
 	if (App->player->winsP1 == 2)
 	{
-		Cube* winCube2P1 = SetCube(vec3(-75.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		//winCube2P1->color = Blue;
-		winCube2P1->color = Cyan;
+		gameWinCube1_P1 = SetCube(vec3(winPos, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
+		gameWinCube1_P1->color = Cyan;
+		
+		gameWinCube2_P1 = SetCube(vec3(winPos, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Second Win Cube
+		gameWinCube2_P1->color = Cyan;
 
 	}
 
-	if (App->player->winsP1 == 3)
+	if (App->player->winsP1 >= 3)
 	{
-		Cube* winCube3P1 = SetCube(vec3(-75.0f, 3.5f, 92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		//winCube3P1->color = Blue;
-		winCube3P1->color = Cyan;
+		gameWinCube1_P1 = SetCube(vec3(winPos, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
+		gameWinCube1_P1->color = Cyan;
+
+		gameWinCube2_P1 = SetCube(vec3(winPos, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Second Win Cube
+		gameWinCube2_P1->color = Cyan;
+		
+		gameWinCube3_P1 = SetCube(vec3(winPos, 3.5f, 93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Third Win Cube
+		gameWinCube3_P1->color = Cyan;
 	}
 
+	// --- PLAYER 2's GAME WIN CUBES
 	if (App->player2->winsP2 == 1)
 	{
-		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		//winCubeP2->color = Red;
-		winCubeP2->color = Magenta;
+		gameWinCube1_P2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's First Win Cube
+		gameWinCube1_P2->color = Magenta;
 	}
 
 	if (App->player2->winsP2 == 2)
 	{
-		Cube* winCube2P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		//winCube2P2->color = Red;
-		winCube2P2->color = Magenta;
+		gameWinCube1_P2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's First Win Cube
+		gameWinCube1_P2->color = Magenta;
+		
+		gameWinCube2_P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Second Win Cube
+		gameWinCube2_P2->color = Magenta;
 
 	}
 
-	if (App->player2->winsP2 == 3)
+	if (App->player2->winsP2 >= 3)
 	{
-		Cube* winCube3P2 = SetCube(vec3(-75.0f, 3.5f, -92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
-		//winCube3P2->color = Red;
-		winCube3P2->color = Magenta;
+		gameWinCube1_P2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's First Win Cube
+		gameWinCube1_P2->color = Magenta;
+
+		gameWinCube2_P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Second Win Cube
+		gameWinCube2_P2->color = Magenta;
+		
+		gameWinCube3_P2 = SetCube(vec3(-75.0f, 3.5f, -93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Third Win Cube
+		gameWinCube3_P2->color = Magenta;
 	}
 }
 
+void ModuleSceneIntro::ClearDisplayElements()
+{
+	// --- P1'S DISPLAY ELEMENTS
+	DeleteBody(roundWinCube1_P1);
+	DeleteBody(roundWinCube2_P1);
+	DeleteBody(roundWinCube3_P1);
+	DeleteBody(gameWinCube1_P1);
+	DeleteBody(gameWinCube2_P1);
+	DeleteBody(gameWinCube3_P1);
+	
+	// --- P2'S DISPLAY ELEMENTS
+	DeleteBody(roundWinCube1_P2);
+	DeleteBody(roundWinCube2_P2);
+	DeleteBody(roundWinCube3_P2);
+	DeleteBody(gameWinCube1_P2);
+	DeleteBody(gameWinCube2_P2);
+	DeleteBody(gameWinCube3_P2);
+}
+
+// --- This method starts a new game when a player reaches 3 
 void ModuleSceneIntro::RestartGame()
 {
 	App->player->RestartPlayer1(App->player->spawnPoint);
 	App->player2->RestartPlayer2(App->player2->spawnPoint);
+
+	CleanUp();
+}
+
+// --- This method restarts everything. Used with the R debug Key to restart the game.
+void ModuleSceneIntro::RestartEverything()
+{
+	App->player->RestartPlayer1(App->player->spawnPoint);
+	App->player2->RestartPlayer2(App->player2->spawnPoint);
+
+	App->player->roundsWonP1	= 0;
+	App->player->winsP1			= 0;
+	App->player2->roundsWonP2	= 0;
+	App->player2->winsP2		= 0;
 
 	CleanUp();
 }

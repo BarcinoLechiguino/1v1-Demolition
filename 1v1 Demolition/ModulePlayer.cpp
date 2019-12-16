@@ -58,7 +58,7 @@ update_status ModulePlayer::Update(float dt)
 		DriveInputsP1();											//Inputs P1
 	}
 	
-	SpecialInputsP1();												//Throw Item & Restart.
+	SpecialInputsP1();												//Throw Item, Reset Transform & Restart.
 
 	CheckLivesP1();													//Checks how many lives Player 2 has left. If P1 has no lives, s/he is reset.
 
@@ -113,14 +113,14 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 				break;
 			}
 
-			if (prevCollBody[i] == NULL)										//(&& body1->parentPrimitive->color == Blue) to compare the projectile's colour?
+			if (prevCollBody[i] == NULL)							//(&& body1->parentPrimitive->color == Blue) to compare the projectile's colour?
 			{
 				lives--;
 				prevCollBody[i] = body1;
 
 				LOG("P1 Lives %d", lives);
 
-				App->audio->PlayFx(4, 0);										 //CAR HIT SFX
+				App->audio->PlayFx(4, 0);							 //CAR HIT SFX
 
 				break;
 			}
@@ -301,6 +301,11 @@ void ModulePlayer::CheckLivesP1()
 	{
 		RestartPlayer1(spawnPoint);
 		App->audio->PlayFx(5, 0);
+
+		if (App->scene_intro->RespawnOnRoundEnd == true)
+		{
+			App->player2->RestartPlayer2(App->player2->spawnPoint);
+		}
 
 		App->player2->roundsWonP2++;
 		App->scene_intro->RoundWinsDisplay();
