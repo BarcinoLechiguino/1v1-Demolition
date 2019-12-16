@@ -255,7 +255,7 @@ void ModulePlayer2::SpecialInputsP2()
 // --- Checks how many lives Player 2 has left. If P2 has no lives, s/he is reset.
 void ModulePlayer2::CheckLivesP2()
 {
-	uint prevLives;
+	uint prevLives = MAX_LIVES;
 
 	if (lives <= MAX_LIVES)
 	{
@@ -273,6 +273,7 @@ void ModulePlayer2::CheckLivesP2()
 		App->audio->PlayFx(6, 0);
 
 		App->player->roundsWonP1++;
+		App->scene_intro->RoundWinsDisplay();
 	}
 }
 

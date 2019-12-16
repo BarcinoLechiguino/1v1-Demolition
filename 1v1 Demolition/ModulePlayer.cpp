@@ -184,7 +184,7 @@ void ModulePlayer::DriveInputsP1()
 	{
 		if (P1vehicle->GetKmh() >= 0.0f)
 		{
-			acceleration = MAX_ACCELERATION/* * 2.0f*/;
+			acceleration = MAX_ACCELERATION;
 			
 		}
 		else
@@ -285,26 +285,14 @@ void ModulePlayer::CheckLivesP1()
 		App->audio->PlayFx(5, 0);
 
 		App->player2->roundsWonP2++;
+		App->scene_intro->RoundWinsDisplay();
 	}
 }
 
 void ModulePlayer::GenerateP1Vehicle()
 {
-	/*VehicleInfo car;*/
-
 	// Car properties ----------------------------------------
-	//car.chassis_size.Set(3.5, 3, 4);		//(2, 2, 4)		//._______________.
-	//car.chassis_offset.Set(0, 1.5, 0);		//(0, 1.5, 0)
-	//car.mass = 500.0f;						//500.0f		//FV
-	//car.suspensionStiffness = 150.88f;		//15.88f
-	//car.suspensionCompression = 0.83f;		//0.83f
-	//car.suspensionDamping = 10.0f;			//0.88f
-	//car.maxSuspensionTravelCm = 1000.0f;	//1000.0f
-	//car.frictionSlip = 50.5f;				//50.5f
-	//car.maxSuspensionForce = 6000.0f;		//6000.0f
-
-	// Car properties ----------------------------------------
-	car.chassis_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);
+	car.chassis_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);			//._______________.
 	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
 	car.cabin_size.Set(3.4f * scale, 1.6f * scale, 3.0f * scale);
@@ -343,7 +331,7 @@ void ModulePlayer::GenerateP1Vehicle()
 	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
 	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
 
-	car.mass					= 1800.0f;		//Original: 1500.0f, Heavy: 1950.0f
+	car.mass					= 1800.0f;		//Original: 1500.0f, Heavy: 1950.0f //FV
 	car.suspensionStiffness		= 15.88f;		//F1: 200.0f
 	car.suspensionCompression	= 0.83f;
 	car.suspensionDamping		= 0.88f;
