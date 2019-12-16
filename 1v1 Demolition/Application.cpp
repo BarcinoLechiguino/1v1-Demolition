@@ -98,9 +98,9 @@ void Application::FinishUpdate()
 	const char* gameTitle = "1v1 Demolition";
 
 	char title[256];
-	sprintf_s(title, "%s / Av.FPS: %.2f / P1 Ammo: %d  / P2 Ammo: %d / P1 Lives: %d / P2 Lives: %d / P1 Rounds Won: %d  / P2 RoundsWon: %d / P1 Wins: %d / P2 Wins: %d",
-		gameTitle, avg_fps, App->player->ammo, App->player2->ammo, App->player->lives, App->player2->lives,
-		App->player->roundsWonP1, App->player2->roundsWonP2 , App->player->winsP1, App->player2->winsP2);
+	sprintf_s(title, "%s / Av.FPS: %.2f /// P1 Ammo: %d / P1 Lives: %d / P1 Rounds Won: %d / P1 Wins: %d /// P2 Ammo: %d / P2 Lives: %d / P2 RoundsWon: %d / P2 Wins: %d ///",
+		gameTitle, avg_fps, App->player->ammo, App->player->lives, App->player->roundsWonP1, App->player->winsP1,
+		App->player2->ammo, App->player2->lives, App->player2->roundsWonP2 , App->player2->winsP2);
 	App->window->SetTitle(title);
 }
 

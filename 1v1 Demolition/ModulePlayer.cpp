@@ -84,7 +84,6 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	if (body1->parentPrimitive != nullptr && body2->GetBody() == P1vehicle->GetBody())
 	{
 		body1->parentPrimitive->color = Blue;
-		//body1->GetBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
 	}
 
 	if (body2->parentPrimitive != nullptr && body2->is_environment == false && body1->is_sensor == false)
@@ -270,14 +269,16 @@ void ModulePlayer::SpecialInputsP1()
 	if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)		// Temporal
 	{
 		roundsWonP1++;
-		winsP1++;
+		//winsP1++;
 		App->scene_intro->RoundWinsDisplay();
+		App->scene_intro->GameWinsDisplay();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)		// Temporal
 	{
 		App->player2->roundsWonP2++;
-		App->player2->winsP2++;
+		//App->player2->winsP2++;
+		App->scene_intro->RoundWinsDisplay();
 		App->scene_intro->GameWinsDisplay();
 	}
 }

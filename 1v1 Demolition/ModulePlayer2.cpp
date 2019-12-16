@@ -281,8 +281,6 @@ void ModulePlayer2::CheckLivesP2()
 
 void ModulePlayer2::GenerateP2Vehicle()
 {
-	//VehicleInfo car;
-
 	// Car properties ----------------------------------------
 	car.chassis_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
 	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);

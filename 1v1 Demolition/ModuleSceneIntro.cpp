@@ -21,22 +21,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->audio->PlayMusic("audio/Songs/Main_Theme.ogg");
-
-	//App->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);
-
-	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
-	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
-
-	//Scenario Constraints
-	centerLeft_Rotor = nullptr;
-	centerRight_Rotor = nullptr;
-	northWest_Rotor = nullptr;
-	southEast_Rotor = nullptr;
-
-	projectileCount = 0;
-
-	LoadArena();
+	InitGame();
 
 	return ret;
 }
@@ -51,12 +36,7 @@ bool ModuleSceneIntro::CleanUp()
 		DeletePrimitive(primitives[i]);
 	}
 
-	App->physics->DeleteConstraints();
-
-	DeleteConstrainedBody(centerLeft_Rotor);
-	DeleteConstrainedBody(centerRight_Rotor);
-	DeleteConstrainedBody(northWest_Rotor);
-	DeleteConstrainedBody(southEast_Rotor);
+	ClearConstraintElements();
 
 	primitives.Clear();
 	LoadArena();
@@ -79,20 +59,16 @@ update_status ModuleSceneIntro::Update(float dt)
 	if (App->debug == true)
 		HandleDebugInput();
 
+
+	CheckProjectileCount();										// Checking the Projectile Count.
+	
+	CheckRoundWins();											// Checking Victory Conditions
+	
+	ApplyTorqueToConstrainedElements();							// Applying torque to the arena's constraints.
+
+	
 	for (uint n = 0; n < primitives.Count(); n++)
 		primitives[n]->Update();
-
-	//Checking the Projectile Count. 
-	CheckProjectileCount();
-	
-	//Checking Victory Conditions
-	CheckRoundWins();
-	
-	//Applying torque to the arena's constraints.
-	centerLeft_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, -ROTOR_TORQUE, 0.0f));
-	centerRight_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, -ROTOR_TORQUE, 0.0f));
-	northWest_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, ROTOR_TORQUE, 0.0f));
-	southEast_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, ROTOR_TORQUE, 0.0f));
 
 	return UPDATE_CONTINUE;
 }
@@ -183,48 +159,6 @@ void ModuleSceneIntro::HandleDebugInput()
 	}
 }
 
-void ModuleSceneIntro::DebugSpawnPrimitive(Primitive * p)
-{
-	primitives.PushBack(p);
-	p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
-	//p->body.collision_listeners.add(this);													//Uncomment this to add this primitive to the colision_listener array
-	//p->body.collision_listeners.add(App->player);
-	p->body.Push(-App->camera->Z * 1000.f);
-}
-
-// --- Adds a primitive to the primitives dynArray.
-void ModuleSceneIntro::AddPrimitive(Primitive * p)
-{
-	primitives.PushBack(p);
-}
-
-void ModuleSceneIntro::DeletePrimitive(Primitive* p)
-{
-	for (int i = 0; i < primitives.Count(); i++)									//Revise this.
-	{
-		if (primitives[i] == p)
-		{
-			if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
-			{
-				App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
-				delete primitives[i];
-				primitives.Pop(primitives[i]);
-			}
-
-			break;
-		}
-	}
-}
-
-void ModuleSceneIntro::DeleteConstrainedBody(Primitive* p)
-{
-	vec3 farAway(300, -300, 300);
-
-	p->SetPos(farAway.x, farAway.y, farAway.z);
-	p->body.is_environment = false;
-	p = nullptr;
-}
-
 void ModuleSceneIntro::CameraMovement()
 {
 	vec3 P1_position = App->player->P1vehicle->GetPos();						//Gets the current position of Player 1.
@@ -283,93 +217,52 @@ float ModuleSceneIntro::GetZoom() const
 	return cameraZoom;
 }
 
-// --- Gets the lerp speed according to a position, a target, and an offset.
-float ModuleSceneIntro::GetLerpSpeed(vec3 position, vec3 target, float speed) const
+// --- Spawns a Primitive if an input is pressed in debug mode.
+void ModuleSceneIntro::DebugSpawnPrimitive(Primitive * p)
 {
-	float pos = sqrt(position.x * position.x + position.y * position.y + position.z * position.z);
-
-	float posTarget = sqrt(target.x * target.x + target.y * target.y + target.z * target.z);
-
-	float lerpSpeed = (posTarget - pos) * speed;
-
-	return lerpSpeed;
-	//return pos + lerpSpeed;
+	primitives.PushBack(p);
+	p->SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	//p->body.collision_listeners.add(this);													//Uncomment this to add this primitive to the colision_listener array
+	//p->body.collision_listeners.add(App->player);
+	p->body.Push(-App->camera->Z * 1000.f);
 }
 
-
-// --- Method that moves the camera according to the lerp speed calculated 
-void ModuleSceneIntro::LerpCamera(vec3 cameraPosition, vec3 targetPosition, float speed)
+// --- Adds a primitive to the primitives dynArray.
+void ModuleSceneIntro::AddPrimitive(Primitive * p)
 {
-	if (App->camera->Position.x < targetPosition.x && App->camera->Position.z < targetPosition.z);
+	primitives.PushBack(p);
+}
+
+void ModuleSceneIntro::DeletePrimitive(Primitive* p)
+{
+	for (int i = 0; i < primitives.Count(); i++)									//Revise this.
 	{
-		App->camera->Position += GetLerpSpeed(cameraPosition, targetPosition, speed);
-	}
-	if (App->camera->Position.x > targetPosition.x && App->camera->Position.z > targetPosition.z)
-	{
-		App->camera->Position -= GetLerpSpeed(cameraPosition, targetPosition, speed);
+		if (primitives[i] == p)
+		{
+			if (primitives[i]->body.is_sensor == false && primitives[i]->body.is_environment == false)
+			{
+				App->physics->RemoveBodyFromWorld(primitives[i]->body.GetBody());
+				delete primitives[i];
+				primitives.Pop(primitives[i]);
+			}
+
+			break;
+		}
 	}
 }
 
-void ModuleSceneIntro::LoadArena()
+void ModuleSceneIntro::DeleteConstrainedBody(Primitive* p)
 {
-	// ---------------------------------- GROUND -----------------------------------
-	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);											//Arena's ground.
+	vec3 farAway(300, -300, 300);
 
-	// ----------------------------------- WALLS -----------------------------------
-	// --- Walls at the center of the arena.
-	SetCube(vec3(-25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//North Center Wall.
-	SetCube(vec3(25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//South Center Wall.
-	SetCube(vec3(0.0f, 2.5f, -25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//West Center Wall.
-	SetCube(vec3(0.0f, 2.5f, 25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//East Center Wall.
+	p->SetPos(farAway.x, farAway.y, farAway.z);
+	p->body.is_environment = false;
+	p = nullptr;
+}
 
-	// --- Arena's bounds
-	SetCube(vec3(-75.0f, 3.5f, 0.0f), vec3(7.f, 7.1f, 65.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//North Border Wall.
-	SetCube(vec3(75.0f, 3.5f, 0.0f), vec3(7.f, 7.1f, 65.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//South Border Wall.
-	SetCube(vec3(0.0f, 3.5f, -75.0f), vec3(65.f, 7.1f, 7.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//West Border Wall.
-	SetCube(vec3(0.0f, 3.5f, 75.0f), vec3(65.f, 7.1f, 7.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//East Border Wall.
-
-	SetCube(vec3(-53.0f, 3.5f, 53.0f), vec3(7.f, 7.f, 65.f), 0.0f, 45, vec3(0, 1, 0), false, true);									//North-West Border Wall.
-	SetCube(vec3(53.0f, 3.5f, 53.0f), vec3(7.f, 7.f, 65.f), 0.0f, 45, vec3(0, -1, 0), false, true);									//South-West Border Wall.
-	SetCube(vec3(-53.0f, 3.5f, -53.0f), vec3(65.f, 7.f, 7.f), 0.0f, 45, vec3(0, 1, 0), false, true);								//North-East Border Wall.
-	SetCube(vec3(53.0f, 3.5f, -53.0f), vec3(65.f, 7.f, 7.f), 0.0f, 45, vec3(0, -1, 0), false, true);								//South-East Border Wall.
-
-	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
-	// --- Columns
-	Cube* centerLeft_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//Center Right Column.
-	centerLeft_Rotor = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Right Column Rotor.
-
-	Cube* centerRight_column = SetCube(vec3(20.0f, 5.0f, -20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);	//Center Left Column.
-	centerRight_Rotor = SetCube(vec3(27.0f, 5.0f, -20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Left Column Rotor.
-
-	Cube* northWest_column = SetCube(vec3(-37.0f, 5.0f, 37.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North-West Column.
-	northWest_Rotor = SetCube(vec3(-44.0f, 5.0f, 37.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//North-West Column Rotor.
-	
-	Cube* southEast_column = SetCube(vec3(37.0f, 5.0f, -37.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South-East Column.
-	southEast_Rotor = SetCube(vec3(44.0f, 5.0f, -37.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//South-East Column Rotor.
-
-	// --- Constraints
-	App->physics->AddConstraintHinge(*centerLeft_column, *centerLeft_Rotor,															//Center Right Column Constraint.
-		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
-	
-	App->physics->AddConstraintHinge(*centerRight_column, *centerRight_Rotor,														//Center Left Column Constraint.
-		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
-
-	App->physics->AddConstraintHinge(*northWest_column, *northWest_Rotor,															//North-West Column Constraint.
-		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
-
-	App->physics->AddConstraintHinge(*southEast_column, *southEast_Rotor,
-		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
-
-	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
-	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																		//Ammo Pick-up at the Arena's center.		
-	SetSphere(vec3(58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																		//North Ammo Pick-up.
-	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																	//South Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);																		//West Ammo Pick-up.
-	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);																	//East Ammp Pick-up.
-
-
-	// ----------------------------- ROUND WINS DISPLAY ------------------------------
-	RoundWinsDisplay();
+void ModuleSceneIntro::AddTorque(Primitive* p, vec3 torque)
+{
+	p->body.GetBody()->applyTorque(btVector3(torque.x, torque.y, torque.z));
 }
 
 Cube* ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
@@ -409,6 +302,114 @@ Cylinder* ModuleSceneIntro::SetCylinder(const vec3& position, float radius, floa
 	furniture->color = color;																			//Sets the element's colour.
 
 	return (Cylinder*)furniture;
+}
+
+// ------------------------------------------ GAME LOGIC & ARENA ------------------------------------------
+void ModuleSceneIntro::InitGame()
+{
+	App->audio->PlayMusic("audio/Songs/Main_Theme.ogg");
+
+	//App->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);
+
+	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
+	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
+
+	// --- Initializing the Arena's Constraints
+	centerLeft_Rotor = nullptr;
+	centerRight_Rotor = nullptr;
+	northWest_Rotor = nullptr;
+	southEast_Rotor = nullptr;
+
+	// --- Initializing the RespawnOnNewRound
+	RespawnOnRoundEnd = true;
+
+	// --- Initializing Projectile Count
+	projectileCount = 0;
+
+	// --- Loading all the Arena's environment elements.
+	LoadArena();
+}
+
+void ModuleSceneIntro::LoadArena()
+{
+	// ---------------------------------- GROUND -----------------------------------
+	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);											//Arena's ground.
+
+	// ----------------------------------- WALLS -----------------------------------
+	// --- Walls at the center of the arena.
+	SetCube(vec3(-25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//North Center Wall.
+	SetCube(vec3(25.0f, 2.5f, 0.0f), vec3(5.f, 5.f, 18.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//South Center Wall.
+	SetCube(vec3(0.0f, 2.5f, -25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//West Center Wall.
+	SetCube(vec3(0.0f, 2.5f, 25.0f), vec3(18.f, 5.f, 5.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//East Center Wall.
+
+	// --- Arena's bounds
+	SetCube(vec3(-75.0f, 3.5f, 0.0f), vec3(7.f, 7.1f, 65.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//North Border Wall.
+	SetCube(vec3(75.0f, 3.5f, 0.0f), vec3(7.f, 7.1f, 65.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//South Border Wall.
+	SetCube(vec3(0.0f, 3.5f, -75.0f), vec3(65.f, 7.1f, 7.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//West Border Wall.
+	SetCube(vec3(0.0f, 3.5f, 75.0f), vec3(65.f, 7.1f, 7.f), 0.0f, 0, vec3(1, 0, 0), false, true);									//East Border Wall.
+
+	SetCube(vec3(-53.0f, 3.5f, 53.0f), vec3(7.f, 7.f, 65.f), 0.0f, 45, vec3(0, 1, 0), false, true);									//North-West Border Wall.
+	SetCube(vec3(53.0f, 3.5f, 53.0f), vec3(7.f, 7.f, 65.f), 0.0f, 45, vec3(0, -1, 0), false, true);									//South-West Border Wall.
+	SetCube(vec3(-53.0f, 3.5f, -53.0f), vec3(65.f, 7.f, 7.f), 0.0f, 45, vec3(0, 1, 0), false, true);								//North-East Border Wall.
+	SetCube(vec3(53.0f, 3.5f, -53.0f), vec3(65.f, 7.f, 7.f), 0.0f, 45, vec3(0, -1, 0), false, true);								//South-East Border Wall.
+
+	// ---------------------------- COLUMNS & CONSTRAINTS ----------------------------
+	// --- Columns
+	Cube* centerLeft_column = SetCube(vec3(-20.0f, 5.0f, 20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//Center Right Column.
+	centerLeft_Rotor = SetCube(vec3(-27.0f, 5.0f, 20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Right Column Rotor.
+
+	Cube* centerRight_column = SetCube(vec3(20.0f, 5.0f, -20.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);	//Center Left Column.
+	centerRight_Rotor = SetCube(vec3(27.0f, 5.0f, -20.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//Center Left Column Rotor.
+
+	Cube* northWest_column = SetCube(vec3(-37.0f, 5.0f, 37.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//North-West Column.
+	northWest_Rotor = SetCube(vec3(-44.0f, 5.0f, 37.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//North-West Column Rotor.
+
+	Cube* southEast_column = SetCube(vec3(37.0f, 5.0f, -37.0f), vec3(5.0f, 10.0f, 5.0f), 0.0f, 0, vec3(1, 0, 0), false, true);		//South-East Column.
+	southEast_Rotor = SetCube(vec3(44.0f, 5.0f, -37.0f), vec3(5.0f, 9.0f, 1.0f), 1000.0f, 0, vec3(1, 0, 0), false, true);			//South-East Column Rotor.
+
+	// --- Constraints
+	App->physics->AddConstraintHinge(*centerLeft_column, *centerLeft_Rotor,															//Center Right Column Constraint.
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+
+	App->physics->AddConstraintHinge(*centerRight_column, *centerRight_Rotor,														//Center Left Column Constraint.
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+
+	App->physics->AddConstraintHinge(*northWest_column, *northWest_Rotor,															//North-West Column Constraint.
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+
+	App->physics->AddConstraintHinge(*southEast_column, *southEast_Rotor,
+		vec3(0.0f, 0.0f, 0.0f), vec3(-7.0f, 0.0f, 0.0f), vec3(0, 1, 0), vec3(0, 1, 0), true);
+
+	// ---------------------------- AMMO PICK-UP SENSORS -----------------------------
+	SetSphere(vec3(0.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																		//Ammo Pick-up at the Arena's center.		
+	SetSphere(vec3(58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																		//North Ammo Pick-up.
+	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																	//South Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);																		//West Ammo Pick-up.
+	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);																	//East Ammp Pick-up.
+
+
+	// ----------------------------- ROUND WINS DISPLAY ------------------------------
+	RoundWinsDisplay();
+}
+
+void ModuleSceneIntro::ApplyTorqueToConstrainedElements()
+{
+	vec3 constraintTorque(0.0f, ROTOR_TORQUE, 0.0f);													//Vector that is set with the amount of torque and in which axis it will be applied.
+	
+	AddTorque(centerLeft_Rotor, -constraintTorque);														//Applying torque to the Center-Left Rotor.
+	AddTorque(centerRight_Rotor, -constraintTorque);													//Applying torque to the Center-Right Rotor.
+	AddTorque(northWest_Rotor, constraintTorque);														//Applying torque to the North-West Rotor.
+	AddTorque(southEast_Rotor, constraintTorque);														//Applying torque to the South-East Rotor.
+}
+
+void ModuleSceneIntro::ClearConstraintElements()
+{
+	App->physics->DeleteConstraints();																	//Deletes all constraints existing in the physics world.
+
+	DeleteConstrainedBody(centerLeft_Rotor);															//Deleting the element constrained to the Center-Left column.
+	DeleteConstrainedBody(centerRight_Rotor);															//Deleting the element constrained to the Center-Right column.
+	DeleteConstrainedBody(northWest_Rotor);																//Deleting the element constrained to the North-West column.
+	DeleteConstrainedBody(southEast_Rotor);																//Deleting the element constrained to the South-East column.
 }
 
 void ModuleSceneIntro::CheckProjectileCount()
