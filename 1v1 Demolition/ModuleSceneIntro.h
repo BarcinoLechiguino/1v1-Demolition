@@ -30,6 +30,7 @@ public:
 
 	void AddPrimitive(Primitive* p);																//Adds a primitive to the primitives dynArray.
 	void DeletePrimitive(Primitive* p);																//Deletes a primitive from the primitives dynArray.
+	void DeleteConstrainedBody(Primitive* p);														//Deletes a constrained body. It just sends it really far and sets it as not an environment. Sorry for this dirty fix.
 
 	void CameraMovement();																			//Method that is responsible of moving the camera around. Done for readability
 	float GetZoom() const;																			//Gets the amount of zoom required taking into account the distance between players (ratio).
@@ -43,6 +44,7 @@ public:
 	Cylinder* SetCylinder(const vec3& position, float radius, float height, float mass, float angle, const vec3& axis, bool is_sensor = false, bool is_environment = false);	//Creates and sets a sphere on the world. Used to set Arena elements.
 
 	void CheckRoundWins();
+	void RoundWinsDisplay();
 	void RestartGame();																				//Resets everyithing except Arena elements.
 
 private:

@@ -365,8 +365,6 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 	vehicles.add(pvehicle);
 
 	body->setUserPointer(pvehicle);
-	//pvehicle->parentPrimitive = ;
-	//pvehicle->collision_listeners.add(this);
 
 	return pvehicle;
 }
@@ -397,6 +395,17 @@ void ModulePhysics3D::AddConstraintHinge(const Primitive& bodyA, const Primitive
 	world->addConstraint(hinge, can_collide);
 	constraints.add(hinge);								//Adds the new hinge constraint to the constraints list.
 	hinge->setDbgDrawSize(2.0f);						//REVISE THIS here.
+}
+
+void ModulePhysics3D::DeleteConstraints()
+{
+	for (p2List_item<btTypedConstraint*>* item = constraints.getFirst(); item; item = item->next)
+	{
+		world->removeConstraint(item->data);
+		delete item->data;
+	}
+
+	constraints.clear();
 }
 
 // =============================================

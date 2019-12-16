@@ -50,10 +50,12 @@ bool ModuleSceneIntro::CleanUp()
 		DeletePrimitive(primitives[i]);
 	}
 
-	centerLeft_Rotor = nullptr;
-	centerRight_Rotor = nullptr;
-	northWest_Rotor = nullptr;
-	southEast_Rotor = nullptr;
+	App->physics->DeleteConstraints();
+
+	DeleteConstrainedBody(centerLeft_Rotor);
+	DeleteConstrainedBody(centerRight_Rotor);
+	DeleteConstrainedBody(northWest_Rotor);
+	DeleteConstrainedBody(southEast_Rotor);
 
 	primitives.Clear();
 	LoadArena();
@@ -100,11 +102,6 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	{
 		primitives[n]->Render();
 	}
-
-	/*for (uint n = 0; n < arena_elements.Count(); n++)
-	{
-		arena_elements[n]->Render();
-	}*/
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 	{
@@ -216,6 +213,15 @@ void ModuleSceneIntro::DeletePrimitive(Primitive* p)
 			break;
 		}
 	}
+}
+
+void ModuleSceneIntro::DeleteConstrainedBody(Primitive* p)
+{
+	vec3 farAway(200, 0, 200);
+
+	p->SetPos(farAway.x, farAway.y, farAway.z);
+	p->body.is_environment = false;
+	p = nullptr;
 }
 
 void ModuleSceneIntro::CameraMovement()
@@ -359,6 +365,10 @@ void ModuleSceneIntro::LoadArena()
 	SetSphere(vec3(-58.0f, 0.0f, 0.0f), 2.0f, 0.0f, true, true);																	//South Ammo Pick-up.
 	SetSphere(vec3(0.0f, 0.0f, 58.0f), 2.0f, 0.0f, true, true);																		//West Ammo Pick-up.
 	SetSphere(vec3(0.0f, 0.0f, -58.0f), 2.0f, 0.0f, true, true);																	//East Ammp Pick-up.
+
+
+	// ----------------------------- ROUND WINS DISPLAY ------------------------------
+	RoundWinsDisplay();
 }
 
 Cube* ModuleSceneIntro::SetCube(const vec3& position, const vec3& size, float mass, float angle, const vec3& axis, bool is_sensor, bool is_environment)
@@ -423,6 +433,65 @@ void ModuleSceneIntro::CheckRoundWins()
 		}
 		
 		RestartGame();
+	}
+}
+
+void ModuleSceneIntro::RoundWinsDisplay()
+{
+	if (App->player->roundsWonP1 == 1)
+	{
+		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCubeP1->color = Green;
+	}
+
+	if (App->player->roundsWonP1 == 2)
+	{
+		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCubeP1->color = Green;
+
+		Cube* winCube2P1 = SetCube(vec3(-75.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube2P1->color = Green;
+
+	}
+
+	if (App->player->roundsWonP1 == 3)
+	{
+		Cube* winCubeP1 = SetCube(vec3(-75.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCubeP1->color = Green;
+
+		Cube* winCube2P1 = SetCube(vec3(-75.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube2P1->color = Green;
+
+		Cube* winCube3P1 = SetCube(vec3(-75.0f, 3.5f, 92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube3P1->color = Green;
+	}
+
+	if (App->player2->roundsWonP2 == 1)
+	{
+		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCubeP2->color = Red;
+	}
+
+	if (App->player2->roundsWonP2 == 2)
+	{
+		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCubeP2->color = Red;
+
+		Cube* winCube2P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube2P2->color = Red;
+
+	}
+
+	if (App->player2->roundsWonP2 == 3)
+	{
+		Cube* winCubeP2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCubeP2->color = Red;
+
+		Cube* winCube2P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube2P2->color = Red;
+
+		Cube* winCube3P2 = SetCube(vec3(-75.0f, 3.5f, -92.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);
+		winCube3P2->color = Red;
 	}
 }
 
