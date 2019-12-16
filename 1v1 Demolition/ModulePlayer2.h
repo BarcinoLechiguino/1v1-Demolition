@@ -30,6 +30,7 @@ public:
 
 
 public:
+	VehicleInfo car;
 	PhysVehicle3D* P2vehicle;
 	float turn;
 	float acceleration;

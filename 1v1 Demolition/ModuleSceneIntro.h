@@ -43,6 +43,10 @@ public:
 	Sphere* SetSphere(const vec3& position, float radius, float mass, bool is_sensor = false, bool is_environment = false);														//Creates and sets a sphere on the world. Used to set Arena elements.
 	Cylinder* SetCylinder(const vec3& position, float radius, float height, float mass, float angle, const vec3& axis, bool is_sensor = false, bool is_environment = false);	//Creates and sets a sphere on the world. Used to set Arena elements.
 
+	int projectileCount;																			//Amount of projectiles spawned in the arena.
+	void CheckProjectileCount();																	//Safety measure to prevent projectile overpopulation in the arena.
+	void ClearProjectiles();																		//When the amount of projectiles spawned reach a certain point they are all deleted.
+
 	void CheckRoundWins();
 	void RoundWinsDisplay();
 	void GameWinsDisplay();

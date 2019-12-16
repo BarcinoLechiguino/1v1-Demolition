@@ -8,7 +8,6 @@
 #include "ModuleRenderer3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-//, top_constrained_cube(nullptr)
 {
 	//app->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);		//Setting the skybox's color from ModuleSceneIntro. Color white.
 }
@@ -34,6 +33,8 @@ bool ModuleSceneIntro::Start()
 	centerRight_Rotor = nullptr;
 	northWest_Rotor = nullptr;
 	southEast_Rotor = nullptr;
+
+	projectileCount = 0;
 
 	LoadArena();
 
@@ -81,6 +82,9 @@ update_status ModuleSceneIntro::Update(float dt)
 	for (uint n = 0; n < primitives.Count(); n++)
 		primitives[n]->Update();
 
+	//Checking the Projectile Count. 
+	CheckProjectileCount();
+	
 	//Checking Victory Conditions
 	CheckRoundWins();
 	
@@ -89,9 +93,6 @@ update_status ModuleSceneIntro::Update(float dt)
 	centerRight_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, -ROTOR_TORQUE, 0.0f));
 	northWest_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, ROTOR_TORQUE, 0.0f));
 	southEast_Rotor->body.GetBody()->applyTorque(btVector3(0.0f, ROTOR_TORQUE, 0.0f));
-
-	/*for (uint n = 0; n < arena_elements.Count(); n++)
-		arena_elements[n]->Update();*/
 
 	return UPDATE_CONTINUE;
 }
@@ -408,6 +409,24 @@ Cylinder* ModuleSceneIntro::SetCylinder(const vec3& position, float radius, floa
 	furniture->color = color;																			//Sets the element's colour.
 
 	return (Cylinder*)furniture;
+}
+
+void ModuleSceneIntro::CheckProjectileCount()
+{
+	if (projectileCount > MAX_PROJECTILES)																//If Count is > MAX_PROJECTILES, all projectiles are cleared.
+	{
+		ClearProjectiles();
+	}
+}
+
+void ModuleSceneIntro::ClearProjectiles()
+{
+	for (int i = 0; i < primitives.Count(); i++)														//REVISE THIS
+	{
+		DeletePrimitive(primitives[i]);
+	}
+
+	projectileCount = 0;
 }
 
 void ModuleSceneIntro::CheckRoundWins()

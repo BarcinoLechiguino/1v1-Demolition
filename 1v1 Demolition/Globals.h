@@ -61,6 +61,7 @@ enum update_status
 #define MAX_AMMO 4
 #define Y_OFFSET 1
 #define PROJECTILE_FORCE 5000.0f
+#define MAX_PROJECTILES 50
 
 class Application;
 

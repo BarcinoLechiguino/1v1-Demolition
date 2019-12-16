@@ -84,6 +84,7 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	if (body1->parentPrimitive != nullptr && body2->GetBody() == P1vehicle->GetBody())
 	{
 		body1->parentPrimitive->color = Blue;
+		//body1->GetBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
 	}
 
 	if (body2->parentPrimitive != nullptr && body2->is_environment == false && body1->is_sensor == false)
@@ -160,6 +161,8 @@ void ModulePlayer::SpawnProjectile(Primitive* p)
 	p->body.Push(fwdVector * PROJECTILE_FORCE);										//Adds a force to the spawned projectile in the directon of fwdVector.
 
 	p->color = Blue;																//The colour of the spawned item will be blue when P1 spawns it.
+
+	App->scene_intro->projectileCount++;
 }
 
 void ModulePlayer::RestartPlayer1(vec3 respawnPosition)
@@ -241,7 +244,7 @@ void ModulePlayer::SpecialInputsP1()
 		if (ammo != 0)
 		{
 			ammo--;
-			SpawnProjectile(new Sphere(1.2f, 1.2f));
+			SpawnProjectile(new Sphere(1.2f, 1.2f, false, false));
 			App->audio->PlayFx(3, 0);
 		}
 		else
