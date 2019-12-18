@@ -32,14 +32,15 @@ public:
 
 	PhysBody3D* RayCast(const vec3& Origin, const vec3& Direction, vec3& HitPoint = vec3());
 
-	PhysBody3D* AddBody(const Sphere& sphere, float mass = 1.0f, bool is_sensor = false);				//REVISE THIS AddBody Methods. No virtual, just an override for different shapes.
+	PhysBody3D* AddBody(const Sphere& sphere, float mass = 1.0f, bool is_sensor = false);				
 	PhysBody3D* AddBody(const Cube& cube, float mass = 1.0f);
 	PhysBody3D* AddBody(const Cylinder& cylinder, float mass = 1.0f);
-	PhysVehicle3D* AddVehicle(const VehicleInfo& info);
 
-	//A P2P constraint takes the center between the centers of the 2 bodies as the pivot. 
-	//Change btVector3s for vec3s? --> With this change the method does not depend on Bullet at argument level. It depends on glmath.h. REVISE THIS HERE --> Should it be changed?
-	//Change "Primitive&"s for PhysBodies ?
+	PhysVehicle3D* AddVehicle(const VehicleInfo& info);
+	void AddVehicleBodyParts(const VehicleInfo& info, btCompoundShape* comShape);
+	void AddCollisionShapeToVehiclePart(btCompoundShape* comShape, const vec3& part, const vec3& offset);
+	btRaycastVehicle* CreateRaycastVehicle(const VehicleInfo& info, btRigidBody* body, btDefaultVehicleRaycaster* vehicle_raycaster);
+
 	void AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, bool can_collide = false);
 	void AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB, bool can_collide = true);
 	void DeleteConstraints();

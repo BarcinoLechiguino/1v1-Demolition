@@ -79,28 +79,35 @@ update_status ModulePlayer::Update(float dt)
 
 void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 {
-	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
-
-	if (body1->parentPrimitive != nullptr && body2->GetBody() == P1vehicle->GetBody())
+	if (body1->parentPrimitive != nullptr && body1->parentPrimitive != App->scene_intro->outOfBoundsSensor 
+		&& body2->GetBody() == P1vehicle->GetBody())
 	{
 		body1->parentPrimitive->color = Blue;
 	}
 
-	if (body2->parentPrimitive != nullptr && body2->is_environment == false && body1->is_sensor == false)
+	if (body2->parentPrimitive != nullptr && body2->is_environment == false 
+		&& body2->parentPrimitive != App->scene_intro->outOfBoundsSensor && body1->is_sensor == false)
 	{
-		body2->parentPrimitive->color = Red;
+			body2->parentPrimitive->color = Red;
 	}
 
 	if (body2->GetBody() == P1vehicle->GetBody())
 	{
 		if (body1->is_sensor == true)
 		{
-			if (ammo < MAX_AMMO)
+			if (body1->parentPrimitive == App->scene_intro->outOfBoundsSensor)
 			{
-				ammo = MAX_AMMO;
-				
-				//RELOAD SFX
-				App->audio->PlayFx(7, 0);
+				RestartPlayer1(spawnPoint);
+			}
+			else
+			{
+				if (ammo < MAX_AMMO)
+				{
+					ammo = MAX_AMMO;
+
+					//RELOAD SFX
+					App->audio->PlayFx(7, 0);
+				}
 			}
 
 			return;
@@ -187,7 +194,6 @@ void ModulePlayer::DriveInputsP1()
 		if (P1vehicle->GetKmh() >= 0.0f)
 		{
 			acceleration = MAX_ACCELERATION;
-			
 		}
 		else
 		{
@@ -321,17 +327,17 @@ void ModulePlayer::GenerateP1Vehicle()
 	car.cabin_size.Set(3.4f * scale, 1.6f * scale, 3.0f * scale);
 	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
-	car.L_light_size.Set(0.4f * scale, 0.f * scale, 6.05f * scale);
-	car.L_light_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
+	car.leftLight_size.Set(0.4f * scale, 0.f * scale, 6.05f * scale);
+	car.leftLight_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.R_light_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
-	car.R_light_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
+	car.rightLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.rightLight_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.L_spoiler_foot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.L_spoiler_foot_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.downLeftBumper_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.downLeftBumper_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	car.R_spoiler_foot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.R_spoiler_foot_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.downRightBumper_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.downRightBumper_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
 
 	car.spoiler_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
 	car.spoiler_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);

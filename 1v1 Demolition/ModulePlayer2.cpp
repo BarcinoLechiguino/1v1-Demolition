@@ -71,14 +71,14 @@ update_status ModulePlayer2::Update(float dt)
 
 void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
  {
-	Color color = Color((float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f, (float)(std::rand() % 255) / 255.f);
-
-	if (body1->parentPrimitive != nullptr && body2->GetBody() == App->player2->P2vehicle->GetBody())
+	if (body1->parentPrimitive != nullptr && body1->parentPrimitive != App->scene_intro->outOfBoundsSensor 
+		&& body2->GetBody() == P2vehicle->GetBody())
 	{
 		body1->parentPrimitive->color = Red;
 	}
 
-	if (body2->parentPrimitive != nullptr && body2->is_environment == false && body1->is_sensor == false)
+	if (body2->parentPrimitive != nullptr && body2->is_environment == false 
+		&& body2->parentPrimitive != App->scene_intro->outOfBoundsSensor && body1->is_sensor == false)
 	{
 		body2->parentPrimitive->color = Blue;
 	}
@@ -87,12 +87,19 @@ void ModulePlayer2::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	{
 		if (body1->is_sensor == true)
 		{
-			if (ammo < MAX_AMMO)
+			if (body1->parentPrimitive == App->scene_intro->outOfBoundsSensor)
 			{
-				ammo = MAX_AMMO;
+				RestartPlayer2(spawnPoint);
+			}
+			else
+			{
+				if (ammo < MAX_AMMO)
+				{
+					ammo = MAX_AMMO;
 
-				//RELOAD SFX
-				App->audio->PlayFx(7, 0);
+					//RELOAD SFX
+					App->audio->PlayFx(7, 0);
+				}
 			}
 
 			return;
@@ -287,23 +294,26 @@ void ModulePlayer2::CheckLivesP2()
 void ModulePlayer2::GenerateP2Vehicle()
 {
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
-	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
+	/*car.chassis_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
+	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);*/
+	
+	car.chassis2_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
+	car.chassis2_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
 	car.cabin_size.Set(3.4f * scale, 1.5f * scale, 3.0f * scale);
 	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
-	car.L_light_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
-	car.L_light_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
+	car.leftLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.leftLight_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.R_light_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
-	car.R_light_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
+	car.rightLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.rightLight_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.L_spoiler_foot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.L_spoiler_foot_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.downLeftBumper_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.downLeftBumper_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	car.R_spoiler_foot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.R_spoiler_foot_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.downRightBumper_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.downRightBumper_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
 
 	car.spoiler_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
 	car.spoiler_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);
@@ -342,8 +352,8 @@ void ModulePlayer2::GenerateP2Vehicle()
 	float suspensionRestLength = 1.2f * scale;
 
 	// Don't change anything below this line ------------------
-	float half_width = car.chassis_size.x*0.5f;
-	float half_length = car.chassis_size.z*0.5f;
+	float half_width = car.chassis2_size.x*0.5f;
+	float half_length = car.chassis2_size.z*0.5f;
 
 	vec3 direction(0, -1, 0);
 	vec3 axis(-1, 0, 0);

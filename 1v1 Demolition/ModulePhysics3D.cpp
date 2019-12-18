@@ -62,9 +62,9 @@ bool ModulePhysics3D::Start()
 	world->setGravity(GRAVITY);
 	vehicle_raycaster = new btDefaultVehicleRaycaster(world);								//Without this stepSimulation crashes. It sends an reading access error because m_dynamicsWorld cannot be read as it has not been allocated/set (is nullptr).
 
-	// Big rectangle as ground
+	// Big circle as ground
 	{
-		btCollisionShape* colShape = new btBoxShape(btVector3(200.0f, 2.0f, 200.0f));
+		btCollisionShape* colShape = new btCylinderShape(btVector3(80.0f, 2.0f, 80.0f));
 
 		mat4x4 glMatrix = IdentityMatrix;
 		glMatrix.translate(0.f, -2.f, 0.f);
@@ -283,7 +283,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cube& cube, float mass)
 // ---------------------------------------------------------
 PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 {
-	btCollisionShape* colShape = new btCylinderShapeX(btVector3(cylinder.GetHeight()*0.5f, cylinder.GetRadius(), 0.0f));			//REVISE THIS Getters here.
+	btCollisionShape* colShape = new btCylinderShapeX(btVector3(cylinder.GetHeight()*0.5f, cylinder.GetRadius(), 0.0f));
 	shapes.add(colShape);
 
 	btTransform startTransform;
@@ -311,17 +311,11 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 {
 	btCompoundShape* comShape = new btCompoundShape();
-
 	shapes.add(comShape);
 
-	btCollisionShape* colShape = new btBoxShape(btVector3(info.chassis_size.x*0.5f, info.chassis_size.y*0.5f, info.chassis_size.z*0.5f));
-	shapes.add(colShape);
+	
+	AddVehicleBodyParts(info, comShape);
 
-	btTransform trans;
-	trans.setIdentity();
-	trans.setOrigin(btVector3(info.chassis_offset.x, info.chassis_offset.y, info.chassis_offset.z));
-
-	comShape->addChildShape(trans, colShape);
 
 	btTransform startTransform;
 	startTransform.setIdentity();
@@ -338,6 +332,54 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 
 	world->addRigidBody(body);
 
+	
+	btRaycastVehicle* vehicle = CreateRaycastVehicle(info, body, vehicle_raycaster);
+
+	// ---------------------
+
+	PhysVehicle3D* pvehicle = new PhysVehicle3D(body, vehicle, info);
+	world->addVehicle(vehicle);
+	vehicles.add(pvehicle);
+
+	body->setUserPointer(pvehicle);
+
+	return pvehicle;
+}
+
+// --- Adds a btCollisionShape to a given vehicle's part and adds it to the vehicle's btCompoundShape.
+void ModulePhysics3D::AddCollisionShapeToVehiclePart(btCompoundShape* comShape, const vec3& part, const vec3& offset)
+{
+	btCollisionShape* colShape = new btBoxShape(btVector3(part.x * HALF, part.y * HALF, part.z * HALF));
+	shapes.add(colShape);
+
+	btTransform trans;
+	trans.setIdentity();
+	trans.setOrigin(btVector3(offset.x, offset.y, offset.z));
+
+	comShape->addChildShape(trans, colShape);
+}
+
+// --- Adds a btCollision shape for every vehicle part that requires it.
+void ModulePhysics3D::AddVehicleBodyParts(const VehicleInfo& info, btCompoundShape* comShape)
+{
+	if (&info == &App->player->car)																	// If P1's vehicle info is being passed as argument (P1 vehicle is being added).
+	{
+		// --- P1's VEHICLE BODY PARTS
+		AddCollisionShapeToVehiclePart(comShape, info.chassis_size, info.chassis_offset);
+		//AddCollisionShapeToVehiclePart(comShape, info.cabin_size, info.cabin_offset);
+		AddCollisionShapeToVehiclePart(comShape, info.spoiler_size, info.spoiler_offset);
+	}
+
+	if (&info == &App->player2->car)																// If P2's vehicle info is being passed as argument (P1 vehicle is being added).
+	{
+		// --- P2's VEHICLE BODY PARTS
+		AddCollisionShapeToVehiclePart(comShape, info.chassis2_size, info.chassis2_offset);
+	}
+}
+
+// --- Generates a new btRaycastVehicle with the vehicle info and all other passed arguments.
+btRaycastVehicle* ModulePhysics3D::CreateRaycastVehicle(const VehicleInfo& info, btRigidBody* body, btDefaultVehicleRaycaster* vehicle_raycaster)
+{
 	btRaycastVehicle::btVehicleTuning tuning;
 	tuning.m_frictionSlip = info.frictionSlip;
 	tuning.m_maxSuspensionForce = info.maxSuspensionForce;
@@ -358,15 +400,8 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 
 		vehicle->addWheel(conn, dir, axis, info.wheels[i].suspensionRestLength, info.wheels[i].radius, tuning, info.wheels[i].front);
 	}
-	// ---------------------
 
-	PhysVehicle3D* pvehicle = new PhysVehicle3D(body, vehicle, info);
-	world->addVehicle(vehicle);
-	vehicles.add(pvehicle);
-
-	body->setUserPointer(pvehicle);
-
-	return pvehicle;
+	return vehicle;
 }
 
 void ModulePhysics3D::AddConstraintP2P(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, bool can_collide)
@@ -380,7 +415,7 @@ void ModulePhysics3D::AddConstraintP2P(const Primitive& bodyA, const Primitive& 
 		btVector3(pivotInB.x, pivotInB.y, pivotInB.z));
 	world->addConstraint(p2p, can_collide);					//addConstraint receives as arguments a constraint (btTypedConstraint and its subclasses) and a bool that determines whether or not the constrained bodies will collide between them. 
 	constraints.add(p2p);									//Adds the new p2p constraint to the constraints list.
-	p2p->setDbgDrawSize(2.0f);								//REVISE THIS here.
+	p2p->setDbgDrawSize(2.0f);
 }
 
 void ModulePhysics3D::AddConstraintHinge(const Primitive& bodyA, const Primitive& bodyB, const vec3& pivotInA, const vec3& pivotInB, const vec3& axisInA, const vec3& axisInB, bool can_collide)

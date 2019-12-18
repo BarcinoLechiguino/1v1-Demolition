@@ -69,6 +69,8 @@ public:
 	Cube* gameWinCube2_P2;																			//Pointer of the element assigned to display that P2 has won 2 games.
 	Cube* gameWinCube3_P2;																			//Pointer of the element assigned to display that P2 has won 3 games.
 
+	Cube* outOfBoundsSensor;
+
 	Primitive* furniture;																			//Multiuse pointer that is used in the SetCube/Sphere/Cylinder methods.	
 
 	int projectileCount;																			//Amount of projectiles spawned in the arena.

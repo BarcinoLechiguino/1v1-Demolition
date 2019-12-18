@@ -16,6 +16,14 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 # Game Mechanics
 
+**<u>Basic Movement:</u>**
+
+* **Throttle** (W/KP 8) makes the vehicle move slowly but helps in aiming shots and making sharp turns.
+
+* **Turbo** (L SHIFT/ KP Plus) propels the vehicle forward, which helps in moving around easily and avoiding the opponent's projectiles.
+
+  
+
 **<u>Lives:</u>**
 
 * Each player starts with 3 lives. A life is subtracted when a player is hit by the opponent's projectiles. 
@@ -38,8 +46,6 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 * If for whatever reason a vehicle is flipped over, each player has a specific input key (E/KP 7) assigned to flip their vehicle back to its original state.
 
-* Normal acceleration (W/KP 8) makes the vehicle move slowly, and turbo (L SHIFT/ KP Plus) propels the vehicle forward,
-
 * Players' ammo, lives, round Wins and game wins can be checked out in the window title.
 * Player's Round and Game wins are displayed in game, represented by coloured cubes.
   * Both displays will be located top-left for Player 1 and top-right for Player 2.
@@ -54,17 +60,23 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 - **Basic Movement Keys:** 
 
-  - W Key: Throttle / Accelerate.
-  - S Key: Brake.
-  - A Key: Turn Left. (The vehicle's Left)
-  - D Key: Turn Right. (The vehicle's Right)
-  - Left Shift Key: Turbo.
+  - <u>W Key:</u> Throttle / Accelerate.
+
+  - <u>S Key:</u> Brake.
+
+  - <u>A Key:</u> Turn Left. (The vehicle's Left)
+
+  - <u>D Key:</u> Turn Right. (The vehicle's Right)
+
+  - <u>Left Shift Key</u>: Turbo.
+
+    
 
 - **Special Actions:**
 
-  - Space Bar: Use Item. (If Player 1 has any)
+  - <u>Space Bar:</u> Use Item. (If Player 1 has any)
 
-  - E Key: Flip over the vehicle. (In case it was upside down.)
+  - <u>E Key:</u> Flip over the vehicle. (Only in case it was turned upside down.)
   
     
 
@@ -72,17 +84,23 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 - **Basic Movement Keys:** 
 
-  - 8 Key (Keypad): Throttle / Accelerate.
-  - 5 Key (Keypad): Brake.
-  - 4 Key (Keypad): Turn Left. (The vehicle's Left)
-  - 6 Key (Keypad): Turn Right. (The vehicle's Right)
-  - + Key (Keypad): Turbo.
+  - <u>8 Key (Keypad):</u> Throttle / Accelerate.
+
+  - <u>5 Key (Keypad):</u> Brake.
+
+  - <u>4 Key (Keypad):</u> Turn Left. (The vehicle's Left)
+
+  - <u>6 Key (Keypad):</u> Turn Right. (The vehicle's Right)
+
+  - <u>Plus Key (Keypad):</u> Turbo.
+
+    
 
 - **Special Actions:**
 
-  - 0 Key (Keypad): Use Item. (If Player 2 has any)
+  - <u>0 Key (Keypad):</u> Use Item. (If Player 2 has any)
 
-  - 7 Key: Flip over the vehicle. (In case it was upside down.)
+  - <u>7 Key (Keypad):</u> Flip over the vehicle. (Only in case it was turned upside down.)
   
     
 
@@ -90,7 +108,8 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 * **F1**: Debug Mode (Spawn PhysBodies and Free Camera Movement)
 
-  * Free Camera Inputs:
+  * <u>Free Camera Inputs:</u>
+    
     * **S Key**: Increase the camera's position in the Z Axis.
     * **W Key**: Decrease the camera's position in the Z Axis.
     * **D Key**: Increase the camera's position in the X Axis.
@@ -147,7 +166,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
    - Constraints Implementation.
 
-   - Sensor Implementation (Ammo packs).
+   - Sensor Implementation (Ammo Packs & Out Of Bounds Sensor).
 
    - Player 1 & Player 2 Implementation.
 

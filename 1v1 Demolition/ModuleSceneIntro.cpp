@@ -350,6 +350,9 @@ void ModuleSceneIntro::InitGame()
 
 	// --- Loading all the Arena's environment elements.
 	LoadArena();
+
+	outOfBoundsSensor = SetCube(vec3(0.0f, -12.0f, 0.0f), vec3(400.0f, 2.0f, 400.0f), 0.0f, 0, vec3(1, 0, 0), true, true);
+	outOfBoundsSensor->color = Black;
 }
 
 void ModuleSceneIntro::LoadArena()
