@@ -43,19 +43,19 @@ void PhysVehicle3D::Render()
 	RenderVehicles(q);
 	
 	// --- P1'S VEHICLE PARTS
-	Cube chassis_P1			= SetVehicleCubeElement(info.chassis_size, info.chassis_offset, Magenta, q);				// Chassis.
-	Cube cabin_P1			= SetVehicleCubeElement(info.cabin_size, info.cabin_offset, Cyan, q);						// Cabin.
-	Cube leftLight_P1		= SetVehicleCubeElement(info.leftLight_size, info.leftLight_offset, Yellow, q);				// Left Light.
-	Cube rightLight_P1		= SetVehicleCubeElement(info.rightLight_size, info.rightLight_offset, Yellow, q);			// Right Light.
-	Cube downLeftBumper_P1	= SetVehicleCubeElement(info.downLeftBumper_size, info.downLeftBumper_offset, Purple, q);	// Down Left Bumper.
-	Cube downRightBumper_P1 = SetVehicleCubeElement(info.downRightBumper_size, info.downRightBumper_offset, Purple, q);	// Down Right Bumper.
-	Cube spoiler_P1			= SetVehicleCubeElement(info.spoiler_size, info.spoiler_offset, Yellow, q);					// Spoiler.
-	Cube front_P1			= SetVehicleCubeElement(info.front_size, info.front_offset, Blue, q);						// Front.
-	Cube front2_P1			= SetVehicleCubeElement(info.front2_size, info.front2_offset, Blue, q);						// Front 2.
-	Cube back_P1			= SetVehicleCubeElement(info.back_size, info.back_offset, Blue, q);							// Back.
-	Cube L_P1				= SetVehicleCubeElement(info.L_size, info.L_offset, Blue, q);								// L.
-	Cube R_P1				= SetVehicleCubeElement(info.R_size, info.R_offset, Blue, q);								// R.
-	//Cube neon_P1			= SetVehicleCubeElement(info.neon_size, info.neon_offset, Green, q);						//Neon. Should Erase?
+	Cube chassis_P1				= SetVehicleCubeElement(info.chassis_size, info.chassis_offset, Magenta, q);					// Chassis.
+	Cube cabin_P1				= SetVehicleCubeElement(info.cabin_size, info.cabin_offset, Cyan, q);							// Cabin.
+	Cube leftLight_P1			= SetVehicleCubeElement(info.leftLight_size, info.leftLight_offset, Yellow, q);					// Left Light.
+	Cube rightLight_P1			= SetVehicleCubeElement(info.rightLight_size, info.rightLight_offset, Yellow, q);				// Right Light.
+	Cube spoilerLeftPivot_P1	= SetVehicleCubeElement(info.spoilerLeftPivot_size, info.spoilerLeftPivot_offset, Purple, q);	// Down Left Bumper.
+	Cube spoilerRightPivot_P1	= SetVehicleCubeElement(info.spoilerRightPivot_size, info.spoilerRightPivot_offset, Purple, q);	// Down Right Bumper.
+	Cube spoiler_P1				= SetVehicleCubeElement(info.spoiler_size, info.spoiler_offset, Yellow, q);						// Spoiler.
+	Cube front_P1				= SetVehicleCubeElement(info.front_size, info.front_offset, Blue, q);							// Front.
+	Cube front2_P1				= SetVehicleCubeElement(info.front2_size, info.front2_offset, Blue, q);							// Front 2.
+	Cube back_P1				= SetVehicleCubeElement(info.back_size, info.back_offset, Blue, q);								// Back.
+	Cube L_P1					= SetVehicleCubeElement(info.L_size, info.L_offset, Blue, q);									// L.
+	Cube R_P1					= SetVehicleCubeElement(info.R_size, info.R_offset, Blue, q);									// R.
+	//Cube neon_P1				= SetVehicleCubeElement(info.neon_size, info.neon_offset, Green, q);						//Neon. Should Erase?
 
 	// --- P2'S VEHICLE PARTS
 	Cube chassis_P2 = SetVehicleCubeElement(info.chassis2_size, info.chassis2_offset, Grey, q);							//Chassis.
@@ -66,8 +66,8 @@ void PhysVehicle3D::Render()
 	cabin_P1.Render();
 	leftLight_P1.Render();
 	rightLight_P1.Render();
-	downLeftBumper_P1.Render();
-	downRightBumper_P1.Render();
+	spoilerLeftPivot_P1.Render();
+	spoilerRightPivot_P1.Render();
 	spoiler_P1.Render();
 	front_P1.Render();
 	front2_P1.Render();

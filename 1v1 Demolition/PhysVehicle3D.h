@@ -31,10 +31,10 @@ struct VehicleInfo
 	vec3 chassis_offset;
 	vec3 cabin_size;
 	vec3 cabin_offset;
-	vec3 downLeftBumper_size;
-	vec3 downLeftBumper_offset;
-	vec3 downRightBumper_size;
-	vec3 downRightBumper_offset;
+	vec3 spoilerLeftPivot_size;
+	vec3 spoilerLeftPivot_offset;
+	vec3 spoilerRightPivot_size;
+	vec3 spoilerRightPivot_offset;
 	vec3 spoiler_size;
 	vec3 spoiler_offset;
 	vec3 front_size;

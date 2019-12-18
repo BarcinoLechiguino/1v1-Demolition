@@ -309,11 +309,11 @@ void ModulePlayer2::GenerateP2Vehicle()
 	car.rightLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
 	car.rightLight_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.downLeftBumper_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.downLeftBumper_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.spoilerLeftPivot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.spoilerLeftPivot_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	car.downRightBumper_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.downRightBumper_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.spoilerRightPivot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.spoilerRightPivot_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
 
 	car.spoiler_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
 	car.spoiler_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);
