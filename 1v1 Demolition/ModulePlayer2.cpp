@@ -300,42 +300,41 @@ void ModulePlayer2::GenerateP2Vehicle()
 	car.chassis2_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
 	car.chassis2_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
-	car.cabin_size.Set(3.4f * scale, 1.5f * scale, 3.0f * scale);
-	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
+	car.stabilizer2_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
+	car.stabilizer2_offset.Set(0.0f * scale, -7.0f * scale, 0.0f * scale);
 
-	car.leftLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
-	car.leftLight_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
+	car.cabin2_size.Set(3.4f * scale, 1.5f * scale, 3.0f * scale);
+	car.cabin2_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
-	car.rightLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
-	car.rightLight_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
+	car.leftLight2_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.leftLight2_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.spoilerLeftPivot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.spoilerLeftPivot_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.rightLight2_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
+	car.rightLight2_offset.Set(-1.0f * scale, 0.9f * scale, 0.0f * scale);
 
-	car.spoilerRightPivot_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
-	car.spoilerRightPivot_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
+	car.spoilerLeftPivot2_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.spoilerLeftPivot2_offset.Set(-1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	car.spoiler_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
-	car.spoiler_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);
+	car.spoilerRightPivot2_size.Set(0.5f * scale, 1.0f * scale, 0.4f * scale);
+	car.spoilerRightPivot2_offset.Set(1.0f * scale, 1.3f * scale, -2.7f * scale);
 
-	car.front_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
-	car.front_offset.Set(0.0f * scale, -0.4f * scale, 2.9f * scale);
+	car.spoiler2_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
+	car.spoiler2_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);
 
-	car.front2_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
-	car.front2_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
+	car.frontBumper2_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
+	car.frontBumper2_offset.Set(0.0f * scale, -0.4f * scale, 2.9f * scale);
 
-	car.back_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
-	car.back_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
+	car.frontBumperPivot2_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
+	car.frontBumperPivot2_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
 
-	car.L_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
-	car.L_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);
+	car.rearBumper2_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
+	car.rearBumper2_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
 
-	car.R_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
-	car.R_offset.Set(1.5f * scale, 0.0f * scale, 0.0f * scale);
+	car.leftSkirt2_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
+	car.leftSkirt2_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);
 
-
-	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
-	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
+	car.rightSkirt2_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
+	car.rightSkirt2_offset.Set(1.5f * scale, 0.0f * scale, 0.0f * scale);
 
 	car.mass					= 1800.0f;		//Original: 1500.0f, Heavy: 1950.0f
 	car.suspensionStiffness		= 15.88f;

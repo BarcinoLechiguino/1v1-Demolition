@@ -41,43 +41,6 @@ void PhysVehicle3D::Render()
 	btQuaternion q = vehicle->getChassisWorldTransform().getRotation();
 
 	RenderVehicles(q);
-	
-	// --- P1'S VEHICLE PARTS
-	Cube chassis_P1				= SetVehicleCubeElement(info.chassis_size, info.chassis_offset, Magenta, q);					// Chassis.
-	Cube cabin_P1				= SetVehicleCubeElement(info.cabin_size, info.cabin_offset, Cyan, q);							// Cabin.
-	Cube leftLight_P1			= SetVehicleCubeElement(info.leftLight_size, info.leftLight_offset, Yellow, q);					// Left Light.
-	Cube rightLight_P1			= SetVehicleCubeElement(info.rightLight_size, info.rightLight_offset, Yellow, q);				// Right Light.
-	Cube spoilerLeftPivot_P1	= SetVehicleCubeElement(info.spoilerLeftPivot_size, info.spoilerLeftPivot_offset, Purple, q);	// Down Left Bumper.
-	Cube spoilerRightPivot_P1	= SetVehicleCubeElement(info.spoilerRightPivot_size, info.spoilerRightPivot_offset, Purple, q);	// Down Right Bumper.
-	Cube spoiler_P1				= SetVehicleCubeElement(info.spoiler_size, info.spoiler_offset, Yellow, q);						// Spoiler.
-	Cube front_P1				= SetVehicleCubeElement(info.front_size, info.front_offset, Blue, q);							// Front.
-	Cube front2_P1				= SetVehicleCubeElement(info.front2_size, info.front2_offset, Blue, q);							// Front 2.
-	Cube back_P1				= SetVehicleCubeElement(info.back_size, info.back_offset, Blue, q);								// Back.
-	Cube L_P1					= SetVehicleCubeElement(info.L_size, info.L_offset, Blue, q);									// L.
-	Cube R_P1					= SetVehicleCubeElement(info.R_size, info.R_offset, Blue, q);									// R.
-	//Cube neon_P1				= SetVehicleCubeElement(info.neon_size, info.neon_offset, Green, q);						//Neon. Should Erase?
-
-	// --- P2'S VEHICLE PARTS
-	Cube chassis_P2 = SetVehicleCubeElement(info.chassis2_size, info.chassis2_offset, Grey, q);							//Chassis.
-
-
-	// --- P1'S VEHICLE'S RENDER
-	chassis_P1.Render();
-	cabin_P1.Render();
-	leftLight_P1.Render();
-	rightLight_P1.Render();
-	spoilerLeftPivot_P1.Render();
-	spoilerRightPivot_P1.Render();
-	spoiler_P1.Render();
-	front_P1.Render();
-	front2_P1.Render();
-	back_P1.Render();
-	L_P1.Render();
-	R_P1.Render();
-	//neon_P1.Render();
-
-	// --- P2'S VEHICLE'S RENDER
-	chassis_P2.Render();
 }
 
 // --- Sets a cube vehicle structure element's data members.
@@ -101,7 +64,65 @@ Cube PhysVehicle3D::SetVehicleCubeElement(vec3 part, vec3 offset, Color partColo
 // --- Renders all vehicles.
 void PhysVehicle3D::RenderVehicles(btQuaternion q)
 {
+	// --- P1'S VEHICLE PARTS
+	Cube chassis_P1				= SetVehicleCubeElement(info.chassis_size, info.chassis_offset, Magenta, q);						// Chassis.
+	//Cube stabilizer_P1		= SetVehicleCubeElement(info.stabilizer_size, info.stabilizer_offset, Black, q);					// Stabilizer.
+	Cube cabin_P1				= SetVehicleCubeElement(info.cabin_size, info.cabin_offset, Cyan, q);								// Cabin.
+	Cube leftLight_P1			= SetVehicleCubeElement(info.leftLight_size, info.leftLight_offset, Yellow, q);						// Left Light.
+	Cube rightLight_P1			= SetVehicleCubeElement(info.rightLight_size, info.rightLight_offset, Yellow, q);					// Right Light.
+	Cube spoilerLeftPivot_P1	= SetVehicleCubeElement(info.spoilerLeftPivot_size, info.spoilerLeftPivot_offset, Purple, q);		// Down Left Bumper.
+	Cube spoilerRightPivot_P1	= SetVehicleCubeElement(info.spoilerRightPivot_size, info.spoilerRightPivot_offset, Purple, q);		// Down Right Bumper.
+	Cube spoiler_P1				= SetVehicleCubeElement(info.spoiler_size, info.spoiler_offset, Yellow, q);							// Spoiler.
+	Cube frontBumper_P1			= SetVehicleCubeElement(info.frontBumper_size, info.frontBumper_offset, Blue, q);					// Front Bumper.
+	Cube frontBumperPivot_P1	= SetVehicleCubeElement(info.frontBumperPivot_size, info.frontBumperPivot_offset, Blue, q);			// Front Bumper Pivot.
+	Cube rearBumper_P1			= SetVehicleCubeElement(info.rearBumper_size, info.rearBumper_offset, Blue, q);						// Rear Bumper.
+	Cube leftSkirt_P1			= SetVehicleCubeElement(info.leftSkirt_size, info.leftSkirt_offset, Blue, q);						// Left Skirt.
+	Cube rightSkirt_P1			= SetVehicleCubeElement(info.rightSkirt_size, info.rightSkirt_offset, Blue, q);						// Right Skirt.
 
+	// --- P2'S VEHICLE PARTS
+	Cube chassis_P2				= SetVehicleCubeElement(info.chassis2_size, info.chassis2_offset, Grey, q);							// Chassis.
+	//Cube stabilizer_P2		= SetVehicleCubeElement(info.stabilizer2_size, info.stabilizer2_offset, Black, q);					// Stabilizer.
+	Cube cabin_P2				= SetVehicleCubeElement(info.cabin2_size, info.cabin2_offset, Magenta, q);							// Cabin.
+	Cube leftLight_P2			= SetVehicleCubeElement(info.leftLight2_size, info.leftLight2_offset, Yellow, q);					// Left Light.
+	Cube rightLight_P2			= SetVehicleCubeElement(info.rightLight2_size, info.rightLight2_offset, Yellow, q);					// Right Light.
+	Cube spoilerLeftPivot_P2	= SetVehicleCubeElement(info.spoilerLeftPivot2_size, info.spoilerLeftPivot2_offset, Purple, q);		// Down Left Bumper.
+	Cube spoilerRightPivot_P2	= SetVehicleCubeElement(info.spoilerRightPivot2_size, info.spoilerRightPivot2_offset, Purple, q);	// Down Right Bumper.
+	Cube spoiler_P2				= SetVehicleCubeElement(info.spoiler2_size, info.spoiler2_offset, Yellow, q);						// Spoiler.
+	Cube frontBumper_P2			= SetVehicleCubeElement(info.frontBumper2_size, info.frontBumper2_offset, Blue, q);					// Front Bumper.
+	Cube frontBumperPivot_P2	= SetVehicleCubeElement(info.frontBumperPivot2_size, info.frontBumperPivot2_offset, Blue, q);		// Front Bumper Pivot.
+	Cube rearBumper_P2			= SetVehicleCubeElement(info.rearBumper2_size, info.rearBumper2_offset, Blue, q);					// Rear Bumper.
+	Cube leftSkirt_P2			= SetVehicleCubeElement(info.leftSkirt2_size, info.leftSkirt2_offset, Blue, q);						// Left Skirt.
+	Cube rightSkirt_P2			= SetVehicleCubeElement(info.rightSkirt2_size, info.rightSkirt2_offset, Blue, q);					// Right Skirt.
+
+
+	// --- P1'S VEHICLE'S RENDER
+	chassis_P1.Render();
+	//stabilizer_P1.Render();
+	cabin_P1.Render();
+	leftLight_P1.Render();
+	rightLight_P1.Render();
+	spoilerLeftPivot_P1.Render();
+	spoilerRightPivot_P1.Render();
+	spoiler_P1.Render();
+	frontBumper_P1.Render();
+	frontBumperPivot_P1.Render();
+	rearBumper_P1.Render();
+	leftSkirt_P1.Render();
+	rightSkirt_P1.Render();
+
+	// --- P2'S VEHICLE'S RENDER
+	chassis_P2.Render();
+	cabin_P2.Render();
+	leftLight_P2.Render();
+	rightLight_P2.Render();
+	spoilerLeftPivot_P2.Render();
+	spoilerRightPivot_P2.Render();
+	spoiler_P2.Render();
+	frontBumper_P2.Render();
+	frontBumperPivot_P2.Render();
+	rearBumper_P2.Render();
+	leftSkirt_P2.Render();
+	rightSkirt_P2.Render();
 }
 
 // ----------------------------------------------------------------------------

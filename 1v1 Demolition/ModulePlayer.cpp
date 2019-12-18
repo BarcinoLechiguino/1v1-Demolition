@@ -324,6 +324,9 @@ void ModulePlayer::GenerateP1Vehicle()
 	car.chassis_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);			//._______________.
 	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
+	car.stabilizer_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);
+	car.stabilizer_offset.Set(0.0f * scale, -7.0f * scale, 0.0f * scale);
+
 	car.cabin_size.Set(3.4f * scale, 1.6f * scale, 3.0f * scale);
 	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
@@ -342,23 +345,20 @@ void ModulePlayer::GenerateP1Vehicle()
 	car.spoiler_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
 	car.spoiler_offset.Set(0.0f * scale, 1.9f * scale, -3.0f * scale);
 
-	car.front_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
-	car.front_offset.Set(0.0f * scale, -0.4f * scale, 2.9f * scale);
+	car.frontBumper_size.Set(3.4f * scale, 0.2f * scale, 1.0f * scale);
+	car.frontBumper_offset.Set(0.0f * scale, -0.4f * scale, 2.9f * scale);
 
-	car.front2_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
-	car.front2_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
+	car.frontBumperPivot_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
+	car.frontBumperPivot_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
 
-	car.back_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
-	car.back_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
+	car.rearBumper_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
+	car.rearBumper_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
 
-	car.L_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
-	car.L_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);
+	car.leftSkirt_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
+	car.leftSkirt_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);
 
-	car.R_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
-	car.R_offset.Set(1.5f * scale, 0.0f * scale, 0.0f * scale);
-
-	/*car.neon_size.Set(3.2f * scale, 0.1f * scale, 6.1f * scale);
-	car.neon_offset.Set(0.0f * scale, -0.25f * scale, 0.0f * scale);*/
+	car.rightSkirt_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
+	car.rightSkirt_offset.Set(1.5f * scale, 0.0f * scale, 0.0f * scale);
 
 	car.mass					= 1800.0f;		//Original: 1500.0f, Heavy: 1950.0f //FV
 	car.suspensionStiffness		= 15.88f;		//F1: 200.0f

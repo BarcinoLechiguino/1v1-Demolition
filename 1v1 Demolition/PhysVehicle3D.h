@@ -29,6 +29,8 @@ struct VehicleInfo
 	// --- P1's VEHICLE PARTS
 	vec3 chassis_size;
 	vec3 chassis_offset;
+	vec3 stabilizer_size;
+	vec3 stabilizer_offset;
 	vec3 cabin_size;
 	vec3 cabin_offset;
 	vec3 spoilerLeftPivot_size;
@@ -37,28 +39,50 @@ struct VehicleInfo
 	vec3 spoilerRightPivot_offset;
 	vec3 spoiler_size;
 	vec3 spoiler_offset;
-	vec3 front_size;
-	vec3 front_offset;
-	vec3 front2_size;
-	vec3 front2_offset;
-	vec3 back_size;
-	vec3 back_offset;
-	vec3 R_size;
-	vec3 R_offset;
-	vec3 L_size;
-	vec3 L_offset;
+	vec3 frontBumper_size;
+	vec3 frontBumper_offset;
+	vec3 frontBumperPivot_size;
+	vec3 frontBumperPivot_offset;
+	vec3 rearBumper_size;
+	vec3 rearBumper_offset;
+	vec3 leftSkirt_size;
+	vec3 leftSkirt_offset;
+	vec3 rightSkirt_size;
+	vec3 rightSkirt_offset;
 	vec3 leftLight_size;
 	vec3 leftLight_offset;
 	vec3 rightLight_size;
 	vec3 rightLight_offset;
-	vec3 neon_size;
-	vec3 neon_offset;
 
 	// --- P2's Vehicle Parts
 	vec3 chassis2_size;
 	vec3 chassis2_offset;
+	vec3 stabilizer2_size;
+	vec3 stabilizer2_offset;
+	vec3 cabin2_size;
+	vec3 cabin2_offset;
+	vec3 spoilerLeftPivot2_size;
+	vec3 spoilerLeftPivot2_offset;
+	vec3 spoilerRightPivot2_size;
+	vec3 spoilerRightPivot2_offset;
+	vec3 spoiler2_size;
+	vec3 spoiler2_offset;
+	vec3 frontBumper2_size;
+	vec3 frontBumper2_offset;
+	vec3 frontBumperPivot2_size;
+	vec3 frontBumperPivot2_offset;
+	vec3 rearBumper2_size;
+	vec3 rearBumper2_offset;
+	vec3 leftSkirt2_size;
+	vec3 leftSkirt2_offset;
+	vec3 rightSkirt2_size;
+	vec3 rightSkirt2_offset;
+	vec3 leftLight2_size;
+	vec3 leftLight2_offset;
+	vec3 rightLight2_size;
+	vec3 rightLight2_offset;
 
-	// --- VEHICLE GENERAL PROPERTIES
+	// --- GENERAL VEHICLE PROPERTIES
 	float mass;
 	float suspensionStiffness;			// default to 5.88 / 10.0 offroad / 50.0 sports car / 200.0 F1 car
 	float suspensionCompression;		// default to 0.83

@@ -164,7 +164,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
    - Game Loop & Win Lose Condition Implementation.
 
-   - Constraints Implementation.
+   - Constraint Implementation.
 
    - Sensor Implementation (Ammo Packs & Out Of Bounds Sensor).
 
