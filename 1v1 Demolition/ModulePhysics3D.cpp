@@ -365,6 +365,8 @@ void ModulePhysics3D::AddVehicleBodyParts(const VehicleInfo& info, btCompoundSha
 		// --- P1's VEHICLE BODY COLLISION SHAPES
 		AddCollisionShapeToVehiclePart(comShape, info.chassis_size, info.chassis_offset);
 		AddCollisionShapeToVehiclePart(comShape, info.spoiler_size, info.spoiler_offset);
+		AddCollisionShapeToVehiclePart(comShape, info.leftSkirt_size, info.leftSkirt_offset);
+		AddCollisionShapeToVehiclePart(comShape, info.rightSkirt_size, info.rightSkirt_offset);
 	}
 
 	if (&info == &App->player2->car)																// If P2's vehicle info is being passed as argument (P1 vehicle is being added).
@@ -372,6 +374,8 @@ void ModulePhysics3D::AddVehicleBodyParts(const VehicleInfo& info, btCompoundSha
 		// --- P2's VEHICLE BODY COLLISION SHAPES
 		AddCollisionShapeToVehiclePart(comShape, info.chassis2_size, info.chassis2_offset);
 		AddCollisionShapeToVehiclePart(comShape, info.spoiler2_size, info.spoiler2_offset);
+		AddCollisionShapeToVehiclePart(comShape, info.leftSkirt2_size, info.leftSkirt2_offset);
+		AddCollisionShapeToVehiclePart(comShape, info.rightSkirt2_size, info.rightSkirt2_offset);
 	}
 }
 

@@ -74,7 +74,8 @@ public:
 	Primitive* furniture;																			//Multiuse pointer that is used in the SetCube/Sphere/Cylinder methods.	
 
 	int projectileCount;																			//Amount of projectiles spawned in the arena.
-	bool RespawnOnRoundEnd;																			//Keeps track whether or not the car's positions are reset back to their spawn positions.
+	bool firstArenaToLoad;																			//Keep track whether or not the arena being loaded is the fist one or not.
+	bool respawnOnRoundEnd;																			//Keeps track whether or not the car's positions are reset back to their spawn positions.
 
 private:
 	void HandleDebugInput();																		//Method that holds all the inputs that are activated when in debug mode.

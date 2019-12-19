@@ -35,6 +35,7 @@ extern Color Green;
 extern Color Blue;
 extern Color Black;
 extern Color White;
+extern Color Brown;
 extern Color Yellow;
 extern Color Pink;
 extern Color LightPink;

@@ -129,7 +129,7 @@ update_status ModuleInput::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
 	{
-		App->scene_intro->RespawnOnRoundEnd = !App->scene_intro->RespawnOnRoundEnd;
+		App->scene_intro->respawnOnRoundEnd = !App->scene_intro->respawnOnRoundEnd;
 	}
 
 	return UPDATE_CONTINUE;

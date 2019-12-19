@@ -220,7 +220,7 @@ void ModulePlayer2::DriveInputsP2()
 	// -------------------------------- EXTRA ACTIONS --------------------------------
 	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_REPEAT)
 	{
-		acceleration = MAX_ACCELERATION * 5;
+		acceleration = MAX_ACCELERATION * TURBO_BONUS;
 
 		if (!firstTurbo)
 		{
@@ -237,7 +237,7 @@ void ModulePlayer2::SpecialInputsP2()
 		if (ammo != 0)
 		{
 			ammo--;
-			SpawnProjectile(new Sphere(1.2f, 1.2f));
+			SpawnProjectile(new Sphere(PROJECTILE_RADIUS, PROJECTILE_MASS));
 			App->audio->PlayFx(5, 0);
 		}
 		else
@@ -281,7 +281,7 @@ void ModulePlayer2::CheckLivesP2()
 		RestartPlayer2(spawnPoint);
 		App->audio->PlayFx(6, 0);
 
-		if (App->scene_intro->RespawnOnRoundEnd == true)
+		if (App->scene_intro->respawnOnRoundEnd == true)
 		{
 			App->player->RestartPlayer1(App->player->spawnPoint);
 		}
@@ -325,10 +325,10 @@ void ModulePlayer2::GenerateP2Vehicle()
 	car.rearBumper2_offset.Set(0.0f * scale, 0.0f * scale, -3.0f * scale);
 
 	car.leftSkirt2_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
-	car.leftSkirt2_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);
+	car.leftSkirt2_offset.Set(-1.5f * scale, 0.15f * scale, 0.0f * scale);
 
 	car.rightSkirt2_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
-	car.rightSkirt2_offset.Set(1.5f * scale, 0.0f * scale, 0.0f * scale);
+	car.rightSkirt2_offset.Set(1.5f * scale, 0.15f * scale, 0.0f * scale);
 
 	car.mass					= 1800.0f;		//Original: 1500.0f, Heavy: 1950.0f
 	car.suspensionStiffness		= 15.88f;

@@ -51,15 +51,18 @@ enum update_status
 
 // ----------------- Player Variables -----------------
 // Vehicle Movement Variables
-#define MAX_ACCELERATION 5500.0f			//Fast: 5500.0f, Slow but steady: 3650.0f 
+#define MAX_ACCELERATION 6000.0f			//Fast: 5500.0f, Slow but steady: 3650.0f 
 #define TURN_DEGREES 40.0f * DEGTORAD		//Slow Turn: 25.0f
 #define BRAKE_POWER 1250.0f
+#define TURBO_BONUS 5
 
 // Gameplay Variables
 #define MAX_BODIES 30
 #define MAX_LIVES 3
 #define MAX_AMMO 4
 #define Y_OFFSET 1
+#define PROJECTILE_RADIUS 1.2f
+#define PROJECTILE_MASS 1.2f
 #define PROJECTILE_FORCE 5000.0f
 #define MAX_PROJECTILES 12
 

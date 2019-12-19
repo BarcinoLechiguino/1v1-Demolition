@@ -35,10 +35,9 @@ bool ModuleSceneIntro::CleanUp()
 	}
 
 	ClearConstraintElements();
-	
 	ClearDisplayElements();
-
 	primitives.Clear();
+	
 	LoadArena();
 
 	return true;
@@ -307,14 +306,13 @@ Cylinder* ModuleSceneIntro::SetCylinder(const vec3& position, float radius, floa
 }
 
 // ------------------------------------------ GAME LOGIC & ARENA ------------------------------------------
+// --- Initializes all game & arena relevant variables, loads the bg music and sets the camera`s position.
 void ModuleSceneIntro::InitGame()
 {
 	App->audio->PlayMusic("audio/Songs/Main_Theme.ogg");
 
-	//App->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);
-
-	App->camera->Move(vec3(1.0f, 40.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
-	App->camera->LookAt(vec3(0, 0, 0));								//Initial point of reference. Set it to be the vehicle.
+	App->camera->Move(vec3(0.0f, 150.0f, 0.0f));						//Changes both the camera position and its reference point. Set Move to match the vehicle.
+	App->camera->LookAt(vec3(0, 0, 0));									//Initial point of reference. Set it to be the vehicle.
 
 	// --- Initializing the Arena's Constraints
 	furniture			= nullptr;
@@ -340,7 +338,8 @@ void ModuleSceneIntro::InitGame()
 	gameWinCube3_P2		= nullptr;
 
 	// --- Initializing the RespawnOnNewRound
-	RespawnOnRoundEnd	= true;
+	firstArenaToLoad	= false;
+	respawnOnRoundEnd	= true;
 
 	// --- Initializing Projectile Count
 	projectileCount = 0;
@@ -355,7 +354,13 @@ void ModuleSceneIntro::InitGame()
 void ModuleSceneIntro::LoadArena()
 {
 	// ---------------------------------- GROUND -----------------------------------
-	SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);											//Arena's ground.
+	Cylinder* ground = SetCylinder(vec3(0.0f, -1.0f, 0.0f), 80.f, 2.1f, 0.0f, 90, vec3(0, 0, 1), false, true);					//Arena's ground.
+
+	if (!firstArenaToLoad)
+	{
+		ground->color = Brown;
+		firstArenaToLoad = true;
+	}
 
 	// ----------------------------------- WALLS -----------------------------------
 	// --- Walls at the center of the arena.
