@@ -368,11 +368,11 @@ void ModulePlayer::GenerateP1Vehicle()
 	// Wheel properties ---------------------------------------
 	float connection_height = 1.2f * scale;
 	float wheel_radius = 0.6f * scale;
-	float wheel_width = 0.5f *  scale;
+	float wheel_width = 0.6f *  scale;
 	float suspensionRestLength = 1.2f * scale;
 
 	// Don't change anything below this line ------------------
-	float half_width = car.chassis_size.x*0.5f;
+	float half_width = car.chassis_size.x*0.57f;
 	float half_length = car.chassis_size.z*0.5f;
 
 	vec3 direction(0, -1, 0);

@@ -294,9 +294,6 @@ void ModulePlayer2::CheckLivesP2()
 void ModulePlayer2::GenerateP2Vehicle()
 {
 	// Car properties ----------------------------------------
-	/*car.chassis_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
-	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);*/
-	
 	car.chassis2_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
 	car.chassis2_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
@@ -344,11 +341,11 @@ void ModulePlayer2::GenerateP2Vehicle()
 	// Wheel properties ---------------------------------------
 	float connection_height = 1.2f * scale;
 	float wheel_radius = 0.6f * scale;
-	float wheel_width = 0.5f *  scale;
+	float wheel_width = 0.6f *  scale;
 	float suspensionRestLength = 1.2f * scale;
 
 	// Don't change anything below this line ------------------
-	float half_width = car.chassis2_size.x*0.5f;
+	float half_width = car.chassis2_size.x*0.57f;
 	float half_length = car.chassis2_size.z*0.5f;
 
 	vec3 direction(0, -1, 0);
