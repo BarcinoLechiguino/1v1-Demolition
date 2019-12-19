@@ -475,7 +475,7 @@ void ModuleSceneIntro::CheckWins()
 			App->audio->PlayFx(10, 0);
 		}
 
-		if (App->player->winsP1 >= 3 || App->player2->winsP2 >= 3)
+		if (App->player->winsP1 > 3 || App->player2->winsP2 > 3)
 		{
 			App->player->winsP1		= 0;
 			App->player2->winsP2	= 0;
