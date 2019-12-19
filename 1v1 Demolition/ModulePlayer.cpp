@@ -321,10 +321,10 @@ void ModulePlayer::CheckLivesP1()
 void ModulePlayer::GenerateP1Vehicle()
 {
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);			//._______________.
+	car.chassis_size.Set(4.0f * scale, 1.1f * scale, 6.0f * scale);			//._______________.
 	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
-	car.cabin_size.Set(3.4f * scale, 1.6f * scale, 3.0f * scale);
+	car.cabin_size.Set(3.9f * scale, 1.6f * scale, 3.0f * scale);
 	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
 	car.leftLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
