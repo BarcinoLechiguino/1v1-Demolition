@@ -324,13 +324,10 @@ void ModulePlayer::GenerateP1Vehicle()
 	car.chassis_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);			//._______________.
 	car.chassis_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
-	car.stabilizer_size.Set(3.5f * scale, 1.1f * scale, 6.0f * scale);
-	car.stabilizer_offset.Set(0.0f * scale, -7.0f * scale, 0.0f * scale);
-
 	car.cabin_size.Set(3.4f * scale, 1.6f * scale, 3.0f * scale);
 	car.cabin_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
-	car.leftLight_size.Set(0.4f * scale, 0.f * scale, 6.05f * scale);
+	car.leftLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
 	car.leftLight_offset.Set(1.0f * scale, 0.9f * scale, 0.0f * scale);
 
 	car.rightLight_size.Set(0.4f * scale, 0.2f * scale, 6.05f * scale);
@@ -352,7 +349,7 @@ void ModulePlayer::GenerateP1Vehicle()
 	car.frontBumperPivot_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
 
 	car.rearBumper_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
-	car.rearBumper_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
+	car.rearBumper_offset.Set(0.0f * scale, 0.0f * scale, -3.0f * scale);
 
 	car.leftSkirt_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
 	car.leftSkirt_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);

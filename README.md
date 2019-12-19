@@ -10,7 +10,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 * The first player to destroy the opponent's vehicle 3 times wins a round.
 * The first player to win 3 rounds wins a game.
-* The first player to win 3 games gets the win.
+* The first player to win 4 games gets the match.
 
 
 
@@ -19,10 +19,19 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 **<u>Basic Movement:</u>**
 
 * **Throttle** (W/KP 8) makes the vehicle move slowly but helps in aiming shots and making sharp turns.
-
 * **Turbo** (L SHIFT/ KP Plus) propels the vehicle forward, which helps in moving around easily and avoiding the opponent's projectiles.
 
+
+
+**<u>Player 1 & Player 2:</u>**
+
+* **Player 1:** Drives the yellow and blue car at the bottom-left side of the Arena.
+
   
+
+* **Player 2:** Drives the green and red car at the top-right side of the Arena.
+
+
 
 **<u>Lives:</u>**
 
@@ -48,9 +57,9 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 * Players' ammo, lives, round Wins and game wins can be checked out in the window title.
 * Player's Round and Game wins are displayed in game, represented by coloured cubes.
-  * Both displays will be located top-left for Player 1 and top-right for Player 2.
-  * Player 1's Round Win cubes will be Blue while Game Win cubes will be Cyan.
-  * Player 2's Round Win cubes will be Red while Game Win cubes will be Magenta.
+  * The display will be located bottom-left for Player 1 and top-right for Player 2.
+  * Player 1's Round Win cubes will be Blue while Game Win cubes will be Yellow.
+  * Player 2's Round Win cubes will be Red while Game Win cubes will be Green.
 
 
 
@@ -68,7 +77,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
   - <u>D Key:</u> Turn Right. (The vehicle's Right)
 
-  - <u>Left Shift Key</u>: Turbo.
+  - <u>Left Shift Key:</u> Turbo.
 
     
 
@@ -176,11 +185,13 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
    - Respawn at Round's End mode Implementation.
 
+   - Different Player Colours Implementation.
+
      
 
 - **Gerard Romeu:**
 
-   - Song & FX implementation.
+   - Music & FX implementation.
    
    - Vehicle Design.
    

@@ -1,4 +1,3 @@
-
 #include "Globals.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -27,7 +26,6 @@ void Primitive::Update()
 	{
 		if (body.is_sensor == false && body.is_environment == false)
 		{
-			//App->physics->RemoveBodyFromWorld(body.GetBody());
 			App->scene_intro->DeletePrimitive(this);
 		}
 	}
@@ -120,11 +118,6 @@ void Primitive::Scale(float x, float y, float z)
 }
 
 // CUBE ============================================
-//Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)		//REVISE THIS here
-//{
-//	type = PrimitiveTypes::Primitive_Cube;
-//}
-
 Cube::Cube(const vec3& _size, float mass, bool is_sensor, bool is_environment) : Primitive(), size(_size)
 {
 	type = PrimitiveTypes::Primitive_Cube;
@@ -236,7 +229,7 @@ float Cylinder::GetRadius() const
 	return radius;
 }
 
-void Cylinder::SetRadius(const float newRadius)			//REVISE THIS. Check both the setter function and the const float argument.
+void Cylinder::SetRadius(const float newRadius)
 {
 	radius = newRadius;
 }
@@ -246,7 +239,7 @@ float Cylinder::GetHeight() const
 	return height;
 }
 
-void Cylinder::SetHeight(const float newHeight)			//REVISE THIS. Check both the setter function and the const float argument.
+void Cylinder::SetHeight(const float newHeight)
 {
 	height = newHeight;
 }

@@ -41,7 +41,6 @@ protected:
 class Cube : public Primitive
 {
 public :
-	//Cube()
 	Cube(const vec3& size = vec3(1.f,1.f,1.f), float mass = 1.f, bool is_sensor = false, bool is_environment = false);
 	Cube(float sizeX, float sizeY, float sizeZ, bool is_sensor = false, bool is_environment = false);
 	vec3 GetSize() const;
@@ -59,7 +58,7 @@ public:
 	Sphere(float radius = 1.f, float mass = 1.f, bool is_sensor = false, bool is_environment = false);
 
 	float GetRadius() const;
-	void SetRadius(const float newRadius);					//REVISE THIS. Check both the setter function and the const float argument.
+	void SetRadius(const float newRadius);
 protected:
 	void InnerRender() const;
 private:
@@ -74,9 +73,9 @@ public:
 	Cylinder(bool is_sensor, bool is_environment = false, const vec3& size = vec3(1.f, 2.f, 1.f), float mass = 1.f);
 
 	float GetRadius() const;
-	void SetRadius(float newRadius);					//REVISE THIS. Check both the setter function and the const float argument.
+	void SetRadius(float newRadius);
 	float GetHeight() const;
-	void SetHeight(float newHeight);					//REVISE THIS. Check both the setter function and the const float argument.
+	void SetHeight(float newHeight);
 protected:
 	void InnerRender() const;
 private:

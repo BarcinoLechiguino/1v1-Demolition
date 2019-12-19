@@ -29,8 +29,6 @@ struct VehicleInfo
 	// --- P1's VEHICLE PARTS
 	vec3 chassis_size;
 	vec3 chassis_offset;
-	vec3 stabilizer_size;
-	vec3 stabilizer_offset;
 	vec3 cabin_size;
 	vec3 cabin_offset;
 	vec3 spoilerLeftPivot_size;
@@ -57,8 +55,6 @@ struct VehicleInfo
 	// --- P2's Vehicle Parts
 	vec3 chassis2_size;
 	vec3 chassis2_offset;
-	vec3 stabilizer2_size;
-	vec3 stabilizer2_offset;
 	vec3 cabin2_size;
 	vec3 cabin2_offset;
 	vec3 spoilerLeftPivot2_size;

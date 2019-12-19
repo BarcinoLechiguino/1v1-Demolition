@@ -8,9 +8,7 @@
 #include "ModuleRenderer3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-{
-	//app->renderer3D->skyBoxColor = vec3(1.f, 1.f, 1.f);		//Setting the skybox's color from ModuleSceneIntro. Color white.
-}
+{}
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
@@ -61,10 +59,10 @@ update_status ModuleSceneIntro::Update(float dt)
 	if (App->debug == true)
 		HandleDebugInput();
 
-
+	
 	CheckProjectileCount();										// Checking the Projectile Count.
 	
-	CheckWins();											// Checking Victory Conditions
+	CheckWins();												// Checking Victory Conditions
 	
 	ApplyTorqueToConstrainedElements();							// Applying torque to the arena's constraints.
 
@@ -139,7 +137,7 @@ void ModuleSceneIntro::HandleDebugInput()
 
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		//TODO: NEW CODE		//Change Ball colour on click.
+		//Change Ball colour on click.
 		//A snippet of new code that may be useful for you. Nothing to do here really
 
 		//Get a vector indicating the direction from the camera viewpoint to the "mouse"
@@ -179,7 +177,6 @@ void ModuleSceneIntro::CameraMovement()
 
 	App->camera->Position = (avgPosition);										//Changes both the camera position and its reference point. Set Move to match the vehicle. OFFSET on x --> Horizontal, OFFSET on z --> Vertical.
 	App->camera->LookAt(avgRefPoint);											//LookAt cannot look  at the same position the camera is. There needs to be an offset somewhere.
-	//LerpCamera(cameraPosition, avgPosition);
 }
 
 //Gets the amount of zoom required taking into account the distance between players (ratio).
@@ -237,7 +234,7 @@ void ModuleSceneIntro::AddPrimitive(Primitive * p)
 
 void ModuleSceneIntro::DeletePrimitive(Primitive* p)
 {
-	for (int i = 0; i < primitives.Count(); i++)									//Revise this.
+	for (int i = 0; i < primitives.Count(); i++)
 	{
 		if (primitives[i] == p)
 		{
@@ -478,7 +475,7 @@ void ModuleSceneIntro::CheckWins()
 			App->audio->PlayFx(10, 0);
 		}
 
-		if (App->player->winsP1 > 3 || App->player2->winsP2 > 3)
+		if (App->player->winsP1 >= 3 || App->player2->winsP2 >= 3)
 		{
 			App->player->winsP1		= 0;
 			App->player2->winsP2	= 0;
@@ -535,66 +532,63 @@ void ModuleSceneIntro::RoundWinsDisplay()
 }
 
 void ModuleSceneIntro::GameWinsDisplay()
-{
-	//float winPos = 75.0f;
-	float winPos = 60.0f;
-	
+{	
 	// --- PLAYER 1's GAME WIN CUBES
 	if (App->player->winsP1 == 1)
 	{
-		gameWinCube1_P1 = SetCube(vec3(winPos, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
-		gameWinCube1_P1->color = Cyan;
+		gameWinCube1_P1 = SetCube(vec3(60.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
+		gameWinCube1_P1->color = Yellow;
 	}
 
 	if (App->player->winsP1 == 2)
 	{
-		gameWinCube1_P1 = SetCube(vec3(winPos, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
-		gameWinCube1_P1->color = Cyan;
+		gameWinCube1_P1 = SetCube(vec3(60.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
+		gameWinCube1_P1->color = Yellow;
 		
-		gameWinCube2_P1 = SetCube(vec3(winPos, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Second Win Cube
-		gameWinCube2_P1->color = Cyan;
+		gameWinCube2_P1 = SetCube(vec3(60.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Second Win Cube
+		gameWinCube2_P1->color = Yellow;
 
 	}
 
 	if (App->player->winsP1 >= 3)
 	{
-		gameWinCube1_P1 = SetCube(vec3(winPos, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
-		gameWinCube1_P1->color = Cyan;
+		gameWinCube1_P1 = SetCube(vec3(60.0f, 3.5f, 75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's First Win Cube
+		gameWinCube1_P1->color = Yellow;
 
-		gameWinCube2_P1 = SetCube(vec3(winPos, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Second Win Cube
-		gameWinCube2_P1->color = Cyan;
+		gameWinCube2_P1 = SetCube(vec3(60.0f, 3.5f, 84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Second Win Cube
+		gameWinCube2_P1->color = Yellow;
 		
-		gameWinCube3_P1 = SetCube(vec3(winPos, 3.5f, 93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Third Win Cube
-		gameWinCube3_P1->color = Cyan;
+		gameWinCube3_P1 = SetCube(vec3(60.0f, 3.5f, 93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P1's Third Win Cube
+		gameWinCube3_P1->color = Yellow;
 	}
 
 	// --- PLAYER 2's GAME WIN CUBES
 	if (App->player2->winsP2 == 1)
 	{
 		gameWinCube1_P2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's First Win Cube
-		gameWinCube1_P2->color = Magenta;
+		gameWinCube1_P2->color = Green;
 	}
 
 	if (App->player2->winsP2 == 2)
 	{
 		gameWinCube1_P2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's First Win Cube
-		gameWinCube1_P2->color = Magenta;
+		gameWinCube1_P2->color = Green;
 		
 		gameWinCube2_P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Second Win Cube
-		gameWinCube2_P2->color = Magenta;
+		gameWinCube2_P2->color = Green;
 
 	}
 
 	if (App->player2->winsP2 >= 3)
 	{
 		gameWinCube1_P2 = SetCube(vec3(-75.0f, 3.5f, -75.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's First Win Cube
-		gameWinCube1_P2->color = Magenta;
+		gameWinCube1_P2->color = Green;
 
 		gameWinCube2_P2 = SetCube(vec3(-75.0f, 3.5f, -84.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Second Win Cube
-		gameWinCube2_P2->color = Magenta;
+		gameWinCube2_P2->color = Green;
 		
 		gameWinCube3_P2 = SetCube(vec3(-75.0f, 3.5f, -93.0f), vec3(7.f, 7.1f, 7.1f), 0.0f, 0, vec3(1, 0, 0), false, true);		//P2's Third Win Cube
-		gameWinCube3_P2->color = Magenta;
+		gameWinCube3_P2->color = Green;
 	}
 }
 

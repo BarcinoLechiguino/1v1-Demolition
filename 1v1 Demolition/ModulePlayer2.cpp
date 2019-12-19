@@ -300,9 +300,6 @@ void ModulePlayer2::GenerateP2Vehicle()
 	car.chassis2_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
 	car.chassis2_offset.Set(0.0f * scale, 0.7f * scale, 0.0f * scale);
 
-	car.stabilizer2_size.Set(3.5f * scale, 1.0f * scale, 6.0f * scale);
-	car.stabilizer2_offset.Set(0.0f * scale, -7.0f * scale, 0.0f * scale);
-
 	car.cabin2_size.Set(3.4f * scale, 1.5f * scale, 3.0f * scale);
 	car.cabin2_offset.Set(0.0f * scale, 1.2f * scale, -0.5f * scale);
 
@@ -328,7 +325,7 @@ void ModulePlayer2::GenerateP2Vehicle()
 	car.frontBumperPivot2_offset.Set(0.0f * scale, 0.0f * scale, 3.0f * scale);
 
 	car.rearBumper2_size.Set(3.5f * scale, 0.5f * scale, 0.2f * scale);
-	car.rearBumper2_offset.Set(0.0f * scale, 0.0f * scale, -2.9f * scale);
+	car.rearBumper2_offset.Set(0.0f * scale, 0.0f * scale, -3.0f * scale);
 
 	car.leftSkirt2_size.Set(0.7f * scale, 0.5f * scale, 3.0f * scale);
 	car.leftSkirt2_offset.Set(-1.5f * scale, 0.0f * scale, 0.0f * scale);

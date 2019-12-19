@@ -12,17 +12,15 @@ PhysBody3D::PhysBody3D()
 	, motionState(nullptr)
 	, parentPrimitive(nullptr)
 	, is_sensor(false)
-	/*, collision_listeners()*/
 {
 	
 }
 
-PhysBody3D::PhysBody3D(btRigidBody* body)		//REVISE THIS. Second PhysBody3D constructor. May be problematic(?).
+PhysBody3D::PhysBody3D(btRigidBody* body)
 	: body(body)
 	, colShape(nullptr)
 	, motionState(nullptr)
 	, parentPrimitive(nullptr)
-	/*, collision_listeners()*/
 {}
 
 // ---------------------------------------------------------

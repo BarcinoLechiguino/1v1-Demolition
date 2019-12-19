@@ -75,7 +75,6 @@ public:
 
 	int projectileCount;																			//Amount of projectiles spawned in the arena.
 	bool RespawnOnRoundEnd;																			//Keeps track whether or not the car's positions are reset back to their spawn positions.
-	bool alreadyDisplayed;																			//Bool that keeps track of whether or not a Round or Game Win display cube has been created.
 
 private:
 	void HandleDebugInput();																		//Method that holds all the inputs that are activated when in debug mode.

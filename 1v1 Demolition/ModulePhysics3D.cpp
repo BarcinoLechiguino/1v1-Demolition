@@ -17,7 +17,7 @@
 	#pragma comment (lib, "Bullet/libx86/LinearMath.lib")
 #endif
 
-ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled), world(nullptr)/*, constraint(nullptr)*/
+ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled), world(nullptr)
 {
 	collision_conf	= new btDefaultCollisionConfiguration();
 	dispatcher		= new btCollisionDispatcher(collision_conf);
@@ -86,7 +86,6 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 {
 	world->stepSimulation(dt, 15);
 
-																											//REVISE THIS.
 	int numManifolds = world->getDispatcher()->getNumManifolds();											//Gets the amount of manifolds in the dispatcher
 	for (int i = 0; i < numManifolds; i++)																	//Loop that iterates for as many manyfolds the dispatcher has registered.
 	{
@@ -190,7 +189,6 @@ bool ModulePhysics3D::CleanUp()
 
 PhysBody3D * ModulePhysics3D::RayCast(const vec3 & Origin, const vec3 & Direction, vec3& HitPoint)
 {
-	//TODO: NEW CODE
 	//A snippet of new code that may be useful for you. Nothing to do here really
 	vec3 Dir = normalize(Direction);
 
@@ -221,7 +219,7 @@ void ModulePhysics3D::RemoveBodyFromWorld(btRigidBody * body)
 
 PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass, bool is_sensor)
 {
-	btCollisionShape* colShape = new btSphereShape(sphere.GetRadius());								//REVISE THIS Getters here.
+	btCollisionShape* colShape = new btSphereShape(sphere.GetRadius());								
 	shapes.add(colShape);
 
 	btTransform startTransform;
@@ -256,7 +254,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass, bool is_s
 // ---------------------------------------------------------
 PhysBody3D* ModulePhysics3D::AddBody(const Cube& cube, float mass)
 {
-	btCollisionShape* colShape = new btBoxShape(btVector3(cube.GetSize().x*0.5f, cube.GetSize().y*0.5f, cube.GetSize().z*0.5f));	//REVISE THIS Getters here.
+	btCollisionShape* colShape = new btBoxShape(btVector3(cube.GetSize().x*0.5f, cube.GetSize().y*0.5f, cube.GetSize().z*0.5f));
 	shapes.add(colShape);
 
 	btTransform startTransform;
@@ -364,16 +362,16 @@ void ModulePhysics3D::AddVehicleBodyParts(const VehicleInfo& info, btCompoundSha
 {
 	if (&info == &App->player->car)																	// If P1's vehicle info is being passed as argument (P1 vehicle is being added).
 	{
-		// --- P1's VEHICLE BODY PARTS
+		// --- P1's VEHICLE BODY COLLISION SHAPES
 		AddCollisionShapeToVehiclePart(comShape, info.chassis_size, info.chassis_offset);
-		//AddCollisionShapeToVehiclePart(comShape, info.cabin_size, info.cabin_offset);
 		AddCollisionShapeToVehiclePart(comShape, info.spoiler_size, info.spoiler_offset);
 	}
 
 	if (&info == &App->player2->car)																// If P2's vehicle info is being passed as argument (P1 vehicle is being added).
 	{
-		// --- P2's VEHICLE BODY PARTS
+		// --- P2's VEHICLE BODY COLLISION SHAPES
 		AddCollisionShapeToVehiclePart(comShape, info.chassis2_size, info.chassis2_offset);
+		AddCollisionShapeToVehiclePart(comShape, info.spoiler2_size, info.spoiler2_offset);
 	}
 }
 
@@ -428,8 +426,8 @@ void ModulePhysics3D::AddConstraintHinge(const Primitive& bodyA, const Primitive
 		btVector3(axisInA.x, axisInA.y, axisInA.z),
 		btVector3(axisInB.x, axisInB.y, axisInB.z));
 	world->addConstraint(hinge, can_collide);
-	constraints.add(hinge);								//Adds the new hinge constraint to the constraints list.
-	hinge->setDbgDrawSize(2.0f);						//REVISE THIS here.
+	constraints.add(hinge);									//Adds the new hinge constraint to the constraints list.
+	hinge->setDbgDrawSize(2.0f);
 }
 
 void ModulePhysics3D::DeleteConstraints()
