@@ -185,7 +185,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
    - Respawn at Round's End mode Implementation.
 
-   - Different Player Colours Implementation.
+   - Vehicle Redesign (Shape & Colours) Implementation.
 
      
 
