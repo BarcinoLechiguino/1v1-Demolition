@@ -202,7 +202,7 @@ The goal of the game is, by the use of projectiles, destroy the other player's v
 
 # Link to Repository
 
-<https://github.com/BarcinoLechiguino/3D-Racing-Game>
+<https://github.com/BarcinoLechiguino/1v1-Demolition>
 
 
 
